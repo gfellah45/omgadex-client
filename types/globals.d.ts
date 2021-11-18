@@ -1,0 +1,3 @@
+interface Itest {
+  test: string;
+}
