@@ -12,12 +12,13 @@ module.exports = {
         gray: "#F4F5F6",
         links: "#777E91",
         heading: "#23262F",
+        offwhite: "#FCFCFD",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         sans: ["DM Sans", "sans-seri"],
       },
-      shadows: {
+      shadow: {
         card: "0px 64px 64px -48px rgba(15, 15, 15, 0.1)",
       },
     },
