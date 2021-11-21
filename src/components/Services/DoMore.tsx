@@ -21,44 +21,36 @@ const DoMore = (props: Props) => {
 
         <div className="hidden grid-cols-2 lg:grid lg:grid-cols-3 lg:gap-0 xl:gap-4 lg:mt-16 xl:mt-28">
           {service.slice(0, 3).map((item, index) => (
-            <>
-              <ServiceCard
-                key={index}
-                title={item.title}
-                description={item.text}
-              />
-            </>
+            <ServiceCard
+              key={index}
+              title={item.title}
+              description={item.text}
+            />
           ))}
         </div>
         <div className="hidden grid-cols-3 gap-4 mt-4 lg:grid">
           {service.slice(0, 3).map((item, index) => (
-            <>
-              <div key={index} className="h-[1px] bg-devide"></div>
-            </>
+            <div key={index} className="h-[1px] bg-devide"></div>
           ))}
         </div>
         <div className="hidden grid-cols-2 lg:grid lg:grid-cols-3 lg:gap-0 xl:gap-4 lg:mt-16 xl:mt-12">
           {service.slice(3, 6).map((item, index) => (
-            <>
-              <ServiceCard
-                key={index}
-                title={item.title}
-                description={item.text}
-              />
-            </>
+            <ServiceCard
+              key={index}
+              title={item.title}
+              description={item.text}
+            />
           ))}
         </div>
 
         {/* mobile */}
         <div className="grid grid-cols-2 gap-0 md:grid-cols-2 lg:hidden lg:grid-cols-3 lg:gap-0 xl:gap-4 lg:mt-16 xl:mt-28">
           {service.map((item, index) => (
-            <>
-              <ServiceCard
-                key={index}
-                title={item.title}
-                description={item.text}
-              />
-            </>
+            <ServiceCard
+              key={index}
+              title={item.title}
+              description={item.text}
+            />
           ))}
         </div>
       </Container>

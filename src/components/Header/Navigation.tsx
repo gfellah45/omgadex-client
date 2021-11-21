@@ -19,7 +19,7 @@ const Navigation: FC = () => {
         <div className="flex flex-wrap items-center justify-between p-2 md:py-2 lg:py-2">
           {/* logo and company name */}
           <div className="flex items-center lg:w-3/12">
-            <Image src={logo} />
+            <Image src={logo} alt="logo" />
             <div className="mx-2 text-lg font-bold text-black md:text-lg lg:text-2xl font-poppins">
               Omega Dex
             </div>

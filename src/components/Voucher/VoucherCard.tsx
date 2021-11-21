@@ -11,7 +11,7 @@ const VoucherCard = ({ title, description, img }: Props): JSX.Element => {
   return (
     <div className="flex flex-wrap">
       <div className="flex items-center justify-center w-full lg:w-2/12">
-        <Image src={img} />
+        <Image src={img} alt={title} />
       </div>
       <div className="mt-2 lg:mt-0 lg:w-7/12 xl:w-5/12">
         <h4 className="text-center text-gray2 lg:text-left"> {title}</h4>

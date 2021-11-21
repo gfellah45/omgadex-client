@@ -1,7 +1,6 @@
 import React from "react";
 import Container from "../shared/Container";
-import Image from "next/image";
-import Swift from "../../../public/assets/swift.svg";
+
 import { voucherList } from "../../data";
 import VoucherCard from "./VoucherCard";
 import Form from "./Form";

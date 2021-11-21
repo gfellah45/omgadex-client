@@ -61,7 +61,7 @@ const Form = (props: Props) => {
 
               <div className="flex">
                 <div className="flex ">
-                  <Image src={btc} /> <p className="mx-1">BTC</p>
+                  <Image src={btc} alt="btc" /> <p className="mx-1">BTC</p>
                 </div>
 
                 <BiChevronDown className="text-2xl text-links" />
@@ -79,14 +79,14 @@ const Form = (props: Props) => {
             <p className="text-links">Payment Methods we accept</p>
             <div className="flex items-center justify-center">
               <div className="mx-2.5 mt-2">
-                <Image src={mastercard} />
+                <Image src={mastercard} alt="master card" />
               </div>
               <div className="mx-2.5">
-                <Image src={Visa} />
+                <Image src={Visa} alt="visa" />
               </div>
               <div className="mx-2.5">
                 {" "}
-                <Image src={googlepay} />
+                <Image src={googlepay} alt="google pay" />
               </div>
             </div>
           </div>

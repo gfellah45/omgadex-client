@@ -23,7 +23,7 @@ const MobileNavigator: FC<Props> = ({ isOpen, setOpen }) => {
     >
       <div className="w-9/12 h-full bg-white md:2/12">
         <div className="flex items-center justify-between p-4">
-          <Image src={logo} />
+          <Image src={logo} alt="logo" />
           <div className="font-sans text-lg font-semibold text-black">
             Omega Dex
           </div>

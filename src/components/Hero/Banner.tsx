@@ -28,7 +28,7 @@ const Banner = (props: Props) => {
             </div>
           </div>
           <div className="hidden h-full bg-left-top bg-no-repeat lg:w-8/12 xl:w-6/12 lg:block ">
-            <Image src={person} />
+            <Image src={person} alt="banner image" />
           </div>
         </div>
 

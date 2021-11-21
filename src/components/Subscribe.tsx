@@ -9,7 +9,7 @@ const Subscribe = (props: Props) => {
         Subsribe to Our News Letter
       </div>
       <p className="w-10/12 mt-10 lg:w-5/12 text-links md:w-8/12">
-        Don't miss out on the latest happenings in the crypto space, stay up to
+        Dont miss out on the latest happenings in the crypto space, stay up to
         date on the relevant trends and happenings in 
       </p>
 
