@@ -1,9 +1,12 @@
 import React, { FC } from "react";
 import Image from "next/image";
-import logo from "src/assets/images/logo.svg";
+import logo from "../../../public/assets/logo.svg";
 import Link from "next/link";
-import { navItems } from "src/data/index";
-import { FilledButtons, OutlinedButtons } from "src/components/shared/Buttons";
+import { navItems } from "../../data";
+import {
+  FilledButtons,
+  OutlinedButtons,
+} from "../../components/shared/Buttons";
 
 interface Props {
   isOpen: boolean;

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { navItems } from "src/data";
+import { navItems } from "../../data";
 import Link from "next/link";
 
 interface Props {}

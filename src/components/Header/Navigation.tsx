@@ -1,12 +1,12 @@
 import React, { FC, useState } from "react";
-import Container from "src/components/shared/Container";
+import Container from "../../../src/components/shared/Container";
 import Image from "next/image";
-import logo from "src/assets/images/logo.svg";
-import Hambuger from "src/components/Header/Hambuger";
+import logo from "../../../public/assets/logo.svg";
+import Hambuger from "./Hambuger";
 
-import MobileNavigator from "src/components/Header/MobileNavigator";
-import Desktopnav from "src/components/Header/Desktopnav";
-import { FilledButtons, OutlinedButtons } from "src/components/shared/Buttons";
+import MobileNavigator from "./MobileNavigator";
+import Desktopnav from "./Desktopnav";
+import { FilledButtons, OutlinedButtons } from "../shared/Buttons";
 import { FaCaretDown } from "react-icons/fa";
 
 interface Props {}
@@ -14,7 +14,7 @@ interface Props {}
 const Navigation: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="fixed z-20 w-full shadow-md ">
+    <div className="w-full shadow-md ">
       <Container>
         <div className="flex flex-wrap items-center justify-between p-2 md:py-2 lg:py-2">
           {/* logo and company name */}
