@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Signingpage from "src/screens/Signingpage";
+import Signingpage from "../src/screens/Signingpage";
+import Landingpage from "../src/screens/Landingpage";
 
 const Home: NextPage = () => {
   return (
@@ -11,7 +12,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="font-poppins">
-        <Signingpage />
+        <Landingpage />
       </div>
     </div>
   );
