@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Container from "../shared/Container";
 import { FilledButtons } from "../shared/Buttons";
 import Image from "next/image";
 import person from "../../assets/images/manImage.png";
 import CurrencyCard from "./CurrencyCard";
 import { rates } from "../../data";
+import { gsap } from "gsap";
 
 interface Props {}
 
@@ -22,7 +23,7 @@ const Banner = (props: Props) => {
                 Invest like an expert. Build wealth and secure with Real Estate
                 | Stocks | NFTs | Cryptocurrencies | Insurrances
               </p>
-              <div className="mt-12 text-center">
+              <div className="mt-12 text-center lg:text-left">
                 <FilledButtons text="Get Started Now" />
               </div>
             </div>
