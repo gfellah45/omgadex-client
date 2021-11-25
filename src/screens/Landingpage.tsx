@@ -5,6 +5,8 @@ import DoMore from "../components/Services/DoMore";
 import GetVoucher from "../components/Voucher/GetVoucher";
 import UseVoucher from "../components/Usage/UseVoucher";
 import Subscribe from "../components/Subscribe";
+import Details from "../components/FAQ/Details";
+import Footer from "../components/Footer";
 
 interface Props {}
 
@@ -21,6 +23,8 @@ const Landingpage = (props: Props): JSX.Element => {
       <GetVoucher />
       <UseVoucher />
       <Subscribe />
+      <Details />
+      <Footer />
     </div>
   );
 };

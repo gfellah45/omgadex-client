@@ -4,7 +4,7 @@ interface Props {}
 
 const Subscribe = (props: Props) => {
   return (
-    <div className="flex flex-col items-center justify-center mt-10 text-center py-14 md:py-36 bg-gray2">
+    <div className="flex flex-col items-center justify-center mt-10 text-center py-14 md:py-36 bg-gray">
       <div className="text-2xl font-bold md:text-4xl">
         Subsribe to Our News Letter
       </div>
