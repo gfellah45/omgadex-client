@@ -31,8 +31,8 @@ export default function Ditem({}: Props): ReactElement {
   return (
     <div className="w-full px-4 pt-8">
       <div className="w-full max-w-4xl p-4 mx-auto lg:max-w-3xl rounded-2xl">
-        {item.map((item) => (
-          <Disclosure>
+        {item.map((item, idx) => (
+          <Disclosure key={idx}>
             {({ open }) => (
               <>
                 <Disclosure.Button

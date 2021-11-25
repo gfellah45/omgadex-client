@@ -21,6 +21,9 @@ module.exports = {
       shadow: {
         card: "0px 64px 64px -48px rgba(15, 15, 15, 0.1)",
       },
+      backgroundImage: {
+        pattern: "/assets/toppng.svg",
+      },
     },
   },
   variants: {

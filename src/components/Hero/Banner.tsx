@@ -5,7 +5,6 @@ import Image from "next/image";
 import person from "../../assets/images/manImage.png";
 import CurrencyCard from "./CurrencyCard";
 import { rates } from "../../data";
-import { gsap } from "gsap";
 
 interface Props {}
 
