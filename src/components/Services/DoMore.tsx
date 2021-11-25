@@ -9,7 +9,7 @@ const DoMore = (props: Props) => {
   return (
     <div className="pb-8 mt-32">
       <Container>
-        <h2 className="text-4xl font-bold text-center md:text-5xl">
+        <h2 className="text-5xl font-bold text-center md:text-5xl">
           Do more with Omega DEX
         </h2>
         <p className="w-11/12 mx-auto mt-6 text-xs leading-6 text-center md:w-7/12 lg:text-sm xl:text-lg text-links">

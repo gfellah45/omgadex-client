@@ -10,7 +10,7 @@ const UseVoucher = (props: Props) => {
     <div className="mt-20 lg:my-32">
       <Container>
         <div>
-          <h2 className="font-sans text-3xl font-bold text-center md:text-5xl ">
+          <h2 className="font-sans text-4xl font-bold text-center md:text-5xl ">
             More Ways to get Omega voucher
           </h2>
           <p className="mt-5 text-center text-links">
