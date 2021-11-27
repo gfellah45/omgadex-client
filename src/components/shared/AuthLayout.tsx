@@ -20,7 +20,7 @@ const AuthLayout: FC = ({ children }) => {
           </div>
         </div>
         <div className="items-center justify-center flex-1 hidden bg-indigo-100 lg:flex">
-          <Image src={bgImage} />
+          <Image src={bgImage} alt="logo" />
         </div>
       </div>
 
