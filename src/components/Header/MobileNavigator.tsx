@@ -7,6 +7,7 @@ import {
   FilledButtons,
   OutlinedButtons,
 } from "../../components/shared/Buttons";
+import { useRouter } from "next/router";
 
 interface Props {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const MobileNavigator: FC<Props> = ({ isOpen, setOpen }) => {
+  const { push } = useRouter();
   return (
     <div
       onClick={() => setOpen(!isOpen)}
@@ -43,9 +45,13 @@ const MobileNavigator: FC<Props> = ({ isOpen, setOpen }) => {
             );
           })}
         </div>
-        <div className="flex flex-col p-4">
-          <FilledButtons text={"Sign Up"} />
-          <OutlinedButtons text={"Login"} />
+        <div className="flex flex-col w-full p-4">
+          <p className="w-11/12 " onClick={() => push("/signup")}>
+            <FilledButtons text={"Sign Up"} />
+          </p>
+          <p className="w-11/12" onClick={() => push("/login")}>
+            <OutlinedButtons text={"Login"} />
+          </p>
         </div>
       </div>
     </div>
