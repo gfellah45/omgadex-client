@@ -1,16 +1,17 @@
 import React, { FC } from "react";
-import Signuppage from "../src/screens/Signuppage";
 import Head from "next/head";
 
-const signup: FC = () => {
+import VerifyAccount from "../src/screens/VerifyAccount";
+
+const verify: FC = () => {
   return (
     <div>
       <Head>
         <title>Omega Dex / Signup</title>
       </Head>
-      <Signuppage />
+      <VerifyAccount />
     </div>
   );
 };
 
-export default signup;
+export default verify;
