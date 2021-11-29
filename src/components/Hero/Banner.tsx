@@ -40,8 +40,11 @@ const Banner = (props: Props) => {
                 stagger={0.2}
                 ease="elastic.out(0.1, 0.1)"
               >
-                <div className="mt-12 text-center lg:text-left">
+                <div className="w-8/12 mx-auto mt-12 text-center lg:w-5/12 lg:mx-0 lg:text-left">
                   <FilledButtons text="Get Started Now" />
+                  {/* <button className="w-7/12 px-8 py-2 text-white rounded-md shadow-md bg-primary">
+                    Get Started Now
+                  </button> */}
                 </div>
               </Tween>
             </div>

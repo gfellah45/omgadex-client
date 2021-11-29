@@ -10,7 +10,7 @@ const Desktopnav: FC = () => {
       {navItems.map((item, idx) => (
         <li
           key={idx}
-          className="lg:text-md xl:text-lg text-links font-poppins hover:text-primary "
+          className="lg:text-[14px] xl:text-[14px] font-bold text-links font-poppins hover:text-primary "
         >
           <Link href={item.link}>
             <a>{item.name}</a>

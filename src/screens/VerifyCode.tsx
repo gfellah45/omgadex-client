@@ -19,6 +19,7 @@ interface Inputs {
 
 const VerifyCode: FC = () => {
   const [tempData, setTempData] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { push } = useRouter();
 
@@ -67,6 +68,7 @@ const VerifyCode: FC = () => {
 
   //sunmit verified code
   const onFinish: SubmitHandler<Inputs> = (values) => {
+    setLoading(true);
     const trimValue = Object.values(values).join("").toUpperCase();
 
     onConfirmFinish(
@@ -77,10 +79,15 @@ const VerifyCode: FC = () => {
             toast.success("Code verified succesfully, Procced to Login");
             localStorage.removeItem("tempdata");
             push("/login");
+            setLoading(false);
+          } else if (data.message.includes("Incorrect code")) {
+            toast.error("Code not verified, please input the correct code");
+            setLoading(false);
           }
         },
         onError: () => {
           toast.error("Somthong wen wrong pls try again later");
+          setLoading(false);
         },
       }
     );
@@ -125,28 +132,28 @@ const VerifyCode: FC = () => {
               maxLength={1}
               minLength={1}
               type="text"
-              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md shadow lg:px-5 jus border-gray2"
+              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md lg:px-5 jus border-gray2"
             />
             <input
               {...register("b", { required: true, maxLength: 1, minLength: 1 })}
               maxLength={1}
               minLength={1}
               type="text"
-              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md shadow lg:px-5 jus border-gray2"
+              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md lg:px-5 jus border-gray2"
             />
             <input
               {...register("C", { required: true, maxLength: 1, minLength: 1 })}
               maxLength={1}
               minLength={1}
               type="text"
-              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md shadow lg:px-5 jus border-gray2"
+              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md lg:px-5 jus border-gray2"
             />
             <input
               {...register("D", { required: true, maxLength: 1, minLength: 1 })}
               maxLength={1}
               minLength={1}
               type="text"
-              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md shadow lg:px-5 jus border-gray2"
+              className="flex items-center justify-center w-1/5 h-20 px-3 text-3xl border-2 rounded-md lg:px-5 jus border-gray2"
             />
           </div>
 
@@ -161,13 +168,17 @@ const VerifyCode: FC = () => {
               type="submit"
               className="w-5/12 py-2 text-sm text-white rounded-md shadow lg:py-4 bg-primary"
             >
-              {isSubmitting ? (
-                <Loader
-                  type="ThreeDots"
-                  color="#00BFFF"
-                  height={20}
-                  width={20}
-                />
+              {loading ? (
+                <div className="flex items-center justify-center w-full">
+                  <div className="flex items-center justify-center w-full">
+                    <Loader
+                      type="ThreeDots"
+                      color="#fff"
+                      height={30}
+                      width={60}
+                    />
+                  </div>
+                </div>
               ) : (
                 " Continue"
               )}

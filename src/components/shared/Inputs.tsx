@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import Image from "next/image";
-import eye from "../../../public/assets/eye.svg";
+
+import Msg from "../../assets/svg/Msg";
+import Eye from "../../assets/svg/Eye";
 
 interface Props {
   type?: string;
@@ -11,6 +12,7 @@ interface Props {
   register?: any;
   validation?: any;
   errors?: any;
+  addOns?: boolean;
 }
 
 const Inputs = ({
@@ -21,6 +23,7 @@ const Inputs = ({
   register,
   validation,
   errors,
+  addOns,
 }: Props): JSX.Element => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +38,7 @@ const Inputs = ({
       </label>
       <div
         style={{ borderColor: "#E5E5E5" }}
-        className="relative flex w-full border-2 rounded-md shadow"
+        className="relative flex w-full border rounded-md "
       >
         <input
           {...register(name, { ...validation })}
@@ -49,11 +52,17 @@ const Inputs = ({
             className="absolute cursor-pointer right-2 top-1 lg:top-2"
             onClick={() => setShowPassword(!showPassword)}
           >
-            <Image src={eye} alt="eye" />
+            <Eye />
+          </p>
+        )}
+
+        {addOns && (
+          <p className="absolute cursor-pointer right-2 top-1 lg:top-2">
+            <Msg />
           </p>
         )}
       </div>
-      <div className="my-2 text-sm text-red-500">
+      <div className="my-2 text-sm text-red-500 ">
         {errors[`${name}`]?.message}
       </div>
     </>

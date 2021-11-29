@@ -22,23 +22,27 @@ const Navigation: FC = () => {
     >
       <div className="w-full shadow-md ">
         <Container>
-          <div className="flex flex-wrap items-center justify-between p-2 md:py-2 lg:py-2">
+          <div className="flex flex-wrap items-center justify-between flex-1 p-2 md:py-2 lg:py-2">
             {/* logo and company name */}
-            <div className="flex items-center lg:w-3/12">
-              <Image src={logo} alt="logo" />
-              <div className="mx-2 text-lg font-bold text-black md:text-lg lg:text-2xl font-poppins">
-                Omega Dex
+
+            <div className="flex items-center lg:w-[75%]  xl:w-[80%] ">
+              <div className="flex items-center lg:border-r border-r-links lg:w-[28%] xl:lg:w-[20%]">
+                <Image src={logo} alt="logo" />
+                <div className="mx-2 text-lg font-bold text-black md:text-lg lg:text-2xl font-poppins">
+                  Omega Dex
+                </div>
+              </div>
+
+              <div className="hidden lg:ml-5 xl:ml-10 lg:block">
+                <Desktopnav />
               </div>
             </div>
 
             {/* desktop navigation */}
-            <div className="hidden w-3/6 lg:block">
-              <Desktopnav />
-            </div>
 
             {/* loging and language buttons */}
-            <div className="items-center justify-between hidden lg:w-3/12 xl:w-1/6 lg:flex">
-              <button className="flex items-center space-x-1">
+            <div className="items-center justify-between hidden lg:w-[22%] xl:w-[20%] lg:flex">
+              <button className="flex items-center space-x-2">
                 <span className="text-sm lg:text-sm">{"EN"}</span>{" "}
                 <FaCaretDown />
               </button>

@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthLayout from "../components/shared/AuthLayout";
 import FormLayout from "../components/shared/FormLayout";
 import Inputs from "../components/shared/Inputs";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useMutation } from "react-query";
 import { makeRequest } from "../lib/makeRequest";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { passwordValidator } from "../utils";
 import Loader from "react-loader-spinner";
+import PhoneNumberInput from "../components/shared/PhoneNumberInput";
 
 interface Iinputs {
   email: string;
@@ -16,13 +17,15 @@ interface Iinputs {
   password2: string;
   phone: string;
   terms: boolean;
+  country: string;
 }
 
 const Signuppage = (): JSX.Element => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     control,
     watch,
   } = useForm();
@@ -38,19 +41,23 @@ const Signuppage = (): JSX.Element => {
   const { mutateAsync } = useMutation(singUp);
 
   const onFinish: SubmitHandler<Iinputs> = (values: Iinputs) => {
+    setLoading(true);
     mutateAsync(values, {
       onSuccess: (data) => {
         if (data.message.includes("already" || "exists")) {
           toast.error(data.message);
+          setLoading(false);
         } else {
           localStorage.setItem("tempdata", JSON.stringify(values));
           toast.success(
             "Succesfully signed up. please select a suitable verification method"
           );
           push("/verify");
+          setLoading(false);
         }
       },
       onError: () => {
+        setLoading(false);
         toast.error("Something went wrong please try again later");
       },
     });
@@ -63,7 +70,7 @@ const Signuppage = (): JSX.Element => {
         action="Login"
         link="/login"
       >
-        <form className="mt-6" onSubmit={handleSubmit(onFinish)}>
+        <form className="mt-6 " onSubmit={handleSubmit(onFinish)}>
           <div className="mt-6">
             <Inputs
               validation={{
@@ -79,9 +86,26 @@ const Signuppage = (): JSX.Element => {
               label="Email"
               name="email"
               errors={errors}
+              addOns={true}
             />
           </div>
-          <div className="mt-6">
+          <div className="mt-6 ">
+            {/* <Controller
+              name="country"
+              control={control}
+              rules={{ required: "This is required" }}
+              render={({ field: { onChange, value } }) => (
+                <PhoneNumberInput
+                  onChange={onChange}
+                  value={value}
+                  register={register}
+                  validation={{ required: "This is required" }}
+                  name="phone"
+                  errors={errors}
+                />
+              )}
+            /> */}
+
             <Inputs
               validation={{
                 required: "This is required",
@@ -112,7 +136,7 @@ const Signuppage = (): JSX.Element => {
               errors={errors}
             />
             {password && !passwordValidator(password) && (
-              <span className="fixed text-xs text-red-500">
+              <span className="text-xs text-red-500 ">
                 Must include at least 1 upper case 1 special character min of 8
                 in length
               </span>
@@ -146,9 +170,16 @@ const Signuppage = (): JSX.Element => {
 
           {/* login button */}
           <div className="mt-6">
-            <button className="w-full p-2 font-semibold tracking-wide text-white text-gray-100 bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600">
-              {isSubmitting ? (
-                <Loader type="ThreeDots" color="#fff" height={20} width={20} />
+            <button className="w-full p-2 font-semibold tracking-wide text-center text-white text-gray-100 bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600">
+              {loading ? (
+                <div className="flex items-center justify-center w-full">
+                  <Loader
+                    type="ThreeDots"
+                    color="#fff"
+                    height={30}
+                    width={60}
+                  />
+                </div>
               ) : (
                 "Sign up"
               )}

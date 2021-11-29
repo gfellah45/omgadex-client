@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import Link from "next/link";
 import { useMutation } from "react-query";
 import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";
@@ -23,6 +23,7 @@ const Signingpage = (): JSX.Element => {
   const [isEmail, setIsEmail] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [tempData, setTempData] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTempData(localStorage?.getItem("tempdata") || "");
@@ -49,10 +50,10 @@ const Signingpage = (): JSX.Element => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
-  //verify acciu function
+  //verify account function
   const verifyAccount = () => {
     const email = JSON.parse(tempData).email;
     verifyRequest(email, {
@@ -66,21 +67,29 @@ const Signingpage = (): JSX.Element => {
 
   //login action function
   const onFinish: SubmitHandler<Iinputs> = (values) => {
+    setLoading(true);
     mutateAsync(values, {
       onSuccess: (data) => {
         localStorage.setItem("tempdata", JSON.stringify(values));
         if (data.message.includes("email" || "phone")) {
+          setLoading(false);
           toast.error("Invalid email or phone number");
         } else if (data.message.includes("activated")) {
           onOpen();
         } else if (data.message.includes("password")) {
+          setLoading(false);
           toast.error("Invalid login credetials, please confirm and try again");
         } else {
           setData("token", data.payload.token);
           setData("user", data);
           toast.success("Login successful, redirecting to dashboard");
           push("/dashboard");
+          setLoading(false);
         }
+      },
+      onError: () => {
+        toast.error("Somthing happened please try again");
+        setLoading(false);
       },
     });
   };
@@ -127,6 +136,7 @@ const Signingpage = (): JSX.Element => {
                 label="Email"
                 name="email"
                 errors={errors}
+                addOns={true}
               />
             ) : (
               <Inputs
@@ -157,9 +167,11 @@ const Signingpage = (): JSX.Element => {
               errors={errors}
             />
             <div className="w-2/5 mt-3 ml-auto text-right">
-              <a className="inline-block text-xs font-semibold cursor-pointer cursor-point er text-primary font-poppins font-display hover:text-indigo-800">
-                Forgot Password?
-              </a>
+              <Link href="/forgotpassword">
+                <a className="inline-block text-xs font-semibold cursor-pointer cursor-point er text-primary font-poppins font-display hover:text-indigo-800">
+                  Forgot Password?
+                </a>
+              </Link>
             </div>
           </div>
 
@@ -167,8 +179,15 @@ const Signingpage = (): JSX.Element => {
           <div className="mt-6">
             <button className="w-full p-2 font-semibold tracking-wide text-white text-gray-100 bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600">
               <p>
-                {isSubmitting ? (
-                  <Loader type="ThreeDots" color="white" />
+                {loading ? (
+                  <div className="flex items-center justify-center w-full">
+                    <Loader
+                      type="ThreeDots"
+                      color="#fff"
+                      height={30}
+                      width={60}
+                    />
+                  </div>
                 ) : (
                   "Log In"
                 )}

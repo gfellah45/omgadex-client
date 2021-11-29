@@ -21,7 +21,7 @@ const FormLayout: FC<Props> = ({
   action,
 }) => {
   return (
-    <div>
+    <div className="pb-2">
       <div className="w-full mb-6 lg:hidden">
         <div className="flex items-center justify-center my-3 space-x-2 text-center">
           <Image src={logo} alt="logo" />
