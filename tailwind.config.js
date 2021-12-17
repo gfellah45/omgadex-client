@@ -1,7 +1,7 @@
 module.exports = {
   mode: "jit",
-  purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
+  media: false, // or 'media' or 'class'
   theme: {
     extend: {
       colors: {
@@ -9,11 +9,12 @@ module.exports = {
         secondary: "#23262F",
         badge2: "#FF6838",
         badge1: "#58BD7D",
-        gray: "#F4F5F6",
-        gray2: "#E5E5E5",
+        omgray: "#F4F5F6",
+        omgray2: "#E5E5E5",
         links: "#777E91",
         heading: "#23262F",
         offwhite: "#FCFCFD",
+        omgray3: "#808191",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],

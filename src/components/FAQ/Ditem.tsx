@@ -55,7 +55,7 @@ export default function Ditem({}: Props): ReactElement {
                     />
                   )}
                 </Disclosure.Button>
-                <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500 transition-all border-b-2 text-links">
+                <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm  transition-all border-b-2 text-links">
                   {item.answer}
                 </Disclosure.Panel>
               </>

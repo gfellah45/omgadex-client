@@ -34,7 +34,7 @@ const Form = (props: Props) => {
             Voucher value
           </label>
           <input
-            className="w-full px-3 py-2 border-2 rounded-lg border-gray2 "
+            className="w-full px-3 py-2 border-2 rounded-lg border-omgray2 "
             type="text"
             placeholder={current}
           />
@@ -56,7 +56,7 @@ const Form = (props: Props) => {
             <label className="block mb-2 text-sm font-semibold text-links">
               Worth
             </label>
-            <div className="flex items-center justify-between px-4 py-3 border-2 rounded-md text-links border-gray2">
+            <div className="flex items-center justify-between px-4 py-3 border-2 rounded-md text-links border-omgray2">
               <p>0.111447624</p>
 
               <div className="flex">

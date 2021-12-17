@@ -21,7 +21,6 @@ interface Iinputs {
 }
 
 const Signuppage = (): JSX.Element => {
-  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -38,26 +37,22 @@ const Signuppage = (): JSX.Element => {
     return await makeRequest("/auth/sign-up", "POST", data);
   };
 
-  const { mutateAsync } = useMutation(singUp);
+  const { mutateAsync, isLoading } = useMutation(singUp);
 
   const onFinish: SubmitHandler<Iinputs> = (values: Iinputs) => {
-    setLoading(true);
     mutateAsync(values, {
       onSuccess: (data) => {
         if (data.message.includes("already" || "exists")) {
           toast.error(data.message);
-          setLoading(false);
         } else {
           localStorage.setItem("tempdata", JSON.stringify(values));
           toast.success(
             "Succesfully signed up. please select a suitable verification method"
           );
           push("/verify");
-          setLoading(false);
         }
       },
       onError: () => {
-        setLoading(false);
         toast.error("Something went wrong please try again later");
       },
     });
@@ -170,8 +165,11 @@ const Signuppage = (): JSX.Element => {
 
           {/* login button */}
           <div className="mt-6">
-            <button className="w-full p-2 font-semibold tracking-wide text-center text-white text-gray-100 bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600">
-              {loading ? (
+            <button
+              disabled={isLoading}
+              className="w-full p-2 font-semibold tracking-wide text-center text-white bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600"
+            >
+              {isLoading ? (
                 <div className="flex items-center justify-center w-full">
                   <Loader
                     type="ThreeDots"

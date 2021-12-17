@@ -64,7 +64,7 @@ const Banner = (props: Props) => {
           stagger={0.1}
           ease="elastic.out(0.1, 0.1)"
         >
-          <div className="grid grid-cols-2 gap-2 px-2 py-2 rounded-lg shadow-xl lg:px-4 lg:gap-8 lg:grid-cols-4 lg:py-2 xl:py-6 bg-gray">
+          <div className="grid grid-cols-2 gap-2 px-2 py-2 rounded-lg shadow-xl lg:px-4 lg:gap-8 lg:grid-cols-4 lg:py-2 xl:py-6 bg-omgray">
             {rates.map((rate, idx) => (
               <CurrencyCard
                 key={idx}

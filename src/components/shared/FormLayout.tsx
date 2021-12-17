@@ -40,11 +40,11 @@ const FormLayout: FC<Props> = ({
       <h2 className="mt-2 text-xl font-semibold text-center text-black-800 font-poppins lg:text-center md:text-3xl">
         {heading}
       </h2>
-      <div className="mt-4 mb-2 text-xs font-semibold text-center text-gray-300 lg:mt-12 font-poppins text-links font-display md:text-sm">
+      <div className="mt-4 mb-2 text-xs font-semibold text-center lg:mt-12 font-poppins text-links font-display md:text-sm">
         Please ensure you are on the correct url
       </div>
       <div className="my-6 text-center">
-        <div className="w-full p-2 my-2 text-xs tracking-wide text-green-700 rounded-full shadow-sm bg-gray font-display md:text-sm">
+        <div className="w-full p-2 my-2 text-xs tracking-wide text-green-700 rounded-full shadow-sm bg-omgray font-display md:text-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="inline-block w-5 h-5"
@@ -58,7 +58,7 @@ const FormLayout: FC<Props> = ({
             />
           </svg>
           https://
-          <span className="text-gray-700">account.omegadex.com</span>
+          <span className="text-omgray-700">account.omegadex.com</span>
         </div>
       </div>
       <div
@@ -68,7 +68,7 @@ const FormLayout: FC<Props> = ({
 
       {children}
 
-      <div className="justify-center hidden mt-8 space-x-2 text-xs font-semibold text-center text-gray-700 lg:flex font-display md:text-sm">
+      <div className="justify-center hidden mt-8 space-x-2 text-xs font-semibold text-center text-omgray-700 lg:flex font-display md:text-sm">
         <p> {next}</p>
         <Link href={`${link}`}>
           <a className="cursor-pointer font-poppins text-primary hover:opacity-75">

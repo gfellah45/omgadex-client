@@ -1,20 +1,20 @@
 import React, { FC } from "react";
 import DashboardLayout from "../../src/components/shared/DashboardLayout";
 import Head from "next/head";
-import Dashboard from "../../src/screens/Dashbaord";
+import Wallets from "../../src/screens/Wallets";
 
-const DashboardPage: FC = () => {
+const WalletsPage: FC = () => {
   return (
     <>
       <Head>
-        <title> OmegaDEX | Dashboard</title>
+        <title> OmegaDEX | Wallets</title>
       </Head>
       <DashboardLayout>
-        <Dashboard />
+        <Wallets />
       </DashboardLayout>
       ;
     </>
   );
 };
 
-export default DashboardPage;
+export default WalletsPage;

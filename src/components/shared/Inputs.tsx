@@ -13,6 +13,8 @@ interface Props {
   validation?: any;
   errors?: any;
   addOns?: boolean;
+  minLength?: number;
+  maxLength?: number;
 }
 
 const Inputs = ({
@@ -24,6 +26,8 @@ const Inputs = ({
   validation,
   errors,
   addOns,
+  minLength,
+  maxLength,
 }: Props): JSX.Element => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -42,6 +46,8 @@ const Inputs = ({
       >
         <input
           {...register(name, { ...validation })}
+          minLength={minLength}
+          maxLength={maxLength}
           name={name}
           type={showPassword ? "text" : type}
           placeholder={placeholder}

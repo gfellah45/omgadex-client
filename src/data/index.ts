@@ -4,6 +4,11 @@ import Safe from "../../public/assets/safe.svg";
 import buylocally from "../../public/assets/buylocally.svg";
 import ecoomerce from "../../public/assets/eccormace.svg";
 import cardpurchase from "../../public/assets/cardpurchase.svg";
+import DashboadIcon from "../assets/svg/DashboadIcon";
+import WalletIcon from "../assets/svg/WalletIcon";
+import Transaction from "../assets/svg/Transaction";
+import Settings from "../assets/svg/Settings";
+import Vouch from "../assets/svg/Vouch";
 
 export const navItems = [
   { name: "Home", link: "/" },
@@ -108,5 +113,33 @@ export const usage = [
     icon: cardpurchase,
     heading: "Card Purchase",
     text: "Card Purchase is a cryptocurrency that is used to pay for internet services.",
+  },
+];
+
+export const sideBarItems = [
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: DashboadIcon,
+  },
+  {
+    name: "Wallets",
+    href: "/wallets",
+    icon: WalletIcon,
+  },
+  {
+    name: "Transactions",
+    href: "/transactions",
+    icon: Transaction,
+  },
+  {
+    name: "Vouchers",
+    href: "/vouchers",
+    icon: Vouch,
+  },
+  {
+    name: "Settings",
+    href: "/settings",
+    icon: Settings,
   },
 ];

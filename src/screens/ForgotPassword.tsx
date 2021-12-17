@@ -6,6 +6,8 @@ import { useMutation } from "react-query";
 import { makeRequest } from "../lib/makeRequest";
 import toast, { Toaster } from "react-hot-toast";
 import { setData } from "../utils";
+import Loader from "react-loader-spinner";
+import { useRouter } from "next/router";
 
 interface Iinputs {
   email: string;
@@ -16,7 +18,9 @@ const ForgotPassword: FC = () => {
     return await makeRequest("/auth/forgot-password", "PATCH", data);
   };
 
-  const { mutateAsync } = useMutation(resetPassword);
+  const { mutateAsync, isLoading } = useMutation(resetPassword);
+
+  const { push } = useRouter();
 
   const onFinish: SubmitHandler<Iinputs> = async (values) => {
     mutateAsync(values, {
@@ -26,6 +30,7 @@ const ForgotPassword: FC = () => {
           toast.error(data.message);
         } else {
           toast.success("Check your email for a reset link");
+          push("/forgetpassordinput");
         }
       },
     });
@@ -49,7 +54,7 @@ const ForgotPassword: FC = () => {
             after password changed.
           </p>
 
-          <div className="h-[1px] bg-gray2 w-full mt-8"></div>
+          <div className="h-[1px] bg-omgray2 w-full mt-8"></div>
           <div className="w-full mt-8">
             <Inputs
               register={register}
@@ -64,10 +69,22 @@ const ForgotPassword: FC = () => {
 
           <div className="mt-8">
             <button
+              disabled={isLoading}
               type="submit"
               className="w-full px-4 py-2 font-bold text-white rounded-md hover:opacity-75 bg-primary bg-blue"
             >
-              Submit
+              {isLoading ? (
+                <div className="flex items-center justify-center w-full">
+                  <Loader
+                    type="ThreeDots"
+                    color="#fff"
+                    height={30}
+                    width={60}
+                  />
+                </div>
+              ) : (
+                "Submit"
+              )}
             </button>
           </div>
         </form>

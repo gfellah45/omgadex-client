@@ -23,7 +23,6 @@ const Signingpage = (): JSX.Element => {
   const [isEmail, setIsEmail] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [tempData, setTempData] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTempData(localStorage?.getItem("tempdata") || "");
@@ -39,7 +38,7 @@ const Signingpage = (): JSX.Element => {
     return await makeRequest("/auth/resend-code", "POST", { email: data });
   };
 
-  const { mutateAsync } = useMutation(loginRequest);
+  const { mutateAsync, isLoading } = useMutation(loginRequest);
   const { mutateAsync: verifyRequest } = useMutation(makeVerifyRequest);
 
   const { push } = useRouter();
@@ -67,29 +66,24 @@ const Signingpage = (): JSX.Element => {
 
   //login action function
   const onFinish: SubmitHandler<Iinputs> = (values) => {
-    setLoading(true);
     mutateAsync(values, {
       onSuccess: (data) => {
         localStorage.setItem("tempdata", JSON.stringify(values));
         if (data.message.includes("email" || "phone")) {
-          setLoading(false);
           toast.error("Invalid email or phone number");
         } else if (data.message.includes("activated")) {
           onOpen();
         } else if (data.message.includes("password")) {
-          setLoading(false);
           toast.error("Invalid login credetials, please confirm and try again");
         } else {
           setData("token", data.payload.token);
           setData("user", data);
           toast.success("Login successful, redirecting to dashboard");
           push("/dashboard");
-          setLoading(false);
         }
       },
       onError: () => {
         toast.error("Somthing happened please try again");
-        setLoading(false);
       },
     });
   };
@@ -177,9 +171,12 @@ const Signingpage = (): JSX.Element => {
 
           {/* login button */}
           <div className="mt-6">
-            <button className="w-full p-2 font-semibold tracking-wide text-white text-gray-100 bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600">
+            <button
+              disabled={isLoading}
+              className="w-full p-2 font-semibold tracking-wide text-white bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600"
+            >
               <p>
-                {loading ? (
+                {isLoading ? (
                   <div className="flex items-center justify-center w-full">
                     <Loader
                       type="ThreeDots"
