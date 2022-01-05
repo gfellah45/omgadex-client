@@ -32,7 +32,7 @@ const DashboardLayout: FC = ({ children }) => {
           <Sidebar />
         </div>
         {/* children */}
-        <div className="ml-auto w-10/12 h-auto bg-gray-100 pt-6 ">
+        <div className="ml-auto w-10/12  h-auto bg-gray-100 pt-6 ">
           {children}
         </div>
       </div>

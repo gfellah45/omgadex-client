@@ -6,6 +6,11 @@ import { sideBarItems } from "../../data";
 
 const Sidebar: FC = () => {
   const { pathname } = useRouter();
+
+  const newPath = pathname.slice(0, pathname.lastIndexOf("/"))
+    ? pathname.slice(0, pathname.lastIndexOf("/"))
+    : pathname;
+
   return (
     <div className="mt-8">
       <div className="flex justify-center items-center flex-1">
@@ -14,7 +19,7 @@ const Sidebar: FC = () => {
             return (
               <li
                 className={` cursor-pointer  py-3 px-5 rounded-md text-sm w-full ${
-                  pathname === item.href
+                  newPath === item.href
                     ? "bg-primary   text-white"
                     : "text-omgray3 hover:text-primary"
                 } `}

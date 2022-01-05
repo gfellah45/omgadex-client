@@ -16,7 +16,7 @@ const Eth: FC = () => {
       <path
         d="M32.5 8.125V26.1422L47.7283 32.9469L32.5 8.125Z"
         fill="white"
-        fill-opacity="0.602"
+        fillOpacity="0.602"
       />
       <path
         d="M33.5116 8.125L18.2812 32.9469L33.5116 26.1422V8.125Z"

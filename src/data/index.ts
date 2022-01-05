@@ -143,3 +143,26 @@ export const sideBarItems = [
     icon: Settings,
   },
 ];
+
+export const tableHeader = [
+  {
+    title: "Type",
+    icon: "",
+  },
+  {
+    title: "Amount",
+    icon: "",
+  },
+  {
+    title: "Address",
+    icon: "",
+  },
+  {
+    title: "Transcation ID",
+    icon: "",
+  },
+  {
+    title: "Date",
+    icon: "",
+  },
+];
