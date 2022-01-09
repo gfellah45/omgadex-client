@@ -3,12 +3,13 @@ import SecureLS from "secure-ls";
 
 export const makeRequest = (url: string, method: string, body?: any) => {
   const ls = new SecureLS();
+  const token = ls.get("token");
   const options: RequestInit = {
     method,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: `Bearer ${JSON.parse(ls.get("token"))}`,
+      Authorization: `Bearer ${token ? token : ""}`,
     },
   };
   if (body) {
