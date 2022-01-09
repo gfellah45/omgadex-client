@@ -1,8 +1,6 @@
 import React from "react";
 
-interface Props {}
-
-const Subscribe = (props: Props) => {
+const Subscribe = (): JSX.Element => {
   return (
     <div className="flex flex-col items-center justify-center mt-10 text-center py-14 md:py-36 bg-omgray">
       <div className="text-2xl font-bold md:text-4xl">
@@ -10,7 +8,7 @@ const Subscribe = (props: Props) => {
       </div>
       <p className="w-10/12 mt-10 lg:w-5/12 text-links md:w-8/12">
         Dont miss out on the latest happenings in the crypto space stay up to
-        date on the relevant trends and happenings in 
+        date on the relevant trends and happenings in
       </p>
 
       <div className="flex items-center justify-center w-10/12 mt-12 shadow-2xl md:w-7/12">
