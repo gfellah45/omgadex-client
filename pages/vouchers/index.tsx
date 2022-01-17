@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import DashboardLayout from "../../src/components/shared/DashboardLayout";
 import Head from "next/head";
+import VouchersScreen from "../../src/screens/VouchersScreen";
 
 const VouchersPage: FC = () => {
   return (
@@ -8,7 +9,10 @@ const VouchersPage: FC = () => {
       <Head>
         <title> OmegaDEX | Vouchers</title>
       </Head>
-      <DashboardLayout>Vouchers Page</DashboardLayout>;
+      <DashboardLayout>
+        <VouchersScreen />
+      </DashboardLayout>
+      ;
     </>
   );
 };
