@@ -16,7 +16,6 @@ import {
 import AppModal from "../modals";
 import { hideModal, showModal } from "../reducers/ui";
 import { useAppDispatch } from "../hooks/useStoreHooks";
-import { dispatch } from "react-hot-toast/dist/core/store";
 
 interface Iinputs {
   email: string;
