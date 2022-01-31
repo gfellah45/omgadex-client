@@ -3,11 +3,11 @@ import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { passwordValidator } from "../utils";
-import { useMutation } from "react-query";
 import { makeRequest } from "../lib/makeRequest";
 import Loader from "react-loader-spinner";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
+import { useForgotPasswordMutation } from "../services/forgotPass";
 
 interface Iinputs {
   password: string;
@@ -30,27 +30,34 @@ function ForgotPasInputs(): ReactElement {
     return await makeRequest("/auth/reset-password", "PATCH", data);
   };
 
-  const { mutateAsync, isLoading } = useMutation(resetPassword);
-
   const password = watch("password");
 
   const { push } = useRouter();
+
+  const [forgotPassword, result] = useForgotPasswordMutation();
+
+  const { isLoading } = result;
 
   const onFinish: SubmitHandler<Iinputs> = (values) => {
     const newValues = {
       password: values.password,
       code: values.code,
     };
-    mutateAsync(newValues, {
-      onSuccess: (data) => {
-        if (data.message.includes("Invalid token")) {
-          toast.error("Invalid token, plseas provide correct token");
-        } else {
-          toast.success("Password Successfully Reset");
+
+    forgotPassword(newValues)
+      .unwrap()
+      .then((res) => {
+        if (res) {
+          toast.success("Password changed successfully");
           push("/login");
         }
-      },
-    });
+      })
+      .catch((err) => {
+        if (err.status === 400) {
+          toast.error("Code invalid Kindly input the correct code");
+        }
+        console.log(err);
+      });
   };
   return (
     <AuthLayout>

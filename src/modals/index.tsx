@@ -1,15 +1,20 @@
 import React, { Fragment, FC } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useAppDispatch, useAppSelector } from "../hooks/useStoreHooks";
+import { hideModal } from "../reducers/ui";
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const AppModal: FC = ({ children }) => {
+  const showModal = useAppSelector((state) => state.ui.showModal);
 
-const Modal: FC<Props> = ({ isOpen, onClose, children }) => {
+  const dispatch = useAppDispatch();
+
+  const onClose = () => {
+    dispatch(hideModal());
+  };
+
   return (
     <>
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={showModal} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -37,7 +42,7 @@ const Modal: FC<Props> = ({ isOpen, onClose, children }) => {
             </span>
             <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
               <Transition.Child
-                as={Fragment}
+                as="div"
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
                 enterTo="opacity-100 scale-100"
@@ -55,4 +60,4 @@ const Modal: FC<Props> = ({ isOpen, onClose, children }) => {
   );
 };
 
-export default Modal;
+export default AppModal;

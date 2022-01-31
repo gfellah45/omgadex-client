@@ -8,25 +8,28 @@ import FiatNaira from "../../assets/svg/FiatNaira";
 import Ripple from "../../assets/svg/Ripple";
 import Send from "../../assets/svg/Send";
 import Tether from "../../assets/svg/Tether";
-import AppModal from "../../components/shared/AppModal";
 import { TransactionButtons } from "../../components/shared/Buttons";
 import CryptoWallets from "./CryptoWallets";
 import FiatCard from "./FiatCard";
 import FundWallet from "./FundWallet";
 import { useRouter } from "next/router";
+import { useAppDispatch } from "../../hooks/useStoreHooks";
+import { hideModal, showModal } from "../../reducers/ui";
+import AppModal from "../../modals";
 
 const Wallets = () => {
   const [show, setShow] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const { push } = useRouter();
 
   function closeModal() {
-    setIsOpen(false);
+    dispatch(hideModal());
   }
 
   function openModal() {
-    setIsOpen(true);
+    dispatch(showModal({ showModal: true }));
   }
 
   const toggleState = () => {
@@ -36,6 +39,10 @@ const Wallets = () => {
 
   const navigateToSingleWallet = () => {
     push(`/wallets/${5}`);
+  };
+
+  const navigateToSend = () => {
+    push(`wallets/send/${5}`);
   };
 
   useEffect(() => {
@@ -78,7 +85,11 @@ const Wallets = () => {
               </p>
             </div>
             <div className="grid grid-cols-4 gap-4">
-              <TransactionButtons text="Send" icon={<Send />} />
+              <TransactionButtons
+                text="Send"
+                action={navigateToSend}
+                icon={<Send />}
+              />
               <TransactionButtons text="Recieve" icon={<Deposit />} />
               <TransactionButtons
                 text="Trade"
@@ -92,7 +103,7 @@ const Wallets = () => {
                 action={openModal}
               />
             </div>
-            <AppModal isOpen={isOpen} closeModal={closeModal}>
+            <AppModal>
               <FundWallet action={closeModal} />
             </AppModal>
           </div>

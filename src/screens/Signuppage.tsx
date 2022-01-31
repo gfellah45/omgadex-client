@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import AuthLayout from "../components/shared/AuthLayout";
 import FormLayout from "../components/shared/FormLayout";
 import Inputs from "../components/shared/Inputs";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useMutation } from "react-query";
-import { makeRequest } from "../lib/makeRequest";
+
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { passwordValidator } from "../utils";
 import Loader from "react-loader-spinner";
 import PhoneNumberInput from "../components/shared/PhoneNumberInput";
+import { useCreateUserMutation } from "../services/auth";
 
 interface Iinputs {
   email: string;
@@ -33,29 +33,29 @@ const Signuppage = (): JSX.Element => {
 
   const password = watch("password");
 
-  const singUp = async (data: Iinputs) => {
-    return await makeRequest("/auth/sign-up", "POST", data);
-  };
+  const [createUser, result] = useCreateUserMutation();
 
-  const { mutateAsync, isLoading } = useMutation(singUp);
+  const { isLoading } = result;
 
   const onFinish: SubmitHandler<Iinputs> = (values: Iinputs) => {
-    mutateAsync(values, {
-      onSuccess: (data) => {
-        if (data.message.includes("already" || "exists")) {
-          toast.error(data.message);
-        } else {
+    createUser(values)
+      .unwrap()
+      .then((res) => {
+        if (res.message.includes("successfully created ")) {
           localStorage.setItem("tempdata", JSON.stringify(values));
           toast.success(
             "Succesfully signed up. please select a suitable verification method"
           );
-          push("/verify");
+          push("/verify-code");
         }
-      },
-      onError: () => {
-        toast.error("Something went wrong please try again later");
-      },
-    });
+      })
+      .catch((err) => {
+        if (err.data?.message.includes("already" || "exists")) {
+          toast.error("A user already exists with the email");
+        } else {
+          toast.error("Something went wrong please try again later");
+        }
+      });
   };
   return (
     <AuthLayout>

@@ -1,14 +1,16 @@
 import React, { useState, useEffect, FC } from "react";
-import { useMutation } from "react-query";
 import AuthLayout from "../components/shared/AuthLayout";
 import Link from "next/link";
 import logo from "../../public/assets/logo.svg";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { makeRequest } from "../lib/makeRequest";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
+import {
+  useVerifyUserMutation,
+  useVerificationRequestMutation,
+} from "../services/auth";
 
 interface Inputs {
   A: string;
@@ -22,37 +24,30 @@ const VerifyCode: FC = () => {
 
   const { push } = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
+
+  const [verifyUser, result] = useVerifyUserMutation();
+
+  const [verificationRequest] = useVerificationRequestMutation();
+
+  const { isLoading } = result;
 
   //grab email
 
   const email: string = tempData ? JSON.parse(tempData).email : "";
 
-  // resend verification code
-  const resend = async (data: string) => {
-    return await makeRequest("/auth/resend-code", "POST", { email: data });
-  };
-
-  //confirm verification code
-  const confirmCode = async (data: { email: string; code: string }) => {
-    return await makeRequest("/auth/verify-user", "POST", data);
-  };
-
-  const { mutateAsync, isLoading } = useMutation(resend);
-
-  const { mutateAsync: onConfirmFinish } = useMutation(confirmCode);
-
-  //make new code request
+  // make new code request
   const getNewCode = () => {
-    mutateAsync(email, {
-      onSuccess: () => {
-        toast.success("New code sent to your email");
-      },
-    });
+    verificationRequest({ email })
+      .then((res) => {
+        if (res) {
+          toast.success("Verifcation code has been sent to your email");
+        }
+      })
+      .catch((error) => {
+        toast.error("something went wrong pls try again later");
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -69,23 +64,21 @@ const VerifyCode: FC = () => {
   const onFinish: SubmitHandler<Inputs> = (values) => {
     const trimValue = Object.values(values).join("").toUpperCase();
 
-    onConfirmFinish(
-      { email: email, code: trimValue },
-      {
-        onSuccess: (data) => {
-          if (data.message.includes("successful verification")) {
-            toast.success("Code verified succesfully, Procced to Login");
-            localStorage.removeItem("tempdata");
-            push("/login");
-          } else if (data.message.includes("Incorrect code")) {
-            toast.error("Code not verified, please input the correct code");
-          }
-        },
-        onError: () => {
-          toast.error("Somthong wen wrong pls try again later");
-        },
-      }
-    );
+    verifyUser({ email: email, code: trimValue })
+      .unwrap()
+      .then((res) => {
+        if (res.message) {
+          toast.success(
+            "Account activated successfully, please login to continue"
+          );
+          push("/login");
+        }
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          toast.error("Invalid actiovation code. Please try again");
+        }
+      });
   };
 
   return (

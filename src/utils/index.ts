@@ -7,7 +7,7 @@ export const verifyEmail = (email: string): boolean => {
   return re.test(String(email).toLowerCase());
 };
 
-export const setData = (key: string, value: Iuser) => {
+export const setData = (key: string, value: User | string) => {
   const ls = new SecureLS();
   ls.set(key, JSON.stringify(value));
 };

@@ -1,92 +1,97 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useMutation } from "react-query";
 import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import FormLayout from "../components/shared/FormLayout";
-import { makeRequest } from "../lib/makeRequest";
 import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
 import toast, { Toaster } from "react-hot-toast";
-import Modal from "../components/shared/Modal";
+
 import { setData } from "../utils";
+import {
+  useUserLoginMutation,
+  useVerificationRequestMutation,
+} from "../services/auth";
+import AppModal from "../modals";
+import { hideModal, showModal } from "../reducers/ui";
+import { useAppDispatch } from "../hooks/useStoreHooks";
+import { dispatch } from "react-hot-toast/dist/core/store";
 
 interface Iinputs {
   email: string;
   password: string;
-  phone: string;
 }
 
 const Signingpage = (): JSX.Element => {
   const [isEmail, setIsEmail] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
   const [tempData, setTempData] = useState("");
+
+  const [userLogin, result] = useUserLoginMutation();
 
   useEffect(() => {
     setTempData(localStorage?.getItem("tempdata") || "");
   }, []);
 
-  // login request function
-  const loginRequest = async (data: any) => {
-    return await makeRequest("/auth/sign-in", "POST", data);
-  };
+  const dispatch = useAppDispatch();
 
-  //verify request function
-  const makeVerifyRequest = async (data: string) => {
-    return await makeRequest("/auth/resend-code", "POST", { email: data });
-  };
-
-  const { mutateAsync, isLoading } = useMutation(loginRequest);
-  const { mutateAsync: verifyRequest } = useMutation(makeVerifyRequest);
+  const [verificationRequest] = useVerificationRequestMutation();
 
   const { push } = useRouter();
 
-  const onClose = () => setIsOpen(!isOpen);
+  const onClose = () => dispatch(hideModal());
 
-  const onOpen = () => setIsOpen(!isOpen);
+  const onOpen = () => dispatch(showModal({ showModal: true }));
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  //verify account function
+  // verify account function
   const verifyAccount = () => {
-    const email = JSON.parse(tempData).email;
-    verifyRequest(email, {
-      onSuccess: () => {
-        toast.success("Verifcation code has been sent to your email");
-        push("/verify-code");
-        onClose();
-      },
-    });
+    const data = JSON.parse(tempData);
+    verificationRequest(data)
+      .unwrap()
+      .then((res) => {
+        if (res.message.includes("activation")) {
+          toast.success("Verifcation code has been sent to your email");
+          push("/verify-code");
+          onClose();
+        }
+      })
+      .catch(() => {
+        toast.error("something went wrong pls try again later");
+      });
   };
 
   //login action function
   const onFinish: SubmitHandler<Iinputs> = (values) => {
-    mutateAsync(values, {
-      onSuccess: (data) => {
-        localStorage.setItem("tempdata", JSON.stringify(values));
-        if (data.message.includes("email" || "phone")) {
-          toast.error("Invalid email or phone number");
-        } else if (data.message.includes("activated")) {
-          onOpen();
-        } else if (data.message.includes("password")) {
-          toast.error("Invalid login credetials, please confirm and try again");
-        } else {
-          setData("token", data.payload.token);
-          setData("user", data);
+    userLogin(values)
+      .unwrap()
+      .then((res) => {
+        if (res.message) {
           toast.success("Login successful, redirecting to dashboard");
           push("/dashboard");
+          setData("token", res.payload.token);
         }
-      },
-      onError: () => {
-        toast.error("Somthing happened please try again");
-      },
-    });
+      })
+      .catch((err) => {
+        if (err.data?.message.includes("password")) {
+          toast.error("Invalid login credetials, please confirm and try again");
+        }
+        if (err.data?.message.includes("email" || "phone")) {
+          toast.error("Invalid email or phone number");
+        }
+        if (err.data?.message.includes("activated")) {
+          localStorage.setItem("tempdata", JSON.stringify(values));
+          onOpen();
+        }
+      });
   };
+
+  const { isLoading } = result;
+
   return (
     <AuthLayout>
       <FormLayout
@@ -177,14 +182,14 @@ const Signingpage = (): JSX.Element => {
             >
               <p>
                 {isLoading ? (
-                  <div className="flex items-center justify-center w-full">
+                  <p className="flex items-center justify-center w-full">
                     <Loader
                       type="ThreeDots"
                       color="#fff"
                       height={30}
                       width={60}
                     />
-                  </div>
+                  </p>
                 ) : (
                   "Log In"
                 )}
@@ -193,12 +198,11 @@ const Signingpage = (): JSX.Element => {
           </div>
         </form>
         <Toaster />
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <AppModal>
           <div className="bg-white ">
             <h2 className="text-2xl font-bold">Unverified Account</h2>
             <p className="mt-6 text-links">
-              This account is not verified. Please check your email for a
-              verifcation code
+              This account is not verified. Please verify your account to login.
             </p>
             <div className="mt-8">
               <button
@@ -209,7 +213,7 @@ const Signingpage = (): JSX.Element => {
               </button>
             </div>
           </div>
-        </Modal>
+        </AppModal>
       </FormLayout>
     </AuthLayout>
   );

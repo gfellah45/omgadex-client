@@ -5,11 +5,9 @@ import { useRouter } from "next/router";
 import { sideBarItems } from "../../data";
 
 const Sidebar: FC = () => {
-  const { pathname } = useRouter();
+  const { asPath } = useRouter();
 
-  const newPath = pathname.slice(0, pathname.lastIndexOf("/"))
-    ? pathname.slice(0, pathname.lastIndexOf("/"))
-    : pathname;
+  const currentPath = asPath.split("/")[1];
 
   return (
     <div className="mt-8">
@@ -19,7 +17,7 @@ const Sidebar: FC = () => {
             return (
               <li
                 className={` cursor-pointer  py-3 px-5 rounded-md text-sm w-full ${
-                  newPath === item.href
+                  `/${currentPath}` === item.href
                     ? "bg-primary   text-white"
                     : "text-omgray3 hover:text-primary"
                 } `}

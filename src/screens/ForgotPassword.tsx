@@ -2,12 +2,11 @@ import React, { FC } from "react";
 import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation } from "react-query";
 import { makeRequest } from "../lib/makeRequest";
 import toast, { Toaster } from "react-hot-toast";
-import { setData } from "../utils";
 import Loader from "react-loader-spinner";
 import { useRouter } from "next/router";
+import { useForgotPasswordMutation } from "../services/auth";
 
 interface Iinputs {
   email: string;
@@ -18,22 +17,27 @@ const ForgotPassword: FC = () => {
     return await makeRequest("/auth/forgot-password", "PATCH", data);
   };
 
-  const { mutateAsync, isLoading } = useMutation(resetPassword);
+  // const { mutateAsync, isLoading } = useMutation(resetPassword);
 
   const { push } = useRouter();
 
+  const [forgotPassword, result] = useForgotPasswordMutation();
+
+  const { isLoading } = result;
+
   const onFinish: SubmitHandler<Iinputs> = async (values) => {
-    mutateAsync(values, {
-      onSuccess: (data) => {
-        setData("token", data.payload);
-        if (data.message.includes("No user exists")) {
-          toast.error(data.message);
-        } else {
-          toast.success("Check your email for a reset link");
-          push("/forgetpassordinput");
+    forgotPassword(values)
+      .unwrap()
+      .then((resp) => {
+        toast.success("Check your email for a reset link");
+        push("/forgetpassordinput");
+        localStorage.setItem("tempToken", JSON.stringify(resp.payload));
+      })
+      .catch((err) => {
+        if (err.status === 404) {
+          toast.error("User not found");
         }
-      },
-    });
+      });
   };
 
   const {
