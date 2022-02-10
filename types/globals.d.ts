@@ -6,7 +6,8 @@ interface Iuser {
 }
 
 interface IuserModel {
-  token: string;
+  loginToken?: string;
+  refreshToken?: string;
   user: Iuser;
 }
 type UserLogin = {
@@ -30,14 +31,17 @@ type User = {
   email: string;
   isAdmin: boolean;
   phone: string;
-  address: string;
+  address: T extends Object ? T : any;
+  loginToken?: string;
+  refreshToken?: string;
 };
 
 type UserResponse = {
   message: string;
   payload: {
-    token: string;
     user: User;
+    loginToken: string;
+    refreshToken?: string;
   };
   error?: UserResponseError;
 };

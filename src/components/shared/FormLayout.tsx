@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/assets/logo.svg";
-import { URL } from "url";
 
 interface Props {
   heading?: string;
@@ -22,7 +21,7 @@ const FormLayout: FC<Props> = ({
 }) => {
   return (
     <div className="pb-2">
-      <div className="w-full mb-6 lg:hidden">
+      <div className="w-full  lg:hidden">
         <div className="flex items-center justify-center my-3 space-x-2 text-center">
           <Image src={logo} alt="logo" />
           <p className="text-2xl font-bold">Omega Dex</p>
@@ -40,10 +39,10 @@ const FormLayout: FC<Props> = ({
       <h2 className="mt-2 text-xl font-semibold text-center text-black-800 font-poppins lg:text-center md:text-3xl">
         {heading}
       </h2>
-      <div className="mt-4 mb-2 text-xs font-semibold text-center lg:mt-12 font-poppins text-links font-display md:text-sm">
+      <div className="mt-4 mb-2 text-xs font-semibold text-center lg:mt-8 font-poppins text-links font-display md:text-sm">
         Please ensure you are on the correct url
       </div>
-      <div className="my-6 text-center">
+      <div className="my-4 text-center">
         <div className="w-full p-2 my-2 text-xs tracking-wide text-green-700 rounded-full shadow-sm bg-omgray font-display md:text-sm">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -61,10 +60,6 @@ const FormLayout: FC<Props> = ({
           <span className="text-omgray-700">account.omegadex.com</span>
         </div>
       </div>
-      <div
-        className="grid my-6 grid-cols-1 h-[1px]"
-        style={{ background: "#E6E8EC" }}
-      ></div>
 
       {children}
 

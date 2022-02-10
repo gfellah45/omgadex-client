@@ -6,10 +6,13 @@ import Eth from "../../assets/svg/Eth";
 import LineChart from "../../assets/svg/LineChart";
 import Path from "../../assets/svg/Path";
 import Withdraw from "../../assets/svg/Withdraw";
+import { useAppSelector } from "../../hooks/useStoreHooks";
 import CoinCard from "./CoinCard";
 import WithdrawCard from "./WithdrawCard";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
+  const { push } = useRouter();
   const CryptoData = [
     {
       name: "Bitcoin",
@@ -51,10 +54,11 @@ const Dashboard = () => {
       date: "Nov 22, 2020",
     },
   ];
+  const { firstName } = useAppSelector((state) => state.auth.user);
   return (
     <div className="flex flex-1 flex-col w-full h-auto px-10">
       <div className="bg-primary text-white rounded-lg mt-5 shadow-sm shadow-primary py-8 px-10 w-full">
-        <div className=" text-5xl font-bold">Hello David,</div>
+        <div className=" text-5xl font-bold">Hello {firstName},</div>
         <p>Welcome to your Dashborad</p>
       </div>
 
@@ -77,7 +81,10 @@ const Dashboard = () => {
               <WithdrawCard {...data} key={index} />
             ))}
           </div>
-          <div className="px-8 flex items-center space-x-5">
+          <div
+            className="px-8 flex items-center space-x-5"
+            onClick={() => push("/transactions")}
+          >
             <ArrowRight />
             <p className="text-blue-500">View all activity</p>
           </div>

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
 import toast, { Toaster } from "react-hot-toast";
 
-import { setData } from "../utils";
 import {
   useUserLoginMutation,
   useVerificationRequestMutation,
@@ -16,6 +15,7 @@ import {
 import AppModal from "../modals";
 import { hideModal, showModal } from "../reducers/ui";
 import { useAppDispatch } from "../hooks/useStoreHooks";
+import { login, registerToken } from "../reducers/auth";
 
 interface Iinputs {
   email: string;
@@ -70,9 +70,20 @@ const Signingpage = (): JSX.Element => {
       .unwrap()
       .then((res) => {
         if (res.message) {
+          dispatch(
+            login({
+              ...res.payload.user,
+              address: res.payload.user.address.address,
+            })
+          );
+          dispatch(
+            registerToken({
+              loginToken: res.payload.loginToken,
+              refreshToken: res.payload.refreshToken,
+            })
+          );
           toast.success("Login successful, redirecting to dashboard");
           push("/dashboard");
-          setData("token", res.payload.token);
         }
       })
       .catch((err) => {

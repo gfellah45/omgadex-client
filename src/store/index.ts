@@ -1,18 +1,28 @@
-import { forgetPassApi } from "./../services/forgotPass";
 import { configureStore } from "@reduxjs/toolkit";
-import { authApi } from "../services/auth";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import uiSlice from "../reducers/ui";
-export const store = configureStore({
-  reducer: {
-    [authApi.reducerPath]: authApi.reducer,
-    [forgetPassApi.reducerPath]: forgetPassApi.reducer,
-    ui: uiSlice,
-  },
+import rootReducer from "../reducers";
+import { persistStore } from "redux-persist";
+import baseAPI from "../services";
 
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+const middlewareHandler = (getDefaultMiddleware: any) => {
+  const middlewareList = [
+    ...getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST"],
+      },
+    }).concat(baseAPI.middleware),
+  ];
+
+  return middlewareList;
+};
+
+export const store = configureStore({
+  reducer: rootReducer,
+
+  middleware: (getDefaultMiddleware) => middlewareHandler(getDefaultMiddleware),
 });
+
+export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
 

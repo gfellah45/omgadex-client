@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Signingpage from "../src/screens/Signingpage";
 import Landingpage from "../src/screens/Landingpage";
 
 const Home: NextPage = () => {

@@ -13,16 +13,23 @@ import CryptoWallets from "./CryptoWallets";
 import FiatCard from "./FiatCard";
 import FundWallet from "./FundWallet";
 import { useRouter } from "next/router";
-import { useAppDispatch } from "../../hooks/useStoreHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal, showModal } from "../../reducers/ui";
 import AppModal from "../../modals";
+import { useGetWalletQuery } from "../../services/wallet";
 
 const Wallets = () => {
   const [show, setShow] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
+  const { address } = useAppSelector((state) => state.auth.user);
+
   const { push } = useRouter();
+
+  const { data } = useGetWalletQuery({ address, symbol: "ETH" });
+
+  console.log(data, ">>>>>>dfjdhsfjdh<<<<<<<<");
 
   function closeModal() {
     dispatch(hideModal());

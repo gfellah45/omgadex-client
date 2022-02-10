@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Signingpage from "../src/screens/Signingpage";
 import Head from "next/head";
+import type { NextPage } from "next";
 
-interface Props {}
-
-const login = (props: Props) => {
+const login: NextPage = () => {
   return (
     <div>
       <Head>

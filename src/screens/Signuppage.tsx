@@ -12,6 +12,8 @@ import PhoneNumberInput from "../components/shared/PhoneNumberInput";
 import { useCreateUserMutation } from "../services/auth";
 
 interface Iinputs {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   password2: string;
@@ -66,6 +68,32 @@ const Signuppage = (): JSX.Element => {
         link="/login"
       >
         <form className="mt-6 " onSubmit={handleSubmit(onFinish)}>
+          <div className="mt-6">
+            <Inputs
+              validation={{
+                required: "This is required",
+              }}
+              register={register}
+              type="text"
+              placeholder="First Name"
+              label="First Name"
+              name="firstName"
+              errors={errors}
+            />
+          </div>
+          <div className="mt-6">
+            <Inputs
+              validation={{
+                required: "This is required",
+              }}
+              register={register}
+              type="text"
+              placeholder="Last Name"
+              label="Last Name"
+              name="lastName"
+              errors={errors}
+            />
+          </div>
           <div className="mt-6">
             <Inputs
               validation={{
