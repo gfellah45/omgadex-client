@@ -73,7 +73,7 @@ const Signingpage = (): JSX.Element => {
           dispatch(
             login({
               ...res.payload.user,
-              address: res.payload.user.address.address,
+              address: res.payload.user.address,
             })
           );
           dispatch(

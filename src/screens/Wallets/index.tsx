@@ -27,9 +27,16 @@ const Wallets = () => {
 
   const { push } = useRouter();
 
-  const { data } = useGetWalletQuery({ address, symbol: "ETH" });
+  const { data: ETH } = useGetWalletQuery({ address, symbol: "ETH" });
+  const { data: USDT } = useGetWalletQuery({ address, symbol: "USDT" });
+  const { data: BTC } = useGetWalletQuery({ address, symbol: "BTC" });
+  const { data: XRP } = useGetWalletQuery({ address, symbol: "XRP" });
 
-  console.log(data, ">>>>>>dfjdhsfjdh<<<<<<<<");
+  const { walletInfo, currentCryptoPrices } = useAppSelector(
+    (state) => state.dashboard.user.payload
+  );
+
+  console.table(currentCryptoPrices);
 
   function closeModal() {
     dispatch(hideModal());
@@ -67,12 +74,12 @@ const Wallets = () => {
             <div>
               <p className="text-lg text-neutral-500">Total Balance</p>
               <p className="text-4xl font-bold">
-                {show ? "N 123,456,789" : "*********"}
+                {show ? walletInfo.balance : "*********"}
               </p>
             </div>
             <div>
               <p className=" text-gray-500 ">
-                {show ? "0.123456777" : "*********"}
+                {show ? walletInfo.equivalentBTC.toPrecision(7) : "*********"}
                 <span className="bg-green-500 mx-3 text-white p-2 rounded-lg">
                   BTC
                 </span>
@@ -140,36 +147,42 @@ const Wallets = () => {
             icon={<Tether />}
             currency="USD Tether"
             currencyCode="USDT"
-            cryptoBalance="1 USDT"
-            balance="0.0000"
-            dollarBalance="USD 0.00"
+            cryptoBalance={0}
+            balance={
+              USDT ? Number(USDT.payload.amount).toPrecision(7) : "0.0000"
+            }
+            dollarBalance={0}
             show={show}
           />
           <CryptoWallets
             icon={<Eth />}
             currency="Ethereum"
             currencyCode="ETH"
-            cryptoBalance="18,245.4 USD"
-            balance="0.0000"
-            dollarBalance="USD 0.00"
+            cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
+            balance={ETH ? Number(ETH.payload.amount).toPrecision(7) : "0.0000"}
+            dollarBalance={
+              ETH
+                ? Number(ETH.payload.dollar_equivalent).toPrecision(7)
+                : "0.0000"
+            }
             show={show}
           />
           <CryptoWallets
             icon={<Btc />}
             currency="Bitcoin"
             currencyCode="BTC"
-            cryptoBalance="18,245.4 USD"
-            balance="0.0000"
-            dollarBalance="USD 0.00"
+            cryptoBalance={0}
+            balance={0}
+            dollarBalance={0}
             show={show}
           />
           <CryptoWallets
             icon={<Ripple />}
             currency="Ripple"
             currencyCode="XRP"
-            cryptoBalance="18,245.4 USD"
-            balance="0.0000"
-            dollarBalance="18,245.4 USD"
+            cryptoBalance={0}
+            balance={0}
+            dollarBalance={0}
             show={show}
           />
         </div>

@@ -1,9 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: UiInterface = {
   showModal: false,
   modalType: "",
   modalProps: {},
+  trade: "",
+  tradeProps: {},
 };
 
 const uiSlice = createSlice({
@@ -20,9 +22,16 @@ const uiSlice = createSlice({
       state.modalType = "";
       state.modalProps = {};
     },
+    tradeType: (
+      state,
+      action: PayloadAction<{ tradeType: string; tradeProps?: {} }>
+    ) => {
+      state.trade = action.payload.tradeType;
+      state.tradeProps = action.payload.tradeProps;
+    },
   },
 });
 
-export const { showModal, hideModal } = uiSlice.actions;
+export const { showModal, hideModal, tradeType } = uiSlice.actions;
 
 export default uiSlice.reducer;

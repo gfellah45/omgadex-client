@@ -1,10 +1,15 @@
 import React, { FC } from "react";
 
-const EmptyState: FC = () => {
+interface Props {
+  width: string;
+  height: string;
+}
+
+const EmptyState: FC<Props> = ({ width, height }) => {
   return (
     <svg
-      width="212"
-      height="201"
+      width={width}
+      height={height}
       viewBox="0 0 212 201"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

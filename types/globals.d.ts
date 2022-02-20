@@ -62,4 +62,81 @@ type UiInterface = {
   showModal: boolean;
   modalType?: string;
   modalProps?: T extends Object ? T : any;
+  trade?: string;
+  tradeProps?: T extends Object ? T : any;
+};
+
+type IRecentTrx = {
+  amount: string;
+  coin: string;
+  date: string;
+  fromAddress: string;
+  toAddress: string;
+  transactionId: string;
+  type: string;
+};
+
+type UserInfo = {
+  message: string;
+  payload: {
+    userDetails: {
+      firstName: string;
+      lastName: string;
+    };
+    currentCryptoPrices: {
+      BTC: {
+        price: string;
+        amountEquivalentInUsd: number;
+        amount: number;
+        price_change_percentage_24h: number;
+        marketCapUSD: number;
+        trend: string;
+      };
+      ETH: {
+        price: string;
+        amountEquivalentInUsd: number;
+        amount: string;
+        price_change_percentage_24h: number;
+        marketCapUSD: number;
+        trend: string;
+      };
+      XRP: {
+        price: string;
+        amountEquivalentInUsd: number;
+        amount: string;
+        price_change_percentage_24h: number;
+        marketCapUSD: number;
+        trend: string;
+      };
+      BNB: {
+        price: string;
+        amountEquivalentInUsd: number;
+        amount: string;
+        price_change_percentage_24h: number;
+        marketCapUSD: number;
+        trend: string;
+      };
+    };
+    recentTransactions: IRecentTrx[];
+    walletInfo: {
+      balance: number;
+      equivalentBTC: number;
+    };
+  };
+};
+
+type ICreateVoucher = {
+  amountInDollars?: number;
+  amountInNaira?: number;
+  rate?: number;
+};
+
+type IVoucherResponse = {
+  message: string;
+  payload: {
+    amountInDollars: number;
+    amountInNaira: number;
+    rate: number;
+    txnRef: string;
+  };
 };

@@ -33,6 +33,9 @@ export const authSlice = createSlice({
     logout: (state) => ({
       ...state,
       user: {} as User,
+      isAuthenticated: false,
+      token: "",
+      refreshToken: "",
     }),
     registerToken: (
       state,

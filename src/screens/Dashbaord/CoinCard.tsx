@@ -6,7 +6,7 @@ interface Props {
   value: string;
   icon: React.ReactElement;
   chart: React.ReactElement;
-  percentage: string;
+  percentage: string | number;
   initials: string;
 }
 
@@ -25,13 +25,30 @@ const CoinCard: FC<Props> = ({
       <div className="ml-4 space-y-2 ">
         <p className="text-[20px] font-semibold">{name}</p>
         <p className="text-gray-500">{initials}</p>
-        <p className="text-[16px] font-semibold">{value}</p>
+        <p className="text-[16px] font-semibold">{value.slice(0, 7)} USD</p>
       </div>
 
-      <div className="ml-auto">{chart}</div>
+      <div
+        className={` ${
+          percentage < 0 ? "text-red-500 rotate-90" : "text-green-500"
+        }  ml-auto`}
+      >
+        {chart}
+      </div>
 
-      <div className=" absolute right-5 top-3 text-green-600 space-x-2 flex items-center">
-        <Path />
+      <div
+        className={`absolute right-5 top-3 ${
+          percentage < 0 ? "text-red-500" : "text-green-600"
+        }  space-x-2 flex items-center`}
+      >
+        <div
+          className={`${
+            percentage < 0 ? "text-red-500 rotate-180" : "text-green-500"
+          }`}
+        >
+          <Path />
+        </div>
+
         <p>{percentage}</p>
       </div>
     </div>

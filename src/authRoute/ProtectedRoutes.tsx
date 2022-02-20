@@ -16,14 +16,10 @@ const ProtectedRoutes: FC = ({ children }) => {
     "/forgotpassordinput",
   ];
 
-  useEffect(() => {
-    if (!token && !authRoute.includes(pathname)) {
-      push("/login");
-    }
-    if (token && authRoute.includes(pathname)) {
-      back();
-    }
-  }, []);
+  if (token && authRoute.includes(pathname)) {
+    back();
+    return null;
+  }
 
   return <div>{children}</div>;
 };

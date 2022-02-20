@@ -42,7 +42,7 @@ const TransactionTable: FC<Props> = ({ showHeader }) => {
       </div>
 
       <div className="flex justify-center flex-1 h-auto my-16 flex-col items-center w-full ">
-        <EmptyState />
+        <EmptyState width="212" height="201" />
         <p className="my-4">No Transaction History</p>
       </div>
     </div>

@@ -11,7 +11,7 @@ const LineChart: FC = () => {
     >
       <path
         d="M1 47C1 47 5.03169 30.3609 9.73533 30.3609C14.439 30.3609 15.084 41.1791 18.8066 41.1791C22.5293 41.1791 26.4525 22.1183 36.2391 22.1183C46.0257 22.1183 44.5955 1 60 1"
-        stroke="#3DBAA2"
+        stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

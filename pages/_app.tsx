@@ -14,9 +14,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <NextNprogress color="#3772FF" />
-          <ProtectedRoutes>
-            <Component {...pageProps} />
-          </ProtectedRoutes>
+
+          <Component {...pageProps} />
         </PersistGate>
       </Provider>
     </div>

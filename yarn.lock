@@ -9777,6 +9777,15 @@ prop-types@^15.5.8, prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
+prop-types@^15.8.1:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 proxy-addr@~2.0.5:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.7.tgz#f19fe69ceab311eeb94b42e70e8c2070f9ba1025"
@@ -10034,6 +10043,13 @@ react-icons@^4.3.1:
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
   integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
 
+react-insect@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/react-insect/-/react-insect-1.1.6.tgz#8574dba64f8fcb032815a15fc0b80e609bf40618"
+  integrity sha512-GTu5p6lRLGeJoVcyN3QZV3sIoTvWbSl1cvz/kuxdNb4bChRnhHIETAbUrvmYoG18VUj4UfKkS1ODs7V49ntC9Q==
+  dependencies:
+    prop-types "^15.8.1"
+
 react-intersection-observer@^8.32.5:
   version "8.32.5"
   resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.32.5.tgz#92e8d8888b0b43a5c10c398e0d483d574bce7f3e"
@@ -10055,6 +10071,11 @@ react-loader-spinner@^4.0.0:
   integrity sha512-RU2vpEej6G4ECei0h3q6bgLU10of9Lw5O+4AwF/mtkrX5oY20Sh/AxoPJ7etbrs/7Q3u4jN5qwCwGLRKCHpk6g==
   dependencies:
     prop-types "^15.7.2"
+
+react-paystack@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/react-paystack/-/react-paystack-3.0.5.tgz#e257c6871bc525978f7a4c29e5a016c0f71157e4"
+  integrity sha512-4cswo2iMToFs0eVmLRGlYRhlAFIs0MrfIOEO/RO20Y58ryre+DHd2tHqyLRWmlX3SOs5eYr/38z/L1quk6O6ZA==
 
 react-phone-number-input@^3.1.41:
   version "3.1.41"

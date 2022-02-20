@@ -5,6 +5,7 @@ import { persistReducer } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import baseApi from "../services";
 import storageSession from "redux-persist/lib/storage/session";
+import dashboard from "./dashboard";
 
 const persistConfig = {
   transforms: [
@@ -17,13 +18,14 @@ const persistConfig = {
   ],
   storage: storageSession,
   key: "omega",
-  whitelist: ["auth"],
+  whitelist: ["auth", "dashboard"],
 };
 
 const rootStore = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth,
   ui,
+  dashboard,
 });
 
 const rootReducer = persistReducer(persistConfig, rootStore);

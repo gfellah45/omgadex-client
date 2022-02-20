@@ -14,7 +14,7 @@ const AppModal: FC = ({ children }) => {
 
   return (
     <>
-      <Transition appear show={showModal} as={Fragment}>
+      <Transition appear show={showModal} as="div">
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
