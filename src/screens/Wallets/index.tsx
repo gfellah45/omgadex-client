@@ -16,7 +16,12 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal, showModal } from "../../reducers/ui";
 import AppModal from "../../modals";
-import { useGetWalletQuery } from "../../services/wallet";
+import {
+  useGetFiatWalletQuery,
+  useGetWalletQuery,
+} from "../../services/wallet";
+import { useRedeemVoucherMutation } from "../../services/vouchers";
+import toast, { Toaster } from "react-hot-toast";
 
 const Wallets = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -36,8 +41,18 @@ const Wallets = () => {
     (state) => state.dashboard.user.payload
   );
 
-  console.table(currentCryptoPrices);
+  const { data: fiat, isSuccess } = useGetFiatWalletQuery();
 
+  const [redeem, { isLoading, isError, data, isSuccess: isSuccessR, error }] =
+    useRedeemVoucherMutation();
+
+  isSuccessR &&
+    toast.success(
+      "Voucher redeemed successfully, Fiat wallet credited successfully",
+      {
+        id: "voucher-redeemed",
+      }
+    );
   function closeModal() {
     dispatch(hideModal());
   }
@@ -66,9 +81,9 @@ const Wallets = () => {
     setShow(boolValue);
   }, []);
   return (
-    <div className="flex flex-1 flex-col px-8 pb-12">
+    <div className="flex flex-col flex-1 px-8 pb-12">
       <div>
-        <div className="flex  flex-wrap bg-white py-12 px-10 rounded-lg shadow-sm">
+        <div className="flex flex-wrap px-10 py-12 bg-white rounded-lg shadow-sm">
           <div className="w-6/12 space-y-7">
             <p className="text-3xl font-bold">Wallet Overview</p>
             <div>
@@ -78,23 +93,23 @@ const Wallets = () => {
               </p>
             </div>
             <div>
-              <p className=" text-gray-500 ">
+              <p className="text-gray-500 ">
                 {show ? walletInfo.equivalentBTC.toPrecision(7) : "*********"}
-                <span className="bg-green-500 mx-3 text-white p-2 rounded-lg">
+                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">
                   BTC
                 </span>
               </p>
             </div>
           </div>
-          <div className="w-6/12 flex flex-col justify-between">
-            <div className="flex space-x-2 justify-end ml-auto ">
+          <div className="flex flex-col justify-between w-6/12">
+            <div className="flex justify-end ml-auto space-x-2 ">
               <p
                 onClick={() => toggleState()}
-                className="px-2 py-2 flex cursor-pointer rounded-lg space-x-3 border-2 text-neutral-500"
+                className="flex px-2 py-2 space-x-3 border-2 rounded-lg cursor-pointer text-neutral-500"
               >
                 <span>Show Balance</span> <Eye />
               </p>
-              <p className="bg-gray-300 cursor-pointer space-x-2 flex items-center px-4 py-1 rounded-2xl text-neutral-800">
+              <p className="flex items-center px-4 py-1 space-x-2 bg-gray-300 cursor-pointer rounded-2xl text-neutral-800">
                 <span>NGN</span> <CarretDown />
               </p>
             </div>
@@ -118,13 +133,20 @@ const Wallets = () => {
               />
             </div>
             <AppModal>
-              <FundWallet action={closeModal} />
+              <FundWallet
+                redeem={redeem}
+                isLoading={isLoading}
+                isError={isError}
+                action={closeModal}
+                isSuccess={isSuccessR}
+                error={error}
+              />
             </AppModal>
           </div>
         </div>
       </div>
 
-      <div className="mt-10 w-7/12 ">
+      <div className="w-7/12 mt-10 ">
         <p className="text-3xl font-bold">Fiat Wallets</p>
 
         <div className="mt-4">
@@ -132,17 +154,17 @@ const Wallets = () => {
             icon={<FiatNaira />}
             currency="Naira"
             currencyCode="NGN"
-            balance="N1,234,089"
+            balance={isSuccess && fiat.payload.amountInNaira}
             show={show}
             action={openModal}
           />
         </div>
       </div>
 
-      <div className="mt-10  ">
+      <div className="mt-10 ">
         <p className="text-3xl font-bold">Crypto Wallets</p>
 
-        <div className="mt-4 grid grid-cols-2 gap-10">
+        <div className="grid grid-cols-2 gap-10 mt-4">
           <CryptoWallets
             icon={<Tether />}
             currency="USD Tether"
@@ -180,13 +202,25 @@ const Wallets = () => {
             icon={<Ripple />}
             currency="Ripple"
             currencyCode="XRP"
-            cryptoBalance={0}
-            balance={0}
-            dollarBalance={0}
+            cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
+            balance={XRP ? Number(XRP.payload.amount).toPrecision(7) : "0.0000"}
+            dollarBalance={
+              XRP
+                ? Number(XRP.payload.dollar_equivalent).toPrecision(7)
+                : "0.0000"
+            }
             show={show}
           />
         </div>
       </div>
+
+      <Toaster
+        toastOptions={{
+          position: "top-right",
+          duration: 7000,
+          id: "voucher-redeemed",
+        }}
+      />
     </div>
   );
 };

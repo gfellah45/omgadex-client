@@ -11,7 +11,13 @@ const walletApi = baseApi.injectEndpoints({
       query: ({ address, symbol }) =>
         `/api/client/crypto_balance/${address}/${symbol}`,
     }),
+
+    // getting fiat wallet balance
+    getFiatWallet: builder.query<any, void>({
+      query: () => "/api/client/fiat_balance",
+      providesTags: ["RedeemVoucher"],
+    }),
   }),
 });
 
-export const { useGetWalletQuery } = walletApi;
+export const { useGetWalletQuery, useGetFiatWalletQuery } = walletApi;

@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { PaystackButton } from "react-paystack";
 import VoucherCard from "./VoucherCard";
 import RectangleSvg from "../../assets/svg/RectangleSvg";
@@ -8,7 +8,11 @@ import VoucherLogo from "../../assets/svg/VoucherLogo";
 import AppModal from "../../modals";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal } from "../../reducers/ui";
-import { useVerifyPaymentQuery } from "../../services/vouchers";
+import {
+  useGetRecentRateQuery,
+  useVerifyPaymentQuery,
+} from "../../services/vouchers";
+import toast, { Toaster } from "react-hot-toast";
 
 type IPaymentDetails = {
   amountInDollars: number;
@@ -29,18 +33,32 @@ const VouchersScreen: FC = () => {
     txnRef: "",
   });
 
+  const { data, isSuccess } = useGetRecentRateQuery();
+
+  useEffect(() => {
+    setDetails({
+      ...details,
+      rate: Number(data?.payload.nairaEquivalence) || 0,
+    });
+  }, [isSuccess]);
   const [ref, setRef] = useState("");
 
-  const { data: verify, refetch } = useVerifyPaymentQuery(ref);
+  const { refetch, isSuccess: confirmSuccess } = useVerifyPaymentQuery(ref);
 
-  console.log(verify, "this is the data");
+  useEffect(() => {
+    if (confirmSuccess) {
+      toast.success(
+        "Payment Successful. Please Check you Email for your Voucher Code"
+      );
+    }
+  }, [confirmSuccess]);
 
   const handlePaystackSuccessAction = (reference: any) => {
     // Implementation for whatever you want to do with reference and after success call.
-    console.log(reference);
     if (reference) {
       setRef(reference.trxref);
       refetch();
+      dispatch(hideModal());
     }
   };
 
@@ -63,7 +81,7 @@ const VouchersScreen: FC = () => {
     onClose: handlePaystackCloseAction,
   };
 
-  const data = [
+  const Vouchers = [
     {
       id: 1,
       value: "1K",
@@ -90,7 +108,7 @@ const VouchersScreen: FC = () => {
     },
     {
       id: 5,
-      value: "4K",
+      value: "5K",
       icon: <OvalSvg />,
       amount: 5000,
     },
@@ -105,8 +123,13 @@ const VouchersScreen: FC = () => {
       {/* list of vouchers */}
 
       <div className="grid grid-cols-3 gap-5 my-5 ">
-        {data.map((item) => (
-          <VoucherCard key={item.id} {...item} setDetails={setDetails} />
+        {Vouchers.map((item) => (
+          <VoucherCard
+            key={item.id}
+            {...item}
+            setDetails={setDetails}
+            details={details}
+          />
         ))}
         <div className="relative flex flex-col items-center justify-center w-full px-4 py-3 bg-gray-700 shadow-sm cursor-pointer rounded-xl">
           <div className="absolute flex flex-col justify-center text-white top-4 left-3">
@@ -153,6 +176,12 @@ const VouchersScreen: FC = () => {
           </div>
         </div>
       </AppModal>
+      <Toaster
+        toastOptions={{
+          position: "top-right",
+          duration: 9000,
+        }}
+      />
     </div>
   );
 };

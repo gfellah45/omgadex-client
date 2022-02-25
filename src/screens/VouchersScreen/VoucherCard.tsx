@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import Deposit from "../../assets/svg/Deposit";
 import Send from "../../assets/svg/Send";
 import VoucherLogo from "../../assets/svg/VoucherLogo";
@@ -18,9 +18,16 @@ interface Props {
   icon?: any;
   amount: number;
   setDetails: (details: IPaymentDetails) => void;
+  details: IPaymentDetails;
 }
 
-const VoucherCard: FC<Props> = ({ value, icon, amount, setDetails }) => {
+const VoucherCard: FC<Props> = ({
+  value,
+  icon,
+  amount,
+  setDetails,
+  details,
+}) => {
   const [voucher] = usePurchaseVoucherMutation();
 
   const dispatch = useAppDispatch();
@@ -29,13 +36,12 @@ const VoucherCard: FC<Props> = ({ value, icon, amount, setDetails }) => {
     try {
       const response = await voucher({
         amountInNaira: amount,
-        amountInDollars: 20,
-        rate: 500,
+        amountInDollars: amount / details.rate,
+        rate: details.rate,
       }).unwrap();
       if (response) {
         dispatch(showModal({ showModal: true }));
         setDetails({ ...response.payload });
-        console.log(response.payload, ">>>>>>><<<<<<<");
       }
     } catch (error) {
       console.log(error);

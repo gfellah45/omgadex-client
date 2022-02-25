@@ -129,6 +129,7 @@ type ICreateVoucher = {
   amountInDollars?: number;
   amountInNaira?: number;
   rate?: number;
+  email?: string;
 };
 
 type IVoucherResponse = {
@@ -138,5 +139,16 @@ type IVoucherResponse = {
     amountInNaira: number;
     rate: number;
     txnRef: string;
+    email?: string;
+  };
+};
+
+type IInternalRates = {
+  message: string;
+  payload: {
+    amount: string;
+    currency: string;
+    nairaEquivalence: string;
+    _id: string;
   };
 };
