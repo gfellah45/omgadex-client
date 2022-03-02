@@ -30,6 +30,7 @@ const Signingpage = (): JSX.Element => {
 
   useEffect(() => {
     setTempData(localStorage?.getItem("tempdata") || "");
+    sessionStorage.clear();
   }, []);
 
   const dispatch = useAppDispatch();
@@ -69,6 +70,7 @@ const Signingpage = (): JSX.Element => {
     userLogin(values)
       .unwrap()
       .then((res) => {
+        console.log(res, "lests see the res");
         if (res.message) {
           dispatch(
             login({

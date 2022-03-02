@@ -18,7 +18,7 @@ const persistConfig = {
   ],
   storage: storageSession,
   key: "omega",
-  whitelist: ["auth", "dashboard"],
+  // whitelist: ["auth"],
 };
 
 const rootStore = combineReducers({

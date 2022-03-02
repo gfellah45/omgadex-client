@@ -21,13 +21,19 @@ const vouchersApi = baseApi.injectEndpoints({
       query: () => "/api/admin/internal/rates",
     }),
 
+    // rate fo non login users
+
+    getRate: builder.query<IInternalRates, void>({
+      query: () => "/api/admin/internal/rates/new",
+    }),
+
     redeemVoucher: builder.mutation<any, string>({
       query: (voucher) => ({
         url: "api/client/voucher/redeem",
         method: "POST",
         body: { voucherCode: voucher },
       }),
-      invalidatesTags: ["RedeemVoucher"],
+      invalidatesTags: ["RedeemVoucher", "Dashboard"],
     }),
 
     // purchase voucher for non logged in user
@@ -40,6 +46,7 @@ const vouchersApi = baseApi.injectEndpoints({
       }),
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {
@@ -48,4 +55,5 @@ export const {
   useGetRecentRateQuery,
   useRedeemVoucherMutation,
   usePurchaseVoucherNonLoggedInMutation,
+  useGetRateQuery,
 } = vouchersApi;

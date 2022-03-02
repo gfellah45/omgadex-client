@@ -16,7 +16,11 @@ import EmptyState from "../../assets/svg/EmptyState";
 const Dashboard = () => {
   const { push } = useRouter();
 
-  const { data, isLoading } = useGetUserInfoQuery();
+  const { data, isLoading } = useGetUserInfoQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
 
   const dispatch = useAppDispatch();
 
@@ -44,9 +48,9 @@ const Dashboard = () => {
         ))} */}
         <CoinCard
           name={"BTC"}
-          value={user?.payload.currentCryptoPrices.BTC.price || ""}
+          value={data?.payload.currentCryptoPrices.BTC.price || ""}
           percentage={
-            user?.payload.currentCryptoPrices.BTC.price_change_percentage_24h ||
+            data?.payload.currentCryptoPrices.BTC.price_change_percentage_24h ||
             ""
           }
           icon={<Btc />}
@@ -55,9 +59,9 @@ const Dashboard = () => {
         />
         <CoinCard
           name={"ETH"}
-          value={user?.payload.currentCryptoPrices.ETH.price || ""}
+          value={data?.payload.currentCryptoPrices.ETH.price || ""}
           percentage={
-            user?.payload.currentCryptoPrices.ETH.price_change_percentage_24h ||
+            data?.payload.currentCryptoPrices.ETH.price_change_percentage_24h ||
             ""
           }
           icon={<Eth />}
@@ -66,9 +70,9 @@ const Dashboard = () => {
         />
         <CoinCard
           name={"Binace coin"}
-          value={user?.payload.currentCryptoPrices.BNB.price || ""}
+          value={data?.payload.currentCryptoPrices.BNB.price || ""}
           percentage={
-            user?.payload.currentCryptoPrices.BNB.price_change_percentage_24h ||
+            data?.payload.currentCryptoPrices.BNB.price_change_percentage_24h ||
             ""
           }
           icon={<Binance />}
@@ -85,11 +89,11 @@ const Dashboard = () => {
           <div className="h-px bg-gray-300 mx-2  mt-5"></div>
           {!isLoading && (
             <div className="mt-10 ">
-              {user?.payload.recentTransactions.map(
-                (user: IRecentTrx, index: number) => (
+              {data?.payload.recentTransactions
+                .slice(0, 2)
+                .map((user: IRecentTrx, index: number) => (
                   <WithdrawCard {...user} key={index} />
-                )
-              )}
+                ))}
             </div>
           )}
 
@@ -127,10 +131,10 @@ const Dashboard = () => {
                 Total balance
               </p>
               <p className="text-[40px] font-bold ">
-                {user?.payload.walletInfo.balance}
+                {data?.payload.walletInfo.balance}
               </p>
               <p className=" text-neutral-500 ">
-                {user?.payload.walletInfo.equivalentBTC.toPrecision(7)} USDT
+                {data?.payload.walletInfo.equivalentBTC.toPrecision(7)} USDT
                 <span className="text-white mx-4 bg-green-500 p-2 rounded-md">
                   BTC
                 </span>

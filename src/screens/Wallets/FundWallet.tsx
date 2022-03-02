@@ -3,8 +3,7 @@ import Close from "../../assets/svg/Close";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Loader from "react-loader-spinner";
-import { useAppDispatch } from "../../hooks/useStoreHooks";
-import { hideModal } from "../../reducers/ui";
+
 interface Props {
   action?: () => void;
   redeem?: any;
@@ -12,6 +11,10 @@ interface Props {
   isLoading?: boolean;
   isSuccess?: boolean;
   error?: any;
+  setAmountFunded: (amount: {
+    amountInDollars: string;
+    amountInNaira: string;
+  }) => void;
 }
 
 const FundWallet: FC<Props> = ({
@@ -19,16 +22,15 @@ const FundWallet: FC<Props> = ({
   redeem,
   isError,
   isLoading,
-  isSuccess,
   error,
+  setAmountFunded,
 }) => {
   const { register, handleSubmit } = useForm();
   const redeemVoucher: SubmitHandler<{ voucher: string }> = async (values) => {
-    await redeem(values.voucher).unwrap();
-  };
+    const res = await redeem(values.voucher).unwrap();
 
-  const dispatch = useAppDispatch();
-  isSuccess && dispatch(hideModal());
+    setAmountFunded(res.payload);
+  };
 
   return (
     <div className="w-full">

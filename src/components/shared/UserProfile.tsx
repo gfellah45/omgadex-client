@@ -10,6 +10,7 @@ import Logout from "../../assets/svg/Logout";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { useRouter } from "next/router";
 import { logout } from "../../reducers/auth";
+import { clearUserInfo, saveUserInfo } from "../../reducers/dashboard";
 
 const UserProfile: FC = () => {
   const user = useAppSelector(({ auth }) => auth.user);
@@ -18,7 +19,11 @@ const UserProfile: FC = () => {
 
   const dispatch = useAppDispatch();
   const logUserOut = () => {
+    sessionStorage.clear();
+
+    dispatch(clearUserInfo());
     dispatch(logout());
+
     push("/login");
   };
 

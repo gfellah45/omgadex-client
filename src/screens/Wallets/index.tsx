@@ -23,8 +23,19 @@ import {
 import { useRedeemVoucherMutation } from "../../services/vouchers";
 import toast, { Toaster } from "react-hot-toast";
 
+import FundSuccess from "./FundSuccess";
+
+type AmountFunded = {
+  amountInDollars: string;
+  amountInNaira: string;
+};
+
 const Wallets = () => {
   const [show, setShow] = useState<boolean>(false);
+  const [amountFunded, setAmountFunded] = useState<AmountFunded>({
+    amountInDollars: "",
+    amountInNaira: "",
+  });
 
   const dispatch = useAppDispatch();
 
@@ -53,6 +64,7 @@ const Wallets = () => {
         id: "voucher-redeemed",
       }
     );
+
   function closeModal() {
     dispatch(hideModal());
   }
@@ -89,7 +101,7 @@ const Wallets = () => {
             <div>
               <p className="text-lg text-neutral-500">Total Balance</p>
               <p className="text-4xl font-bold">
-                {show ? walletInfo.balance : "*********"}
+                {show ? isSuccess && fiat.payload.amountInNaira : "*********"}
               </p>
             </div>
             <div>
@@ -133,14 +145,27 @@ const Wallets = () => {
               />
             </div>
             <AppModal>
-              <FundWallet
-                redeem={redeem}
-                isLoading={isLoading}
-                isError={isError}
-                action={closeModal}
-                isSuccess={isSuccessR}
-                error={error}
-              />
+              <>
+                {isSuccessR && (
+                  <div>
+                    <FundSuccess
+                      amount={amountFunded.amountInNaira}
+                      action={closeModal}
+                    />
+                  </div>
+                )}
+                {!isSuccessR && (
+                  <FundWallet
+                    redeem={redeem}
+                    isLoading={isLoading}
+                    isError={isError}
+                    action={closeModal}
+                    isSuccess={isSuccessR}
+                    error={error}
+                    setAmountFunded={setAmountFunded}
+                  />
+                )}
+              </>
             </AppModal>
           </div>
         </div>

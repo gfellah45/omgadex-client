@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserDashboardState {
-  user: UserInfo;
+  user: UserInfo | null;
 }
 
 const initialState: UserDashboardState = {
@@ -59,12 +59,15 @@ const dashboardSlice = createSlice({
   name: "dashboard",
   initialState,
   reducers: {
-    saveUserInfo: (state, action: PayloadAction<UserInfo>) => {
+    saveUserInfo: (state, action: PayloadAction<UserInfo | null>) => {
       state.user = action.payload;
+    },
+    clearUserInfo: (state) => {
+      state.user = null;
     },
   },
 });
 
-export const { saveUserInfo } = dashboardSlice.actions;
+export const { saveUserInfo, clearUserInfo } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

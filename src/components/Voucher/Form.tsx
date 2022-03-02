@@ -11,6 +11,7 @@ import AppModal from "../../modals";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { PaystackButton } from "react-paystack";
 import {
+  useGetRateQuery,
   usePurchaseVoucherNonLoggedInMutation,
   useVerifyPaymentQuery,
 } from "../../services/vouchers";
@@ -55,10 +56,17 @@ const Form = (props: Props) => {
 
   const [ref, setRef] = useState("");
 
-  const amountInNaira = 500 * parseInt(current.replace("$", ""));
+  // rate hook
+
+  const { data: rate } = useGetRateQuery();
+
+  // set amount in naira
+  const amountInNaira =
+    Number(rate?.payload.nairaEquivalence) * parseInt(current.replace("$", ""));
 
   const dispatch = useAppDispatch();
 
+  // trigger modal
   const triggerModal = () => {
     dispatch(showModal({ showModal: true, modalType: "buy vouucher" }));
   };
@@ -66,6 +74,8 @@ const Form = (props: Props) => {
   const choose = (item: string) => {
     setCurrent(item);
   };
+
+  // paystack key
 
   const config = {
     publicKey: "pk_test_8a379d8bc67e6c9e77c337fa852de6c641d81063",
@@ -99,7 +109,7 @@ const Form = (props: Props) => {
       amountInDollars: parseInt(current.replace("$", "")),
       amountInNaira,
       email: data.email,
-      rate: 500,
+      rate: Number(rate?.payload.nairaEquivalence),
     }).unwrap();
     if (resp) {
       setVoucherResponse({
@@ -258,6 +268,10 @@ const Form = (props: Props) => {
             className="w-full px-3 py-2 border-2 rounded-lg border-omgray2 "
             type="text"
             placeholder={current}
+            value={current}
+            onChange={(e) => {
+              setCurrent(e.target.value);
+            }}
           />
           <div className="grid grid-cols-5 gap-2 mt-4 md:gap-6">
             {voucher.map((item, index) => (
