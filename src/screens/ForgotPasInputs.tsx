@@ -3,7 +3,7 @@ import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { passwordValidator } from "../utils";
-import { makeRequest } from "../lib/makeRequest";
+
 import Loader from "react-loader-spinner";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -22,13 +22,6 @@ function ForgotPasInputs(): ReactElement {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const resetPassword = async (data: {
-    password: string;
-    code: string;
-  }): Promise<any> => {
-    return await makeRequest("/auth/reset-password", "PATCH", data);
-  };
 
   const password = watch("password");
 
@@ -61,7 +54,7 @@ function ForgotPasInputs(): ReactElement {
   };
   return (
     <AuthLayout>
-      <div>
+      <div className="mt-16">
         <h3 className="text-3xl text-center">Reset Password</h3>
 
         <form onSubmit={handleSubmit(onFinish)}>

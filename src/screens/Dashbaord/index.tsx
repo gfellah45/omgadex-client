@@ -34,15 +34,15 @@ const Dashboard = () => {
 
   const { firstName } = useAppSelector((state) => state.auth.user);
   return (
-    <div className="flex flex-1 flex-col w-full h-auto px-10">
-      <div className="bg-primary text-white rounded-lg mt-5 shadow-sm shadow-primary py-8 px-10 w-full">
-        <div className=" text-5xl font-bold">Hello {firstName},</div>
+    <div className="flex flex-col flex-1 w-full h-auto px-10">
+      <div className="w-full px-10 py-8 mt-5 text-white rounded-lg shadow-sm bg-primary shadow-primary">
+        <div className="text-5xl font-bold ">Hello {firstName},</div>
         <p>Welcome to your Dashborad</p>
       </div>
 
       {/* cards */}
 
-      <div className=" grid grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-3 gap-6 mt-8 ">
         {/* {CryptoData.map((user, index) => (
           <CoinCard {...user} key={index} />
         ))} */}
@@ -81,12 +81,12 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className=" grid grid-cols-3 mt-8 gap-6 h-6/12 ">
-        <div className=" col-span-2 bg-white py-8 rounded-lg shadow-sm">
-          <div className=" text-neutral-500 text-2xl font-semibold px-8">
+      <div className="grid grid-cols-3 gap-6 mt-8  h-6/12">
+        <div className="col-span-2 py-8 bg-white rounded-lg shadow-sm ">
+          <div className="px-8 text-2xl font-semibold  text-neutral-500">
             Recent Transactions
           </div>
-          <div className="h-px bg-gray-300 mx-2  mt-5"></div>
+          <div className="h-px mx-2 mt-5 bg-gray-300"></div>
           {!isLoading && (
             <div className="mt-10 ">
               {data?.payload.recentTransactions
@@ -97,21 +97,21 @@ const Dashboard = () => {
             </div>
           )}
 
-          {!isLoading && user?.payload.recentTransactions.length === 0 && (
-            <div className="flex justify-center flex-1 h-auto my-16 flex-col items-center w-full ">
+          {!isLoading && data?.payload.recentTransactions.length === 0 && (
+            <div className="flex flex-col items-center justify-center flex-1 w-full h-auto my-16 ">
               <EmptyState width="100" height="80" />
               <p className="my-4">No Transaction History</p>
             </div>
           )}
 
           {isLoading && (
-            <div className="flex flex-1 w-full h-full  justify-center item-center">
+            <div className="flex justify-center flex-1 w-full h-full item-center">
               <Loader type="Rings" color="#3772FF" height={100} width={120} />
             </div>
           )}
 
           <div
-            className="px-8 flex items-center space-x-5"
+            className="flex items-center px-8 space-x-5"
             onClick={() => push("/transactions")}
           >
             <ArrowRight />
@@ -119,23 +119,23 @@ const Dashboard = () => {
           </div>
         </div>
         {/* wallet overview */}
-        <div className="col-span-1 bg-white p-6 rounded-lg shadow-sm">
+        <div className="col-span-1 p-6 bg-white rounded-lg shadow-sm">
           <div>
-            <p className=" text-3xl font-bold text-center mt-4">
+            <p className="mt-4 text-3xl font-bold text-center ">
               Wallet Overview
             </p>
           </div>
-          <div className="  flex justify-center items-center mt-12">
-            <div className=" space-y-3 ">
-              <p className=" text-neutral-400 text-sm font-medium">
+          <div className="flex items-center justify-center mt-12 ">
+            <div className="space-y-3 ">
+              <p className="text-sm font-medium  text-neutral-400">
                 Total balance
               </p>
               <p className="text-[40px] font-bold ">
                 {data?.payload.walletInfo.balance}
               </p>
-              <p className=" text-neutral-500 ">
+              <p className=" text-neutral-500">
                 {data?.payload.walletInfo.equivalentBTC.toPrecision(7)} USDT
-                <span className="text-white mx-4 bg-green-500 p-2 rounded-md">
+                <span className="p-2 mx-4 text-white bg-green-500 rounded-md">
                   BTC
                 </span>
               </p>

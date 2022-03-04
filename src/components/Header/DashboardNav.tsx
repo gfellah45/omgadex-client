@@ -7,17 +7,17 @@ const DashboardNav = (props: Props) => {
   return (
     <ul className="flex space-x-10 ">
       <li className="text-omgray3 text-sm font-semibold  cursor-pointer hover:text-primary">
-        <Link href={"/"}>
+        <Link href={"/home"}>
           <a className=" hover:text-primary ">Home</a>
         </Link>
       </li>
       <li className="text-omgray3 text-sm font-semibold  cursor-pointer hover:text-primary">
-        <Link href={"/"}>
+        <Link href={"/exhange"}>
           <a className=" hover:text-primary ">Exchange</a>
         </Link>
       </li>
       <li className="text-omgray3 text-sm font-semibold  cursor-pointer hover:text-primary">
-        <Link href={"/"}>
+        <Link href={"/redeem"}>
           <a className=" hover:text-primary ">Redeem Voucher</a>
         </Link>
       </li>

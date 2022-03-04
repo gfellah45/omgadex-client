@@ -43,16 +43,30 @@ const Wallets = () => {
 
   const { push } = useRouter();
 
-  const { data: ETH } = useGetWalletQuery({ address, symbol: "ETH" });
-  const { data: USDT } = useGetWalletQuery({ address, symbol: "USDT" });
+  const { data: ETH } = useGetWalletQuery(
+    { address, symbol: "ETH" },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
+  const { data: USDT } = useGetWalletQuery(
+    { address, symbol: "USDT" },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
   const { data: BTC } = useGetWalletQuery({ address, symbol: "BTC" });
   const { data: XRP } = useGetWalletQuery({ address, symbol: "XRP" });
 
   const { walletInfo, currentCryptoPrices } = useAppSelector(
-    (state) => state.dashboard.user.payload
+    (state) => state?.dashboard?.user?.payload
   );
 
-  const { data: fiat, isSuccess } = useGetFiatWalletQuery();
+  const { data: fiat, isSuccess } = useGetFiatWalletQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
 
   const [redeem, { isLoading, isError, data, isSuccess: isSuccessR, error }] =
     useRedeemVoucherMutation();
@@ -106,7 +120,7 @@ const Wallets = () => {
             </div>
             <div>
               <p className="text-gray-500 ">
-                {show ? walletInfo.equivalentBTC.toPrecision(7) : "*********"}
+                {show ? walletInfo?.equivalentBTC.toPrecision(7) : "*********"}
                 <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">
                   BTC
                 </span>

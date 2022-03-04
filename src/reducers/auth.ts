@@ -1,20 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthInterface {
-  user: User;
+  user: Partial<User>;
   isAuthenticated: boolean;
   token: string;
   refreshToken?: string;
 }
 
 const initialState: AuthInterface = {
-  user: {
-    _id: "",
-    email: "",
-    isAdmin: false,
-    phone: "",
-    address: "",
-  },
+  user: {},
   isAuthenticated: false,
   token: "",
   refreshToken: "",
@@ -32,13 +26,7 @@ export const authSlice = createSlice({
     }),
     logout: (state) => ({
       ...state,
-      user: {
-        _id: "",
-        email: "",
-        isAdmin: false,
-        phone: "",
-        address: "",
-      } as User,
+      user: {},
       isAuthenticated: false,
       token: "",
       refreshToken: "",

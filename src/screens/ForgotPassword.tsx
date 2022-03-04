@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { makeRequest } from "../lib/makeRequest";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "react-loader-spinner";
 import { useRouter } from "next/router";
@@ -13,10 +12,6 @@ interface Iinputs {
 }
 
 const ForgotPassword: FC = () => {
-  const resetPassword = async (data: Iinputs) => {
-    return await makeRequest("/auth/forgot-password", "PATCH", data);
-  };
-
   // const { mutateAsync, isLoading } = useMutation(resetPassword);
 
   const { push } = useRouter();

@@ -10,7 +10,7 @@ import Logout from "../../assets/svg/Logout";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { useRouter } from "next/router";
 import { logout } from "../../reducers/auth";
-import { clearUserInfo, saveUserInfo } from "../../reducers/dashboard";
+import { clearUserInfo } from "../../reducers/dashboard";
 
 const UserProfile: FC = () => {
   const user = useAppSelector(({ auth }) => auth.user);
@@ -21,7 +21,7 @@ const UserProfile: FC = () => {
   const logUserOut = () => {
     sessionStorage.clear();
 
-    dispatch(clearUserInfo());
+    // dispatch(clearUserInfo());
     dispatch(logout());
 
     push("/login");
@@ -39,7 +39,7 @@ const UserProfile: FC = () => {
         <NotifIcon />
       </div>
 
-      <div className="rounded-full overflow-hidden w-10 h-10">
+      <div className="w-10 h-10 overflow-hidden rounded-full">
         <Image
           src="/assets/user.svg"
           alt="user"
@@ -65,8 +65,8 @@ const UserProfile: FC = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 w-48 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none py-4">
-            <div className=" py-1 px-2 ">
+          <Menu.Items className="absolute right-0 w-48 py-4 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="px-2 py-1 ">
               <Menu.Item>
                 {({ active }) => (
                   <button
