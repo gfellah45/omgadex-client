@@ -8,7 +8,7 @@ export const forgetPassApi = createApi({
       headers.set("Content-Type", "application/json");
       let token = localStorage.getItem("tempToken");
       if (token) {
-        headers.set("token", `Bearer ${token}`);
+        headers.set("token", `Bearer ${JSON.parse(token)}`);
       }
       return headers;
     },
