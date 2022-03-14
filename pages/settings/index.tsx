@@ -1,6 +1,7 @@
 import React from "react";
 import DashboardLayout from "../../src/components/shared/DashboardLayout";
 import Head from "next/head";
+import SettingScreen from "../../src/screens/Settings";
 
 const SettingsPage = () => {
   return (
@@ -8,7 +9,10 @@ const SettingsPage = () => {
       <Head>
         <title> OmegaDEX | Settings</title>
       </Head>
-      <DashboardLayout>settings page</DashboardLayout>;
+      <DashboardLayout>
+        <SettingScreen />
+      </DashboardLayout>
+      ;
     </>
   );
 };

@@ -22,8 +22,8 @@ const OvalSvg: FC = () => {
           y2="4.68674"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFC796" />
-          <stop offset="1" stop-color="#FF6B95" />
+          <stop stopColor="#FFC796" />
+          <stop offset="1" stopColor="#FF6B95" />
         </linearGradient>
       </defs>
     </svg>
