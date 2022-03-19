@@ -11,13 +11,13 @@ const ArrowRight: FC = () => {
     >
       <path
         d="M0.5 5.5H15.5"
-        stroke="#1B1D21"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M10.5 0.5L15.5 5.5L10.5 10.5"
-        stroke="#1B1D21"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

@@ -5,6 +5,8 @@ import VoucherLogo from "../../assets/svg/VoucherLogo";
 import { useAppDispatch } from "../../hooks/useStoreHooks";
 import { showModal } from "../../reducers/ui";
 import { usePurchaseVoucherMutation } from "../../services/vouchers";
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 type IPaymentDetails = {
   amountInDollars: number;
@@ -47,11 +49,20 @@ const VoucherCard: FC<Props> = ({
       console.log(error);
     }
   };
+  const { theme } = useTheme();
   return (
-    <div className="relative flex flex-col justify-between w-full px-4 py-3 bg-white shadow-sm cursor-pointer rounded-xl">
+    <div
+      className={clsx(
+        "relative flex flex-col justify-between w-full px-4 py-3  shadow-sm cursor-pointer rounded-xl",
+        theme === "light" ? "bg-white" : "bg-neutral-800"
+      )}
+    >
       <div className="flex justify-between w-full mb-4">
-        <div className="flex flex-col justify-center">
-          <VoucherLogo />
+        <div className="flex flex-col space-y-1 justify-center">
+          <div className="flex space-x-1">
+            <VoucherLogo /> <div>Lajeni</div>
+          </div>
+
           <div className="text-xs text-center text-gray-500">Voucher</div>
         </div>
         <div className="">

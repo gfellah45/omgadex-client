@@ -13,6 +13,8 @@ import {
   useVerifyPaymentQuery,
 } from "../../services/vouchers";
 import toast, { Toaster } from "react-hot-toast";
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 type IPaymentDetails = {
   amountInDollars: number;
@@ -113,10 +115,17 @@ const VouchersScreen: FC = () => {
       amount: 5000,
     },
   ];
+
+  const { theme } = useTheme();
   return (
     <div className="flex flex-col flex-1 px-6">
       {/* heading */}
-      <div className="px-5 py-4 text-4xl font-bold bg-white rounded-2xl">
+      <div
+        className={clsx(
+          "px-5 py-4 text-4xl font-bold rounded-2xl",
+          theme === "light" ? "bg-white" : "bg-neutral-800"
+        )}
+      >
         Available Vouchers
       </div>
 

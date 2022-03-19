@@ -1,7 +1,6 @@
 import React, { FC, useState } from "react";
 import Container from "../../../src/components/shared/Container";
-import Image from "next/image";
-import logo from "../../../public/assets/logo.svg";
+
 import Hambuger from "./Hambuger";
 import { Tween } from "react-gsap";
 import MobileNavigator from "./MobileNavigator";
@@ -9,6 +8,8 @@ import Desktopnav from "./Desktopnav";
 import { FilledButtons, OutlinedButtons } from "../shared/Buttons";
 import { FaCaretDown } from "react-icons/fa";
 import { useRouter } from "next/router";
+import Logo from "../../assets/svg/Logo";
+import Switcher from "../shared/Switcher";
 
 const Navigation: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,16 +21,16 @@ const Navigation: FC = () => {
       stagger={0.2}
       ease="elastic.out(0.1, 0.1)"
     >
-      <div className="w-full shadow-md ">
+      <div className="w-full shadow-md  ">
         <Container>
           <div className="flex flex-wrap items-center justify-between flex-1 p-2 md:py-2 lg:py-2">
             {/* logo and company name */}
 
-            <div className="flex items-center lg:w-[75%]  xl:w-[80%] ">
-              <div className="flex items-center lg:border-r border-r-links lg:w-[28%] xl:lg:w-[20%]">
-                <Image src={logo} alt="logo" />
-                <div className="mx-2 text-lg font-bold text-black md:text-lg lg:text-2xl font-poppins">
-                  Omega Dex
+            <div className="flex items-center lg:w-[60%]  xl:w-[70%] ">
+              <div className="flex items-center lg:border-r border-r-links lg:w-[20%] xl:lg:w-[20%]">
+                <Logo />
+                <div className="mx-2 text-lg font-bold  md:text-lg lg:text-2xl font-poppins">
+                  Lajeni
                 </div>
               </div>
 
@@ -37,11 +38,12 @@ const Navigation: FC = () => {
                 <Desktopnav />
               </div>
             </div>
-
+            {/* <Switcher /> */}
             {/* desktop navigation */}
 
             {/* loging and language buttons */}
-            <div className="items-center justify-between hidden lg:w-[22%] xl:w-[20%] lg:flex">
+            <div className="items-center justify-between hidden lg:w-[27%] xl:w-[30%] lg:flex">
+              <Switcher />
               <button className="flex items-center space-x-2">
                 <span className="text-sm lg:text-sm">{"EN"}</span>{" "}
                 <FaCaretDown />

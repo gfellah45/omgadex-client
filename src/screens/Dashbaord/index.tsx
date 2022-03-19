@@ -12,6 +12,10 @@ import { useGetUserInfoQuery } from "../../services/dashboard";
 import { saveUserInfo } from "../../reducers/dashboard";
 import Loader from "react-loader-spinner";
 import EmptyState from "../../assets/svg/EmptyState";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
+import Image from "next/image";
+import dark from "../../../public/assets/balance_cover_dark.svg";
 
 const Dashboard = () => {
   const { push } = useRouter();
@@ -21,6 +25,8 @@ const Dashboard = () => {
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
+
+  const { theme } = useTheme();
 
   const dispatch = useAppDispatch();
 
@@ -35,9 +41,15 @@ const Dashboard = () => {
   const { firstName } = useAppSelector((state) => state.auth.user);
   return (
     <div className="flex flex-col flex-1 w-full h-auto px-10">
-      <div className="w-full px-10 py-8 mt-5 text-white rounded-lg shadow-sm bg-primary shadow-primary">
-        <div className="text-5xl font-bold ">Hello {firstName},</div>
-        <p>Welcome to your Dashborad</p>
+      <div
+        className={clsx(
+          "w-full px-10 py-8 mt-5 text-white  rounded-lg shadow-sm bg-primary shadow-primary"
+        )}
+      >
+        <div>
+          <div className="text-5xl font-bold ">Hello {firstName}</div>
+          <p>Welcome to your Dashborad</p>
+        </div>
       </div>
 
       {/* cards */}
@@ -82,7 +94,12 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-3 gap-6 mt-8  h-6/12">
-        <div className="col-span-2 py-8 bg-white rounded-lg shadow-sm ">
+        <div
+          className={clsx(
+            "col-span-2 py-8 rounded-lg shadow-sm",
+            theme === "light" ? "bg-white" : "bg-neutral-800"
+          )}
+        >
           <div className="px-8 text-2xl font-semibold  text-neutral-500">
             Recent Transactions
           </div>
@@ -115,11 +132,22 @@ const Dashboard = () => {
             onClick={() => push("/transactions")}
           >
             <ArrowRight />
-            <p className="text-blue-500">View all activity</p>
+            <p
+              className={clsx(
+                theme === "light" ? "text-blue-500" : "text-gray-300"
+              )}
+            >
+              View all activity
+            </p>
           </div>
         </div>
         {/* wallet overview */}
-        <div className="col-span-1 p-6 bg-white rounded-lg shadow-sm">
+        <div
+          className={clsx(
+            "col-span-1 p-6  rounded-lg shadow-sm",
+            theme === "light" ? "bg-white" : "bg-neutral-800"
+          )}
+        >
           <div>
             <p className="mt-4 text-3xl font-bold text-center ">
               Wallet Overview
