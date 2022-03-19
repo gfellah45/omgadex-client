@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 import React, { useState } from "react";
 import ArrowDown from "../../assets/svg/ArrowDown";
 import Calendar from "../../assets/svg/Calendar";
@@ -29,9 +31,16 @@ const Trx = () => {
     },
   ];
 
+  const { theme } = useTheme();
+
   const [selectedType, setSelectedType] = useState(transationTypes[0].id);
   return (
-    <div className="flex flex-1 bg-white h-full mx-4 flex-col px-6 rounded-2xl shadow-sm ">
+    <div
+      className={clsx(
+        "flex flex-1 h-full mx-4 flex-col px-6 rounded-2xl shadow-sm",
+        theme === "light" ? "bg-white" : " bg-neutral-800"
+      )}
+    >
       <div className="flex flex-wrap border-b w-full py-8  items-center justify-between ">
         <div className="w-6/12">
           <ul className="flex justify-between">

@@ -1,8 +1,16 @@
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 import React from "react";
 
 const Subscribe = (): JSX.Element => {
+  const { theme } = useTheme();
   return (
-    <div className="flex flex-col items-center justify-center mt-10 text-center py-14 md:py-36 bg-omgray">
+    <div
+      className={clsx(
+        "flex flex-col items-center justify-center mt-10 text-center py-14 md:py-36 ",
+        theme === "light" ? "bg-omgray" : " bg-secondary "
+      )}
+    >
       <div className="text-2xl font-bold md:text-4xl">
         Subsribe to Our News Letter
       </div>

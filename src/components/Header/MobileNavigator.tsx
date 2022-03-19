@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import Image from "next/image";
-import logo from "../../../public/assets/logo.svg";
+
 import Link from "next/link";
 import { navItems } from "../../data";
 import {
@@ -8,6 +8,7 @@ import {
   OutlinedButtons,
 } from "../../components/shared/Buttons";
 import { useRouter } from "next/router";
+import Logo from "../../assets/svg/Logo";
 
 interface Props {
   isOpen: boolean;
@@ -25,9 +26,9 @@ const MobileNavigator: FC<Props> = ({ isOpen, setOpen }) => {
     >
       <div className="w-9/12 h-full bg-white md:w-5/12">
         <div className="flex items-center justify-between p-4">
-          <Image src={logo} alt="logo" />
+          <Logo />
           <div className="font-sans text-lg font-semibold text-black">
-            Omega Dex
+            Lajeni
           </div>
         </div>
         <div className="p-4 ">

@@ -24,6 +24,8 @@ import { useRedeemVoucherMutation } from "../../services/vouchers";
 import toast, { Toaster } from "react-hot-toast";
 
 import FundSuccess from "./FundSuccess";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 type AmountFunded = {
   amountInDollars: string;
@@ -36,6 +38,7 @@ const Wallets = () => {
     amountInDollars: "",
     amountInNaira: "",
   });
+  const { theme } = useTheme();
 
   const dispatch = useAppDispatch();
 
@@ -109,7 +112,12 @@ const Wallets = () => {
   return (
     <div className="flex flex-col flex-1 px-8 pb-12">
       <div>
-        <div className="flex flex-wrap px-10 py-12 bg-white rounded-lg shadow-sm">
+        <div
+          className={clsx(
+            "flex flex-wrap px-10 py-12 rounded-lg shadow-sm",
+            theme === "light" ? "bg-white" : "bg-neutral-800"
+          )}
+        >
           <div className="w-6/12 space-y-7">
             <p className="text-3xl font-bold">Wallet Overview</p>
             <div>

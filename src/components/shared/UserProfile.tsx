@@ -1,16 +1,16 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 import NotifIcon from "../../assets/svg/NotifIcon";
 import Image from "next/image";
 import CarretDown from "../../assets/svg/CarretDown";
-import { Menu, Transition } from "@headlessui/react";
+import { Menu, Transition, Switch } from "@headlessui/react";
 import Profile from "../../assets/svg/Profile";
 import Settings from "../../assets/svg/Settings";
 import Logout from "../../assets/svg/Logout";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { useRouter } from "next/router";
 import { logout } from "../../reducers/auth";
-import { clearUserInfo } from "../../reducers/dashboard";
+import Switcher from "./Switcher";
 
 const UserProfile: FC = () => {
   const user = useAppSelector(({ auth }) => auth.user);
@@ -28,7 +28,8 @@ const UserProfile: FC = () => {
   };
 
   return (
-    <div className="flex items-center space-x-6 ">
+    <div className="flex items-center space-x-6 dark:bg-black ">
+      <Switcher />
       <div>
         <button className="flex items-center space-x-2">
           <span className="text-sm lg:text-sm">{"EN"}</span> <FaCaretDown />

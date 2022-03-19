@@ -124,8 +124,8 @@ const Signingpage = (): JSX.Element => {
           <button
             onClick={() => setIsEmail(!isEmail)}
             className={`p-1 px-4 py-2 font-semibold${
-              !isEmail ? " bg-black text-white" : "text-black"
-            } tracking-wide text-gray-100 bg-gray-200 rounded-full shadow-sm `}
+              !isEmail ? " bg-black text-white" : "text-white"
+            } tracking-wide  rounded-full shadow-sm `}
           >
             Mobile
           </button>
@@ -190,7 +190,7 @@ const Signingpage = (): JSX.Element => {
           <div className="mt-6">
             <button
               disabled={isLoading}
-              className="w-full p-2 font-semibold tracking-wide text-white bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600"
+              className="w-full p-2 font-semibold tracking-wide text-white bg-primary rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600"
             >
               <p>
                 {isLoading ? (

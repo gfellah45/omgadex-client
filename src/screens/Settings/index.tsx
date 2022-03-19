@@ -3,6 +3,8 @@ import Image from "next/image";
 import ProfileTab from "./Profile/ProfileTab";
 import Security from "./Security/Security";
 import BankDetails from "./BankDetails/BankDetails";
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 
 interface settingsScreenData {
   title: string;
@@ -25,14 +27,28 @@ let settingsScreenData: settingsScreenData[] = [
 ];
 
 function SettingScreen() {
-  const [activeTab, setActiveTab] = useState<settingsScreenData>(settingsScreenData[0]);
-
+  const [activeTab, setActiveTab] = useState<settingsScreenData>(
+    settingsScreenData[0]
+  );
+  const { theme } = useTheme();
   return (
     <div className="flex flex-col flex-1 px-6">
       {/* heading */}
-      <div className="px-5 py-4 text-4xl font-bold bg-white rounded-2xl">Settings</div>
+      <div
+        className={clsx(
+          "px-5 py-4 text-4xl font-bold  rounded-2xl",
+          theme === "light" ? "bg-white" : "bg-neutral-800"
+        )}
+      >
+        Settings
+      </div>
       {/* Settings content */}
-      <section className="flex flex-col flex-1 h-full px-5 mt-3 bg-white shadow-sm rounded-2xl ">
+      <section
+        className={clsx(
+          "flex flex-col flex-1 h-full px-5 mt-3 bg-white shadow-sm rounded-2xl",
+          theme === "light" ? "bg-white" : "bg-neutral-800"
+        )}
+      >
         <div className="flex flex-wrap items-center justify-between w-full py-6 mb-3 border-b ">
           <div className="md:w-6/12">
             <ul className="flex  items-center gap-3">
@@ -46,7 +62,9 @@ function SettingScreen() {
                         : "text-neutral-500 "
                     } hover:bg-neutral-600 hover:text-white cursor-pointer 
                  py-1 px-3 text-sm font-bold `}
-                    onClick={() => data.tab && setActiveTab(settingsScreenData[index])}
+                    onClick={() =>
+                      data.tab && setActiveTab(settingsScreenData[index])
+                    }
                   >
                     {data.title}
                   </li>
