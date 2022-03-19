@@ -5,6 +5,7 @@ import Image from "next/image";
 import Fb from "../../../public/assets/Line.svg";
 import tw from "../../../public/assets/twitter.svg";
 import ig from "../../../public/assets/instagram.svg";
+import Logo from "../../assets/svg/Logo";
 
 interface Props {}
 
@@ -16,11 +17,11 @@ export default function Footer({}: Props): ReactElement {
           <div className="grid grid-cols-2 gap-2 justify-items-center lg:grid-cols-4">
             <div className="flex mt-2">
               <div>
-                <Image src={logo} alt="logo" />
+                <Logo />
               </div>
 
               <p className="mx-4 text-lg font-semibold lg:text-2xl font-poppins">
-                omega Dex
+                Lajeni
               </p>
             </div>
             <div>

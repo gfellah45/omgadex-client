@@ -3,11 +3,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useAppDispatch, useAppSelector } from "../hooks/useStoreHooks";
 import { hideModal } from "../reducers/ui";
 
-const AppModal: FC = ({ children }) => {
+type Props = {
+  maxWidth?: string;
+};
+
+const AppModal: FC<Props> = ({ children, maxWidth }) => {
   const showModal = useAppSelector((state) => state.ui.showModal);
 
   const dispatch = useAppDispatch();
-
   const onClose = () => {
     dispatch(hideModal());
   };
@@ -32,7 +35,6 @@ const AppModal: FC = ({ children }) => {
             >
               <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
             </Transition.Child>
-
             {/* This element is to trick the browser into centering the modal contents. */}
             <span
               className="inline-block h-screen align-middle"
@@ -40,7 +42,11 @@ const AppModal: FC = ({ children }) => {
             >
               &#8203;
             </span>
-            <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+            <div
+              className={`inline-block w-full ${
+                maxWidth ? `max-w-${maxWidth}` : "max-w-md"
+              } p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl`}
+            >
               <Transition.Child
                 as="div"
                 enter="ease-out duration-300"

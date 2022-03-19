@@ -195,7 +195,7 @@ const Signuppage = (): JSX.Element => {
           <div className="mt-6">
             <button
               disabled={isLoading}
-              className="w-full p-2 font-semibold tracking-wide text-center text-white bg-blue-500 rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600"
+              className="w-full p-2 font-semibold tracking-wide text-center text-white bg-primary rounded-lg shadow-lg lg:p-4 hover:opacity-75 font-display focus:outline-none focus:shadow-outline hover:bg-blue-600"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center w-full">

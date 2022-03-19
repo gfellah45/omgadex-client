@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 import React, { FC } from "react";
 import EmptyState from "../../assets/svg/EmptyState";
 import Selector from "../../assets/svg/Selector";
@@ -8,8 +10,14 @@ interface Props {
 }
 
 const TransactionTable: FC<Props> = ({ showHeader }) => {
+  const { theme } = useTheme();
   return (
-    <div className="w-full bg-white flex-1 flex flex-col h-auto rounded-xl  shadow-sm py-9 px-4">
+    <div
+      className={clsx(
+        "w-full  flex-1 flex flex-col h-auto rounded-xl  shadow-sm py-9 px-4",
+        theme === "light" ? "bg-white" : "bg-neutral-800"
+      )}
+    >
       {showHeader && (
         <div>
           <p className="text-2xl font-bold">Wallet History</p>

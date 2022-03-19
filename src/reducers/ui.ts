@@ -6,6 +6,7 @@ const initialState: UiInterface = {
   modalProps: {},
   trade: "",
   tradeProps: {},
+  media: true,
 };
 
 const uiSlice = createSlice({
@@ -28,6 +29,9 @@ const uiSlice = createSlice({
     ) => {
       state.trade = action.payload.tradeType;
       state.tradeProps = action.payload.tradeProps;
+    },
+    media: (state) => {
+      state.media = !state.media;
     },
   },
 });

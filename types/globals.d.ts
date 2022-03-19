@@ -64,6 +64,7 @@ type UiInterface = {
   modalProps?: T extends Object ? T : any;
   trade?: string;
   tradeProps?: T extends Object ? T : any;
+  media: boolean;
 };
 
 type IRecentTrx = {

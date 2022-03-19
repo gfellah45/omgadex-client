@@ -7,6 +7,8 @@ import Send from "../../assets/svg/Send";
 import { useAppDispatch } from "../../hooks/useStoreHooks";
 import { tradeType } from "../../reducers/ui";
 import { useRouter } from "next/router";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 interface Props {
   icon?: React.ReactElement;
@@ -55,6 +57,8 @@ const CryptoWallets: FC<Props> = ({
     push("/wallets/trade");
   };
 
+  const { theme } = useTheme();
+
   const recieveAction = () => {
     dispatch(
       tradeType({
@@ -72,7 +76,12 @@ const CryptoWallets: FC<Props> = ({
   };
 
   return (
-    <div className="bg-white shadow-sm rounded-lg px-10 py-8">
+    <div
+      className={clsx(
+        " shadow-sm rounded-lg px-10 py-8",
+        theme === "light" ? "bg-white" : "bg-neutral-800"
+      )}
+    >
       <div className="flex justify-between items-center">
         <div className="flex space-x-2 items-center">
           {icon}

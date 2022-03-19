@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 import React, { FC } from "react";
 import Deposit from "../../assets/svg/Deposit";
 import FiatNaira from "../../assets/svg/FiatNaira";
@@ -21,8 +23,14 @@ const FiatCard: FC<Props> = ({
   action,
   show,
 }) => {
+  const { theme } = useTheme();
   return (
-    <div className="bg-white rounded-lg px-10 py-8">
+    <div
+      className={clsx(
+        " rounded-lg px-10 py-8",
+        theme === "light" ? "bg-white" : "bg-neutral-800"
+      )}
+    >
       <div className="flex justify-between items-center">
         <div className="flex space-x-2 items-center">
           {icon}

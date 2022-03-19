@@ -1,11 +1,18 @@
 module.exports = {
   mode: "jit",
   content: ["./pages/**/*.{js,ts,jsx,tsx}", "./src/**/*.{js,ts,jsx,tsx}"],
-  media: false, // or 'media' or 'class'
+  media: "class",
   theme: {
+    typography: (theme) => ({
+      dark: {
+        css: {
+          color: "white",
+        },
+      },
+    }),
     extend: {
       colors: {
-        primary: "#3772FF",
+        primary: "#601ABA",
         secondary: "#23262F",
         badge2: "#FF6838",
         badge1: "#58BD7D",
@@ -15,6 +22,7 @@ module.exports = {
         heading: "#23262F",
         offwhite: "#FCFCFD",
         omgray3: "#808191",
+        auth_bg: "#F6EDFF",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
@@ -25,11 +33,12 @@ module.exports = {
       },
       backgroundImage: {
         pattern: "url('/assets/toppng.svg')",
+        side: "url('/assets/balance_cover_dark.svg)",
       },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };

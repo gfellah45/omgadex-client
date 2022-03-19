@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import { useTheme } from "next-themes";
 import React, { FC } from "react";
 import Path from "../../assets/svg/Path";
 
@@ -18,8 +20,14 @@ const CoinCard: FC<Props> = ({
   percentage,
   initials,
 }) => {
+  const { theme } = useTheme();
   return (
-    <div className="bg-white rounded-lg relative py-10 shadow-sm px-5 flex items-center">
+    <div
+      className={clsx(
+        " rounded-lg relative py-10 shadow-sm px-5 flex items-center",
+        theme === "light" ? "bg-white" : "bg-neutral-800 shadow-md"
+      )}
+    >
       {/* crypto logo */}
       <div>{icon}</div>
       <div className="ml-4 space-y-2 ">
