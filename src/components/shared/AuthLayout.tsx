@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import Image from "next/image";
-import bgImage from "../../assets/images/auth_bg.svg";
+import bgImage from "../../assets/images/Auth_bg.svg";
 import Logo from "../../assets/svg/Logo";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
