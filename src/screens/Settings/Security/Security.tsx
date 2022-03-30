@@ -200,7 +200,7 @@ function Security() {
                     Copy the generated code and use it to setup your google authenticator or scan
                     the QR code.
                   </p>
-                  <div className="w-8/12  flex justify-between items-center my-3 mx-auto">
+                  <div className="w-8/12 border-2  flex justify-between items-center my-3 mx-auto">
                     <p className="text-blue-500 text-xl">XW25Y5XQKBL2FUUVUEMQ</p>
 
                     <CopyIcon />

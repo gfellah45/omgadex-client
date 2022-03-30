@@ -9,34 +9,10 @@ const SuccessBadge = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle
-        cx="230.167"
-        cy="135"
-        r="3.66025"
-        fill="#4AD395"
-        fillOpacity="0.05"
-      />
-      <circle
-        cx="134.998"
-        cy="230.165"
-        r="3.66025"
-        fill="#4AD395"
-        fillOpacity="0.05"
-      />
-      <circle
-        cx="134.998"
-        cy="39.8331"
-        r="3.66025"
-        fill="#4AD395"
-        fillOpacity="0.05"
-      />
-      <circle
-        cx="39.8331"
-        cy="135"
-        r="3.66025"
-        fill="#4AD395"
-        fillOpacity="0.05"
-      />
+      <circle cx="230.167" cy="135" r="3.66025" fill="#4AD395" fillOpacity="0.05" />
+      <circle cx="134.998" cy="230.165" r="3.66025" fill="#4AD395" fillOpacity="0.05" />
+      <circle cx="134.998" cy="39.8331" r="3.66025" fill="#4AD395" fillOpacity="0.05" />
+      <circle cx="39.8331" cy="135" r="3.66025" fill="#4AD395" fillOpacity="0.05" />
       <circle
         cx="217.417"
         cy="182.584"
@@ -108,39 +84,15 @@ const SuccessBadge = () => {
       <path
         d="M113.971 133.802L130.28 150.863L158.972 122.131"
         stroke="white"
-        stroke-width="7"
+        strokeWidth="7"
         stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
       <g opacity="0.25">
-        <circle
-          cx="208.663"
-          cy="134.789"
-          r="2.84117"
-          fill="#4AD395"
-          fillOpacity="0.75"
-        />
-        <circle
-          cx="134.795"
-          cy="208.661"
-          r="2.84117"
-          fill="#4AD395"
-          fillOpacity="0.75"
-        />
-        <circle
-          cx="134.795"
-          cy="60.9193"
-          r="2.84117"
-          fill="#4AD395"
-          fillOpacity="0.75"
-        />
-        <circle
-          cx="60.9222"
-          cy="134.789"
-          r="2.84117"
-          fill="#4AD395"
-          fillOpacity="0.75"
-        />
+        <circle cx="208.663" cy="134.789" r="2.84117" fill="#4AD395" fillOpacity="0.75" />
+        <circle cx="134.795" cy="208.661" r="2.84117" fill="#4AD395" fillOpacity="0.75" />
+        <circle cx="134.795" cy="60.9193" r="2.84117" fill="#4AD395" fillOpacity="0.75" />
+        <circle cx="60.9222" cy="134.789" r="2.84117" fill="#4AD395" fillOpacity="0.75" />
         <circle
           cx="198.767"
           cy="171.728"
@@ -205,34 +157,10 @@ const SuccessBadge = () => {
           fill="#4AD395"
           fillOpacity="0.75"
         />
-        <circle
-          cx="230.168"
-          cy="134.999"
-          r="3.66025"
-          fill="#4AD395"
-          fillOpacity="0.25"
-        />
-        <circle
-          cx="134.999"
-          cy="230.164"
-          r="3.66025"
-          fill="#4AD395"
-          fillOpacity="0.25"
-        />
-        <circle
-          cx="134.999"
-          cy="39.8321"
-          r="3.66025"
-          fill="#4AD395"
-          fillOpacity="0.25"
-        />
-        <circle
-          cx="39.8336"
-          cy="134.999"
-          r="3.66025"
-          fill="#4AD395"
-          fillOpacity="0.25"
-        />
+        <circle cx="230.168" cy="134.999" r="3.66025" fill="#4AD395" fillOpacity="0.25" />
+        <circle cx="134.999" cy="230.164" r="3.66025" fill="#4AD395" fillOpacity="0.25" />
+        <circle cx="134.999" cy="39.8321" r="3.66025" fill="#4AD395" fillOpacity="0.25" />
+        <circle cx="39.8336" cy="134.999" r="3.66025" fill="#4AD395" fillOpacity="0.25" />
         <circle
           cx="217.419"
           cy="182.584"

@@ -45,9 +45,7 @@ const Signuppage = (): JSX.Element => {
       .then((res) => {
         if (res.message.includes("successfully created ")) {
           localStorage.setItem("tempdata", JSON.stringify(values));
-          toast.success(
-            "Succesfully signed up. please select a suitable verification method"
-          );
+          toast.success("Succesfully signed up. please select a suitable verification method");
           push("/verify-code");
         }
       })
@@ -160,8 +158,7 @@ const Signuppage = (): JSX.Element => {
             />
             {password && !passwordValidator(password) && (
               <span className="text-xs text-red-500 ">
-                Must include at least 1 upper case 1 special character min of 8
-                in length
+                Must include at least 1 upper case 1 special character min of 8 in length
               </span>
             )}
           </div>
@@ -170,8 +167,7 @@ const Signuppage = (): JSX.Element => {
             <Inputs
               validation={{
                 required: "This is required",
-                validate: (value: string) =>
-                  value === password || "The passwords do not match",
+                validate: (value: string) => value === password || "The passwords do not match",
               }}
               register={register}
               type="password"
@@ -199,12 +195,7 @@ const Signuppage = (): JSX.Element => {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center w-full">
-                  <Loader
-                    type="ThreeDots"
-                    color="#fff"
-                    height={30}
-                    width={60}
-                  />
+                  <Loader type="ThreeDots" color="#fff" height={30} width={60} />
                 </div>
               ) : (
                 "Sign up"
