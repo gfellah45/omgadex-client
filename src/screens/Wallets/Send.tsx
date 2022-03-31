@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import SuccessBadge from "../../assets/svg/SuccessBadge";
 import CopyIcon from "../../assets/svg/CopyIcon";
 import QRCode from "react-qr-code";
+import Loader from "react-loader-spinner";
 
 interface availableNetworkProps {
   shortHand: string;
@@ -64,6 +65,12 @@ const INITIALIZED = "INITIALIZED";
 const RESOLVED = "RESOLVED";
 const REJECTED = "REJECTED";
 
+const TRXN_SIGN_INITIALIZED = "TRXN_SIGN_INITIALIZED";
+const TRXN_SIGN_APPROVED = "TRXN_SIGNED";
+const TRXN_SIGN_REJECTED = "TRXN_FAILED";
+const TRXN_SEND_RESOLVED = "TRXN_SEND_RESOLVED";
+const TRXN_SEND_REJECTED = "TRXN_SEND_REJECTED";
+
 const Send = () => {
   const [selectedCoin, setSelectedCoin] = useState<selectedCoinType | any>({});
   const [selectNetwork, setSeleectedNetwork] = useState<availableNetworkProps | any>({});
@@ -71,6 +78,7 @@ const Send = () => {
   const [loading, setLoading] = useState(UNINITIALIZED);
   const [availableBalance, setAvailableBalance] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
+  const [signedTrxnState, setSignedTrxnState] = useState(TRXN_SIGN_INITIALIZED);
   const { theme } = useTheme();
 
   const {
@@ -103,10 +111,6 @@ const Send = () => {
 
   const goReceiveMyCoins = async () => {
     setLoading(INITIALIZED);
-    // const extraParams = {
-    //   token: "eth",
-    //   network: "erc-20",
-    // };
     const extraParams = {
       token: selectedCoin?.shortHand.toLowerCase(),
       network: "erc-20",
@@ -134,31 +138,31 @@ const Send = () => {
 
     setAmount(data.amount);
 
-    for (let val in extraParams) {
-      if (!extraParams[val].length) alert(`${val} field must be provided`);
-    }
-
     sign(extraParams)
       .unwrap()
       .then((res) => {
-        if (res.message.includes("successfully")) {
-          toast.success("Transaction successfully signed");
-          send({
-            token: res.payload.token,
+        toast.success("Transaction successfully signed");
+        // Transfer signed succesfully modal will be triggered here and the content state wil be updated here too
+        handleOpen(TRANSFER_SUCCESSFUL_MODAL);
+        setSignedTrxnState(TRXN_SIGN_APPROVED);
+        send({
+          token: res.payload.token,
+        })
+          .unwrap()
+          .then((res) => {
+            toast.success("transaction sent successfully");
+            // A varialble constant will be made to update here so we could change the content of the modal after a succesfull transaction
+            setSignedTrxnState(TRXN_SEND_RESOLVED);
           })
-            .unwrap()
-            .then((res) => {
-              toast.success("transaction sent successfully");
-              handleOpen(TRANSFER_SUCCESSFUL_MODAL);
-            })
-            .catch((err) => {
-              console.log(err, "error while sending transaction");
-              toast.error("Transaction couldnt be processed at the moment");
-            });
-        }
+          .catch((err) => {
+            console.log(err, "error while sending transaction");
+            setSignedTrxnState(TRXN_SEND_REJECTED);
+            toast.error("Transaction couldnt be processed at the moment");
+          });
       })
       .catch((err) => {
         console.log(err, "error while signing transaction");
+        setSignedTrxnState(TRXN_SIGN_REJECTED);
         toast.error("Unable to transfer tokenError");
       });
   };
@@ -194,162 +198,173 @@ const Send = () => {
       </div>
 
       {trade === "Send" && (
-        <div
-          className={clsx(
-            "flex flex-1 flex-col px-8 h-full rounded-xl  text-xl mt-10 ",
-            theme === "light" ? "bg-white" : "bg-neutral-800"
-          )}
-        >
-          <div className="text-[27px] font-semibold my-10 ">Select Wallet</div>
+        <div className="overflow-hidden h-[450px] mt-10 ">
+          <div
+            className={clsx(
+              "flex flex-1 overflow-y-auto flex-col px-8 h-full rounded-xl text-xl ",
+              theme === "light" ? "bg-white" : "bg-neutral-800"
+            )}
+          >
+            <div className="text-[27px] font-semibold my-10 ">Select Wallet</div>
 
-          <div className=" mt-8 grid grid-cols-2">
-            <div className="w-full">
-              <p className="text-gray-400 text-xs">Coins</p>
-              <div
-                onClick={() => handleOpen(SELECT_COIN_MODAL)}
-                className="my-4 w-9/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
-              >
-                <div>
-                  {Object.keys(selectedCoin).length ? (
-                    <div className="flex items-center gap-2">
-                      <div>{selectedCoin?.logo}</div>
-                      {selectedCoin?.shortHand}
-                    </div>
-                  ) : (
-                    <p>Select coin</p>
-                  )}
-                </div>
-                <div className="aboslute top-2 right-2 ">
-                  <CarretDown />
-                </div>
-              </div>
-              <div className="grid grid-cols-6 gap-2 w-9/12">
-                <div className="flex items-center space-x-2 ">
-                  <SmallNaira />
-                  <p className="text-gray-500 text-[12px]">NGN</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallBTC />
-                  <p className="text-gray-500 text-[12px]">BTC</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallETH />
-                  <p className="text-gray-500 text-[12px]">ETH</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallTether />
-                  <p className="text-gray-500 text-[12px]">USDT</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallXRP />
-                  <p className="text-gray-500 text-[12px]">XRP</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallBNB />
-                  <p className="text-gray-500 text-[12px]">BNB</p>
-                </div>
-              </div>
-
-              {/* form to send a coin */}
-              {Object.keys(selectedCoin).length ? (
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="my-10 w-9/12">
-                    <label className="text-gray-400 text-xs" htmlFor="address">
-                      Send to Address
-                    </label>
-                    <div className="my-3 border ">
-                      <input
-                        type="text"
-                        {...register("address")}
-                        required
-                        className="w-full py-3 px-1 focus:outline-none placeholder:text-sm"
-                        placeholder="Enter address"
-                      />
-                    </div>
+            <div className=" mt-8 grid grid-cols-2">
+              <div className="w-full">
+                <p className="text-gray-400 text-xs">Coins</p>
+                <div
+                  onClick={() => handleOpen(SELECT_COIN_MODAL)}
+                  className="my-4 w-9/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
+                >
+                  <div>
+                    {Object.keys(selectedCoin).length ? (
+                      <div className="flex items-center gap-2">
+                        <div>{selectedCoin?.logo}</div>
+                        {selectedCoin?.shortHand}
+                      </div>
+                    ) : (
+                      <p>Select coin</p>
+                    )}
                   </div>
+                  <div className="aboslute top-2 right-2 ">
+                    <CarretDown />
+                  </div>
+                </div>
+                <div className="grid grid-cols-6 gap-2 w-9/12">
+                  <div className="flex items-center space-x-2 ">
+                    <SmallNaira />
+                    <p className="text-gray-500 text-[12px]">NGN</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallBTC />
+                    <p className="text-gray-500 text-[12px]">BTC</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallETH />
+                    <p className="text-gray-500 text-[12px]">ETH</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallTether />
+                    <p className="text-gray-500 text-[12px]">USDT</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallXRP />
+                    <p className="text-gray-500 text-[12px]">XRP</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallBNB />
+                    <p className="text-gray-500 text-[12px]">BNB</p>
+                  </div>
+                </div>
 
-                  <div className="my-10 w-9/12">
-                    <label className="text-gray-400 text-xs" htmlFor="selectNetwork">
-                      Select Network
-                    </label>
-                    <div
-                      onClick={() => handleOpen(SELECT_NETWORK_MODAL)}
-                      id="selectNetwork"
-                      className="my-4 w-12/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
-                    >
-                      <div>
-                        {Object.keys(selectNetwork).length ? (
-                          <div className="flex items-center gap-2">
-                            <div>{selectNetwork["shortHand"]}</div>
-                            {selectNetwork["fullName"]}
-                          </div>
-                        ) : (
-                          <p>Select Network</p>
+                {/* form to send a coin */}
+                {Object.keys(selectedCoin).length ? (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className={clsx("my-10 w-9/12")}>
+                      <label className="text-gray-400 text-xs" htmlFor="address">
+                        Send to Address
+                      </label>
+                      <div className={clsx("my-3 border ")}>
+                        <input
+                          type="text"
+                          {...register("address")}
+                          required
+                          className={clsx(
+                            "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
+                            theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
+                          )}
+                          placeholder="Enter address"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="my-10 w-9/12">
+                      <label className="text-gray-400 text-xs" htmlFor="selectNetwork">
+                        Select Network
+                      </label>
+                      <div
+                        onClick={() => handleOpen(SELECT_NETWORK_MODAL)}
+                        id="selectNetwork"
+                        className="my-4 w-12/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
+                      >
+                        <div>
+                          {Object.keys(selectNetwork).length ? (
+                            <div className="flex items-center gap-2">
+                              <div>{selectNetwork["shortHand"]}</div>
+                              {selectNetwork["fullName"]}
+                            </div>
+                          ) : (
+                            <p>Select Network</p>
+                          )}
+                        </div>
+                        <div className="aboslute top-2 right-2 ">
+                          <CarretDown />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="my-10 w-9/12">
+                      <label className="text-gray-400 text-xs" htmlFor="amount">
+                        Amount
+                      </label>
+                      <div className="my-3 border">
+                        <input
+                          type="text"
+                          {...register("amount")}
+                          maxLength={100}
+                          className={clsx(
+                            "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
+                            theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
+                          )}
+                          placeholder="Amount"
+                          required
+                        />
+                      </div>
+                      <p className="text-[10px] text-gray-500">
+                        $1,000,000.00 daily withdrawal limit remaining.
+                      </p>
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        className={clsx(
+                          "text-center w-9/12 text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer",
+                          status1.isLoading ? "bg-secondary" : "bg-primary"
                         )}
-                      </div>
-                      <div className="aboslute top-2 right-2 ">
-                        <CarretDown />
-                      </div>
+                      >
+                        {status1.isLoading ? "Sending..." : "Send"}
+                      </button>
+                    </div>
+                  </form>
+                ) : null}
+              </div>
+              {/* Avalable Balance box */}
+              <div className="text-left px-12">
+                <div
+                  className={clsx(
+                    " shadow rounded-lg w-10/12 ml-auto p-5",
+                    theme === "light" ? "bg-gray-200" : "bg-neutral-700"
+                  )}
+                >
+                  <div className="flex items-center space-x-3">
+                    {currencyIcons[code] ? currencyIcons[code] : <div />}
+                    <p className="font-bold text-4xl">{tradeProps.currencyCode}</p>
+                    <p className="text-gray-500 text-2xl">{tradeProps.currencyCode} Wallet</p>
+                  </div>
+                  <div className="my-6">
+                    <p className="text-sm text-gray-500">Available balance</p>
+
+                    <div className="text-5xl font-bold my-3">
+                      {Number(tradeProps.balance).toPrecision(7).toLocaleString() || "0.00"}
                     </div>
                   </div>
 
-                  <div className="my-10 w-9/12">
-                    <label className="text-gray-400 text-xs" htmlFor="amount">
-                      Amount
-                    </label>
-                    <div className="my-3 border">
-                      <input
-                        type="text"
-                        {...register("amount")}
-                        maxLength={100}
-                        className="w-full py-3 px-1 focus:outline-none placeholder:text-sm"
-                        placeholder="Amount"
-                        required
-                      />
-                    </div>
-                    <p className="text-[10px] text-gray-500">
-                      $1,000,000.00 daily withdrawal limit remaining.
+                  <div className="my-6 flex space-x-3 items-center">
+                    <p className="text-gray-400 text-base">
+                      {Number(tradeProps.cryptoBalance).toPrecision(7) || "0.00"}
+                    </p>
+                    <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
+                      {tradeProps.currencyCode}
                     </p>
                   </div>
-                  <div>
-                    <button
-                      type="submit"
-                      className="bg-primary text-center w-9/12 text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer"
-                    >
-                      Send
-                    </button>
-                  </div>
-                </form>
-              ) : null}
-            </div>
-            {/* Avalable Balance box */}
-            <div className="text-left px-12">
-              <div
-                className={clsx(
-                  " shadow rounded-lg w-10/12 ml-auto p-5",
-                  theme === "light" ? "bg-gray-200" : "bg-neutral-700"
-                )}
-              >
-                <div className="flex items-center space-x-3">
-                  {currencyIcons[code] ? currencyIcons[code] : <div />}
-                  <p className="font-bold text-4xl">{tradeProps.currencyCode}</p>
-                  <p className="text-gray-500 text-2xl">{tradeProps.currencyCode} Wallet</p>
-                </div>
-                <div className="my-6">
-                  <p className="text-sm text-gray-500">Available balance</p>
-
-                  <div className="text-5xl font-bold my-3">
-                    {Number(tradeProps.balance).toPrecision(7).toLocaleString() || "0.00"}
-                  </div>
-                </div>
-
-                <div className="my-6 flex space-x-3 items-center">
-                  <p className="text-gray-400 text-base">
-                    {Number(tradeProps.cryptoBalance).toPrecision(7) || "0.00"}
-                  </p>
-                  <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
-                    {tradeProps.currencyCode}
-                  </p>
                 </div>
               </div>
             </div>
@@ -359,177 +374,179 @@ const Send = () => {
 
       {/* Receive component */}
       {trade === "Recieve" && (
-        <div
-          className={clsx(
-            "flex flex-1 flex-col px-8 h-full rounded-xl  text-xl mt-10 ",
-            theme === "light" ? "bg-white" : "bg-neutral-800"
-          )}
-        >
-          <div className="text-[27px] font-semibold my-10 ">Select Wallet</div>
+        <div className="overflow-hidden h-[450px] mt-10 ">
+          <div
+            className={clsx(
+              "flex flex-1 flex-col  overflow-y-auto px-8 h-full rounded-xl text-xl",
+              theme === "light" ? "bg-white" : "bg-neutral-800"
+            )}
+          >
+            <div className="text-[27px] font-semibold my-10 ">Select Wallet</div>
 
-          <div className=" mt-8 grid grid-cols-2">
-            <div className="w-full">
-              <p className="text-gray-400 text-xs">Coins</p>
-              <div
-                onClick={() => handleOpen(SELECT_COIN_MODAL)}
-                className="my-4 w-9/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
-              >
-                <div>
+            <div className=" mt-8 grid grid-cols-2">
+              <div className="w-full">
+                <p className="text-gray-400 text-xs">Coins</p>
+                <div
+                  onClick={() => handleOpen(SELECT_COIN_MODAL)}
+                  className="my-4 w-9/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
+                >
+                  <div>
+                    {Object.keys(selectedCoin).length ? (
+                      <div className="flex items-center gap-2">
+                        <div>{selectedCoin?.logo}</div>
+                        {selectedCoin?.shortHand}
+                      </div>
+                    ) : (
+                      <p>Select coin</p>
+                    )}
+                  </div>
+                  <div className="aboslute top-2 right-2 ">
+                    <CarretDown />
+                  </div>
+                </div>
+                <div className="grid grid-cols-6 gap-2 w-9/12">
+                  <div className="flex items-center space-x-2 ">
+                    <SmallNaira />
+                    <p className="text-gray-500 text-[12px]">NGN</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallBTC />
+                    <p className="text-gray-500 text-[12px]">BTC</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallETH />
+                    <p className="text-gray-500 text-[12px]">ETH</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallTether />
+                    <p className="text-gray-500 text-[12px]">USDT</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallXRP />
+                    <p className="text-gray-500 text-[12px]">XRP</p>
+                  </div>
+                  <div className="flex items-center space-x-2 ">
+                    <SmallBNB />
+                    <p className="text-gray-500 text-[12px]">BNB</p>
+                  </div>
+                </div>
+
+                {/* form to send a coin */}
+
+                <form onSubmit={handleSubmit(onSubmit)}>
                   {Object.keys(selectedCoin).length ? (
-                    <div className="flex items-center gap-2">
-                      <div>{selectedCoin?.logo}</div>
-                      {selectedCoin?.shortHand}
+                    <div className="my-10 w-9/12">
+                      <label className="text-gray-400 text-xs" htmlFor="selectNetwork">
+                        Select Network
+                      </label>
+                      <div
+                        onClick={() => handleOpen(SELECT_NETWORK_MODAL)}
+                        id="selectNetwork"
+                        className="my-4 w-12/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
+                      >
+                        <div>
+                          {Object.keys(selectNetwork).length ? (
+                            <div className="flex items-center gap-2">
+                              <div>{selectNetwork["shortHand"]}</div>
+                              {selectNetwork["fullName"]}
+                            </div>
+                          ) : (
+                            <p>Select Network</p>
+                          )}
+                        </div>
+                        <div className="aboslute top-2 right-2 ">
+                          <CarretDown />
+                        </div>
+                      </div>
                     </div>
-                  ) : (
-                    <p>Select coin</p>
-                  )}
-                </div>
-                <div className="aboslute top-2 right-2 ">
-                  <CarretDown />
-                </div>
-              </div>
-              <div className="grid grid-cols-6 gap-2 w-9/12">
-                <div className="flex items-center space-x-2 ">
-                  <SmallNaira />
-                  <p className="text-gray-500 text-[12px]">NGN</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallBTC />
-                  <p className="text-gray-500 text-[12px]">BTC</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallETH />
-                  <p className="text-gray-500 text-[12px]">ETH</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallTether />
-                  <p className="text-gray-500 text-[12px]">USDT</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallXRP />
-                  <p className="text-gray-500 text-[12px]">XRP</p>
-                </div>
-                <div className="flex items-center space-x-2 ">
-                  <SmallBNB />
-                  <p className="text-gray-500 text-[12px]">BNB</p>
-                </div>
-              </div>
+                  ) : null}
 
-              {/* form to send a coin */}
+                  {loading === UNINITIALIZED && null}
+                  {loading === INITIALIZED && <h1>Processing Transaction....</h1>}
+                  {loading === RESOLVED && (
+                    <div className="my-10 w-9/12 ">
+                      <p className="text-center ">Address</p>
+                      <p className="text-center w-9/12 mx-auto text-neutral-500 text-sm">
+                        Only send USDT to this address. Sending any other asset to this address may
+                        result in the loss of your deposit!
+                      </p>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
-                {Object.keys(selectedCoin).length ? (
-                  <div className="my-10 w-9/12">
-                    <label className="text-gray-400 text-xs" htmlFor="selectNetwork">
-                      Select Network
-                    </label>
-                    <div
-                      onClick={() => handleOpen(SELECT_NETWORK_MODAL)}
-                      id="selectNetwork"
-                      className="my-4 w-12/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
-                    >
-                      <div>
-                        {Object.keys(selectNetwork).length ? (
-                          <div className="flex items-center gap-2">
-                            <div>{selectNetwork["shortHand"]}</div>
-                            {selectNetwork["fullName"]}
-                          </div>
-                        ) : (
-                          <p>Select Network</p>
+                      <div
+                        className={clsx(
+                          "border rounded py-1 my-2 items-center justify-between   pl-2 flex gap-x-2 h-10 w-full",
+                          theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
                         )}
+                      >
+                        <input
+                          type="text"
+                          value={receiverAddress}
+                          readOnly
+                          className="w-full h-full outline-none bg-transparent leading-tight appearance-none"
+                        />
+                        <CopyIcon
+                          color={theme === "light" ? "#E6E8EC" : "bg-neutral-700"}
+                          bgColor={theme === "light" ? "#E6E8EC" : "bg-neutral-800"}
+                          onClick={() => {
+                            copyAddress(receiverAddress);
+                          }}
+                        />
                       </div>
-                      <div className="aboslute top-2 right-2 ">
-                        <CarretDown />
+
+                      {/* QR code box  */}
+                      <div className="h-[10rem] mx-auto mt-7 p-2 w-[10rem] border-dashed border-2 rounded">
+                        <QRCode value={receiverAddress} size={140} />
                       </div>
                     </div>
-                  </div>
-                ) : null}
+                  )}
 
-                {loading === UNINITIALIZED && null}
-                {loading === INITIALIZED && <h1>Processing Transaction....</h1>}
-                {loading === RESOLVED && (
-                  <div className="my-10 w-9/12 ">
-                    <p className="text-center ">Address</p>
-                    <p className="text-center w-9/12 mx-auto text-neutral-500 text-sm">
-                      Only send USDT to this address. Sending any other asset to this address may
-                      result in the loss of your deposit!
-                    </p>
-
-                    <div
-                      className={clsx(
-                        "border rounded py-1 my-2 items-center justify-between   pl-2 flex gap-x-2 h-10 w-full",
-                        theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
-                      )}
-                    >
-                      <input
-                        type="text"
-                        value={receiverAddress}
-                        readOnly
-                        className="w-full h-full outline-none bg-transparent leading-tight appearance-none"
-                      />
-                      <CopyIcon
-                        color={theme === "light" ? "#E6E8EC" : "bg-neutral-700"}
-                        bgColor={theme === "light" ? "#E6E8EC" : "bg-neutral-800"}
-                        onClick={() => {
-                          copyAddress(receiverAddress);
-                        }}
-                      />
-                    </div>
-
-                    {/* QR code box  */}
-                    <div className="h-[10rem] mx-auto mt-7 p-2 w-[10rem] border-dashed border-2 rounded">
-                      <QRCode value={receiverAddress} size={140} />
-                    </div>
-                  </div>
-                )}
-
-                {loading === REJECTED && <h1>Something went wrong please try again</h1>}
-              </form>
-            </div>
-            {/* Avalable Balance box */}
-            <div className="text-left px-12">
-              <div
-                className={clsx(
-                  "shadow rounded-lg w-10/12 ml-auto p-5",
-                  theme === "light" ? "bg-gray-200" : "bg-neutral-700"
-                )}
-              >
-                <div className="flex items-center space-x-3">
-                  {currencyIcons[code] ? currencyIcons[code] : <div />}
-                  <p className="font-bold text-4xl">{tradeProps.currencyCode}</p>
-                  <p className="text-gray-500 text-2xl">{tradeProps.currencyCode} Wallet</p>
-                </div>
-                <div className="my-6">
-                  <p className="text-sm text-gray-500">Available balance</p>
-
-                  <div className="text-5xl font-bold my-3">
-                    {Number(tradeProps.balance).toPrecision(7).toLocaleString() || "0.00"}
-                  </div>
-                </div>
-
-                <div className="my-6 flex space-x-3 items-center">
-                  <p className="text-gray-400 text-base">
-                    {Number(tradeProps.cryptoBalance).toPrecision(7) || "0.00"}
-                  </p>
-                  <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
-                    {tradeProps.currencyCode}
-                  </p>
-                </div>
+                  {loading === REJECTED && <h1>Something went wrong please try again</h1>}
+                </form>
               </div>
-              <ul className="w-9/12 list-disc pr-5 ml-auto mt-8 text-[1rem]">
-                <li>
-                  Send <span className="text-orange-600">only {selectedCoin.shortHand}</span> to
-                  this deposit address
-                </li>
-                <li>
-                  Ensure the network is{" "}
-                  <span className="text-orange-600">{selectedCoin.fullName}</span>.
-                </li>
-                <li>
-                  Please be sure that the contract address is related to the tokens that you are
-                  Receiving.
-                </li>
-              </ul>
+              {/* Avalable Balance box */}
+              <div className="text-left px-12">
+                <div
+                  className={clsx(
+                    "shadow rounded-lg w-10/12 ml-auto p-5",
+                    theme === "light" ? "bg-gray-200" : "bg-neutral-700"
+                  )}
+                >
+                  <div className="flex items-center space-x-3">
+                    {currencyIcons[code] ? currencyIcons[code] : <div />}
+                    <p className="font-bold text-4xl">{tradeProps.currencyCode}</p>
+                    <p className="text-gray-500 text-2xl">{tradeProps.currencyCode} Wallet</p>
+                  </div>
+                  <div className="my-6">
+                    <p className="text-sm text-gray-500">Available balance</p>
+
+                    <div className="text-5xl font-bold my-3">
+                      {Number(tradeProps.balance).toPrecision(7).toLocaleString() || "0.00"}
+                    </div>
+                  </div>
+
+                  <div className="my-6 flex space-x-3 items-center">
+                    <p className="text-gray-400 text-base">
+                      {Number(tradeProps.cryptoBalance).toPrecision(7) || "0.00"}
+                    </p>
+                    <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
+                      {tradeProps.currencyCode}
+                    </p>
+                  </div>
+                </div>
+                <ul className="w-9/12 list-disc pr-5 ml-auto mt-8 text-[1rem]">
+                  <li>
+                    Send <span className="text-orange-600">only {selectedCoin.shortHand}</span> to
+                    this deposit address
+                  </li>
+                  <li>
+                    Ensure the network is{" "}
+                    <span className="text-orange-600">{selectedCoin.fullName}</span>.
+                  </li>
+                  <li>
+                    Please be sure that the contract address is related to the tokens that you are
+                    Receiving.
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -604,18 +621,35 @@ const Send = () => {
                   <span className="">{selectNetwork["fullName"]}</span>
                 </p>
               </div>
+              {signedTrxnState === TRXN_SIGN_APPROVED && (
+                <div className="flex flex-col my-3 text-center justify-center items-center">
+                  <p>Your transaction has been signed successfully</p>
+                  <p>Trying to Process your transaction</p>
+                  <div className="my-2">
+                    <Loader type="Audio" color="#683a9e" height={40} width={60} />
+                  </div>
+                </div>
+              )}
+              {signedTrxnState === TRXN_SIGN_REJECTED && (
+                <p>Opps, something went wrong somewhere</p>
+              )}
+              {signedTrxnState === TRXN_SEND_RESOLVED && (
+                <div>
+                  <p className="flex justify-center items-center">
+                    <SuccessBadge />
+                  </p>
+                  <p className="text-2xl mb-2 text-center font-smeibold">Transfer successful!</p>
 
-              <p className="flex justify-center items-center">
-                <SuccessBadge />
-              </p>
-              <p className="text-2xl mb-2 text-center font-smeibold">Transfer successful!</p>
-
-              <p className="text-sm justify-center text-center my-2 items-center flex gap-1 font-smeibold">
-                <SmallETH />
-                <span>{amount} Eth have been transfered successfully!</span>
-              </p>
-
-              <div className="mx-auto flex justify-center items-center">
+                  <p className="text-sm justify-center text-center my-2 items-center flex gap-1 font-smeibold">
+                    <SmallETH />
+                    <span>{amount} Eth have been transfered successfully!</span>
+                  </p>
+                </div>
+              )}
+              {signedTrxnState === TRXN_SEND_REJECTED && (
+                <div className="my-3 text-center">Something went wrong please try again</div>
+              )}
+              <div className="mx-auto my-3 flex justify-center items-center">
                 <button
                   onClick={() => {
                     handleClose();
