@@ -60,7 +60,7 @@ const Signuppage = (): JSX.Element => {
   return (
     <AuthLayout>
       <FormLayout
-        heading="Sign up to Omega DEX"
+        heading="Sign up to Lajeni"
         next="Already have an account? ?"
         action="Login"
         link="/login"
