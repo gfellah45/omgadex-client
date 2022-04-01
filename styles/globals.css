@@ -1,3 +1,7 @@
+:root {
+  --primarypurple: #601aba;
+}
+
 html,
 body {
   padding: 0;
@@ -21,4 +25,9 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+  background-color: var(--primaryPurple);
 }

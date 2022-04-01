@@ -2,13 +2,7 @@ import React, { FC } from "react";
 
 const VoucherLogo: FC = () => {
   return (
-    <svg
-      width="28"
-      height="23"
-      viewBox="0 0 28 23"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="28" height="23" viewBox="0 0 28 23" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12.0498 13.1538H0.736816L4.41722 0.828613H15.7291L12.0498 13.1538ZM4.3787 10.5034H9.99132L12.0894 3.47689H6.47675L4.3787 10.5034Z"
         fill="url(#paint0_linear_844_13126)"
@@ -26,7 +20,7 @@ const VoucherLogo: FC = () => {
           y2="27.2355"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#5510B4" />
+          <stop stopColor="#5510B4" />
           <stop offset="1" stopColor="#8439CC" />
         </linearGradient>
         <linearGradient
