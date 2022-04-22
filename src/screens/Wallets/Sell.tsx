@@ -51,12 +51,23 @@ function Sell() {
     dispatch(showModal({ showModal: true, modalType: modalType }));
   };
 
+  interface buyData {
+    amount: string;
+    eth_amount: string;
+  }
+
   const onSubmit = (data: any) => {
     for (let value in data) {
-       if (!data[value].length) {
-         toast.error("You cant submit an empty form");
-       }
-     }
+      if (!data[value].length) {
+        return toast.error("You cant submit an empty form fields");
+      }
+      if (value === "amount") {
+        data[value] = parseFloat(data[value]);
+        if (data[value] <= 1000) {
+          return toast.error("You cant sell less than 1000 worth of eth");
+        }
+      }
+    }
     handleOpen(CRYPTO_STATUS_MODAL);
     setBuyCrptoStatus(BUYING_IN_PROGRESS);
     buyCrypto({ ...data, type: "sell" })
@@ -74,6 +85,8 @@ function Sell() {
         console.log(err, "there was an error while trying to buy crypto");
       });
   };
+
+  console.log(errors, "available error");
 
   return (
     <>
@@ -126,7 +139,11 @@ function Sell() {
                     <label htmlFor="amount" className="font-light text-neutral-400  text-[1rem]">
                       Amount to pay
                     </label>
-                    <div className="mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12">
+                    <div
+                      className={`mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12 ${
+                        errors["amount"] ? "border-red-600" : ""
+                      }`}
+                    >
                       <input
                         type="text"
                         className="w-10/12 h-full outline-none bg-transparent border-0"
@@ -145,10 +162,14 @@ function Sell() {
                     <label htmlFor="eth_amount" className="font-light text-neutral-400 text-[1rem]">
                       Recieve
                     </label>
-                    <div className="mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12">
+                    <div
+                      className={`mt-2 w-full text-gray-400 rounded justify-between border cursor-pointer flex items-center relative px-2  h-12 ${
+                        errors["eth_amount"] ? "border-red-600" : ""
+                      }`}
+                    >
                       <input
                         type="text"
-                        className="w-10/12 h-full bg-transparent outline-none border-0"
+                        className={"w-10/12 h-full bg-transparent outline-none border-0"}
                         placeholder="1000"
                         {...register("eth_amount", { required: true })}
                         name="eth_amount"
