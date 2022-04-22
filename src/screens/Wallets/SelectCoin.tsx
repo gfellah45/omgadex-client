@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import React from "react";
 import Close from "../../assets/svg/Close";
 import Eth from "../../assets/svg/Eth";
+import Ripple from "../../assets/svg/Ripple";
 import Tether from "../../assets/svg/Tether";
 
 const availableCoinList: {
@@ -16,9 +17,14 @@ const availableCoinList: {
     logo: <Tether width="40" height="40" />,
   },
   {
-    shortHand: "ETH ",
+    shortHand: "ETH",
     fullName: "Ethereum",
     logo: <Eth width="40" height="40" />,
+  },
+  {
+    shortHand: "LRXP",
+    fullName: "Ripple",
+    logo: <Ripple width="40" height="40" />,
   },
 ];
 

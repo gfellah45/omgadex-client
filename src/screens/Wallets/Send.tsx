@@ -33,23 +33,35 @@ import CopyIcon from "../../assets/svg/CopyIcon";
 import QRCode from "react-qr-code";
 import Loader from "react-loader-spinner";
 
-interface availableNetworkProps {
+export interface availableNetworkProps {
   shortHand: string;
   fullName: string;
   logo: JSX.Element;
   fee: string;
 }
 
-let availableNetwork: availableNetworkProps[] = [
+export const availableNetwork: availableNetworkProps[] = [
   {
     shortHand: "eth",
     fullName: "Ethereum",
     logo: <Eth width="40" height="40" />,
     fee: "Fee 0.80 eth",
   },
+  {
+    shortHand: "lxrp",
+    fullName: "Ripple",
+    logo: <Ripple width="40" height="40" />,
+    fee: "Fee 0.80 lxrp",
+  },
+  {
+    shortHand: "lusdt",
+    fullName: "USDT",
+    logo: <Tether width="40" height="40" />,
+    fee: "Fee 0.80 eth",
+  },
 ];
 
-interface selectedCoinType {
+export interface selectedCoinType {
   shortHand: string;
   fullName: string;
   logo: JSX.Element;
@@ -259,13 +271,13 @@ const Send = () => {
                 {Object.keys(selectedCoin).length ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={clsx("my-10 w-9/12")}>
-                      <label className="text-gray-400 text-xs" htmlFor="address">
+                      <label className="text-gray-400 text-xs" htmlFor="receiver_address">
                         Send to Address
                       </label>
                       <div className={clsx("my-3 border ")}>
                         <input
                           type="text"
-                          {...register("address")}
+                          {...register("receiver_address")}
                           required
                           className={clsx(
                             "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
@@ -519,7 +531,7 @@ const Send = () => {
                     <p className="text-sm text-gray-500">Available balance</p>
 
                     <div className="text-5xl font-bold my-3">
-                      {Number(tradeProps.balance).toPrecision(7).toLocaleString() || "0.00"}
+                      {Number(availableBalance).toPrecision(7).toLocaleString() || "0.00"}
                     </div>
                   </div>
 
