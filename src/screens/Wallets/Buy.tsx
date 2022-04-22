@@ -53,7 +53,13 @@ function Buy() {
   const onSubmit = (data: any) => {
     for (let value in data) {
       if (!data[value].length) {
-        toast.error("You cant submit an empty form");
+        return toast.error("You cant submit an empty form fields");
+      }
+      if (value === "amount") {
+        data[value] = parseFloat(data[value]);
+        if (data[value] <= 1000) {
+          return toast.error("You cant buy less than 1000 worth of eth");
+        }
       }
     }
     handleOpen(CRYPTO_STATUS_MODAL);
@@ -125,7 +131,11 @@ function Buy() {
                     <label htmlFor="amount" className="font-light text-neutral-400  text-[1rem]">
                       Amount to pay
                     </label>
-                    <div className="mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12">
+                    <div
+                      className={`mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12 ${
+                        errors["amount"] ? "border-red-600" : ""
+                      }`}
+                    >
                       <input
                         type="text"
                         className="w-10/12 h-full bg-transparent outline-none border-0"
@@ -144,7 +154,11 @@ function Buy() {
                     <label htmlFor="eth_amount" className="font-light text-neutral-400 text-[1rem]">
                       Recieve
                     </label>
-                    <div className="mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12">
+                    <div
+                      className={`mt-2 w-full text-gray-400 rounded justify-between border cursor-pointer flex items-center relative px-2  h-12 ${
+                        errors["eth_amount"] ? "border-red-600" : ""
+                      }`}
+                    >
                       <input
                         type="text"
                         className="w-10/12 h-full bg-transparent outline-none border-0"
