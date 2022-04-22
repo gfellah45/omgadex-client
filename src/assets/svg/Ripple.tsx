@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 
-const Ripple: FC = () => {
+const Ripple = ({ width = "65", height = "65" }: { width?: string; height?: string }) => {
   return (
     <svg
-      width="66"
-      height="66"
+      width={width}
+      height={height}
       viewBox="0 0 66 66"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
