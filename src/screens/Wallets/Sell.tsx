@@ -16,6 +16,7 @@ import SuccessBadge from "../../assets/svg/SuccessBadge";
 import SmallBTC from "../../assets/svg/SmallBTC";
 import SmallETH from "../../assets/svg/SmallETH";
 import Loader from "react-loader-spinner";
+import { CurrencyFormatter } from "../../lib/currencyFormatter";
 
 const BUYING_PENDING = "BUYING_PENDING";
 const BUYING_IN_PROGRESS = "BUYING_IN_PROGRESS";
@@ -26,15 +27,20 @@ const BUYING_REJECTED = "BUYING_REJECTED";
 const SELECT_NETWORK_MODAL = "SELECT_NETWORK_MODAL";
 const CRYPTO_STATUS_MODAL = "CRYPTO_STATUS_MODAL";
 
+// minimum purchaseable amount required for a transaction
+const minimumPurchaseableAmount = 5000;
+
 function Sell() {
   const { theme } = useTheme();
   const { back, push } = useRouter();
   const [selectNetwork, setSeleectedNetwork] = useState<availableNetworkProps | any>({});
+  const [amount, setAmount] = useState("1000");
 
   const [buyCrptoStatus, setBuyCrptoStatus] = useState("idle");
   const modalType = useAppSelector((state) => state.ui.modalType);
 
   const [buyCrypto, { isLoading }] = useBuyOrSellCryptoMutation();
+  const { balance } = useAppSelector((state) => state.dashboard.user.payload.walletInfo);
 
   const {
     register,
@@ -57,6 +63,7 @@ function Sell() {
   }
 
   const onSubmit = (data: any) => {
+    setAmount(data.amount);
     for (let value in data) {
       if (!data[value].length) {
         return toast.error("You cant submit an empty form fields");
@@ -65,6 +72,11 @@ function Sell() {
         data[value] = parseFloat(data[value]);
         if (data[value] <= 1000) {
           return toast.error("You cant sell less than 1000 worth of eth");
+        }
+        if (data[value] <= minimumPurchaseableAmount) {
+          return toast.error(
+            "You cant buy less than " + minimumPurchaseableAmount + " worth of eth"
+          );
         }
       }
     }
@@ -85,8 +97,6 @@ function Sell() {
         console.log(err, "there was an error while trying to buy crypto");
       });
   };
-
-  console.log(errors, "available error");
 
   return (
     <>
@@ -155,7 +165,7 @@ function Sell() {
                       <p>BTC</p>
                     </div>
                     <p className="text-xs text-neutral-500 my-1">
-                      Available Balance: <b>0.1780 BTC</b>
+                      Available Balance: <b>{balance} NGN</b>
                     </p>
                   </div>
                   <div className="w-6/12">
@@ -206,14 +216,14 @@ function Sell() {
                     <p className="font-bold text-sm">You are Selling</p>
                     <p className="flex justify-start gap-x-2 items-center">
                       <span className="text-gray-500 font-bold text-2xl">0.0001</span>
-                      <span className="text-xl">BTC</span>
+                      <span className="text-xl">{selectNetwork.fullName || "ETH"}</span>
                     </p>
                   </div>
                   <div className="mt-6 mb-3">
                     <p className="font-bold text-sm text-gray-500">You will receive</p>
                     <div className="text-2xl font-bold my-3">
                       <p>
-                        10000 <span>NGN</span>
+                        {CurrencyFormatter.format(Number(amount))} <span>NGN</span>
                       </p>
                     </div>
                   </div>
@@ -264,7 +274,7 @@ function Sell() {
                   <div className="flex gap-3">
                     <div>{network.logo}</div>
                     <div className="">
-                      <p className="text-gray-500">{network.shortHand}</p>
+                      <p className="text-gray-500">{network.properShortHand}</p>
                       <p className="text-gray-500">{network.fullName}</p>
                     </div>
                   </div>
