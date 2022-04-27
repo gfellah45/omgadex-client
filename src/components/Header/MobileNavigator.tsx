@@ -1,6 +1,4 @@
 import React, { FC } from "react";
-import Image from "next/image";
-
 import Link from "next/link";
 import { navItems } from "../../data";
 import {
@@ -9,6 +7,8 @@ import {
 } from "../../components/shared/Buttons";
 import { useRouter } from "next/router";
 import Logo from "../../assets/svg/Logo";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +17,8 @@ interface Props {
 
 const MobileNavigator: FC<Props> = ({ isOpen, setOpen }) => {
   const { push } = useRouter();
+
+  const { theme } = useTheme();
   return (
     <div
       onClick={() => setOpen(!isOpen)}
@@ -24,12 +26,15 @@ const MobileNavigator: FC<Props> = ({ isOpen, setOpen }) => {
         isOpen ? "left-0 right-0 bottom-0" : "-left-3/4"
       } `}
     >
-      <div className="w-9/12 h-full bg-white md:w-5/12">
+      <div
+        className={clsx(
+          "w-9/12 h-full md:w-5/12",
+          theme === "light" ? "bg-white" : "bg-black"
+        )}
+      >
         <div className="flex items-center justify-between p-4">
           <Logo />
-          <div className="font-sans text-lg font-semibold text-black">
-            Lajeni
-          </div>
+          <div className="font-sans text-lg font-semibold">Lajeni</div>
         </div>
         <div className="p-4 ">
           {navItems.map((item, idx) => {

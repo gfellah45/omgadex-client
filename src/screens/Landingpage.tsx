@@ -15,7 +15,7 @@ const Landingpage: FC = () => {
   return (
     <div className="w-screen">
       <div
-        className={`fixed z-50 w-full  bg-black ${
+        className={`fixed z-50 w-full ${
           theme === "light" ? "bg-offwhite" : "bg-black"
         } `}
       >

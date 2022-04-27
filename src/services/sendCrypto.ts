@@ -25,6 +25,13 @@ const sendCrypto = baseApi.injectEndpoints({
         body: params,
       }),
     }),
+    buyOrSellCrypto: builder.mutation<any, any>({
+      query: (params) => ({
+        url: "api/client/crypto/trade",
+        method: "POST",
+        body: params,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -33,4 +40,5 @@ export const {
   useSignTransactionMutation,
   useSendTransactionMutation,
   useRecieveTransactionMutation,
+  useBuyOrSellCryptoMutation,
 } = sendCrypto;

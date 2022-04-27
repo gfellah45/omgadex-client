@@ -5,20 +5,24 @@ import ArrowDown from "../../assets/svg/ArrowDown";
 import Calendar from "../../assets/svg/Calendar";
 import Search from "../../assets/svg/Search";
 import TransactionTable from "../../components/shared/TransactionTable";
+import { useGetAllTransactionsQuery } from "../../services/transactions";
 
 const Trx = () => {
   const transationTypes = [
     {
       id: 1,
       name: "All type",
+      query: "all",
     },
     {
       id: 2,
       name: "Withdrawals",
+      query: "withdrawal",
     },
     {
       id: 3,
       name: "Deposits",
+      query: "deposit",
     },
 
     {
@@ -28,12 +32,18 @@ const Trx = () => {
     {
       id: 5,
       name: "Transfers",
+      query: "transfer",
     },
   ];
 
   const { theme } = useTheme();
 
   const [selectedType, setSelectedType] = useState(transationTypes[0].id);
+
+  const { data } = useGetAllTransactionsQuery({
+    type: "all",
+  });
+
   return (
     <div
       className={clsx(
@@ -93,7 +103,7 @@ const Trx = () => {
       </div>
 
       <div className="-mt-8">
-        <TransactionTable />
+        <TransactionTable tableData={data?.payload.results} />
       </div>
     </div>
   );

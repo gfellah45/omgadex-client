@@ -28,7 +28,7 @@ const UserProfile: FC = () => {
   };
 
   return (
-    <div className="flex items-center space-x-6 dark:bg-black ">
+    <div className="flex items-center space-x-6">
       <Switcher />
       <div>
         <button className="flex items-center space-x-2">
@@ -41,19 +41,13 @@ const UserProfile: FC = () => {
       </div>
 
       <div className="w-10 h-10 overflow-hidden rounded-full">
-        <Image
-          src="/assets/user.svg"
-          alt="user"
-          width={"100%"}
-          height={"100%"}
-        />
+        <Image src="/assets/user.svg" alt="user" width={"100%"} height={"100%"} />
       </div>
 
       <Menu as="div" className="relative inline-block text-left">
         <div className="cursor-pointer">
           <Menu.Button className="flex items-center space-x-2">
-            <span className="text-sm lg:text-sm">{user.firstName}</span>{" "}
-            <CarretDown />
+            <span className="text-sm lg:text-sm">{user.firstName}</span> <CarretDown />
           </Menu.Button>
         </div>
 
