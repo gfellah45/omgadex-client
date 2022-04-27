@@ -1,4 +1,5 @@
 // @ts-nocheck
+// @ts-nochecks
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import React, { FC, useMemo } from "react";
@@ -23,7 +24,7 @@ interface Props {
 const TransactionTable: FC<Props> = ({ showHeader, tableData }) => {
   const { theme } = useTheme();
 
-  const data = useMemo(() => tableData, []);
+  const data = useMemo(() => tableData, [tableData]);
   const columns = useMemo(() => Transaction, []);
 
   const { rows, getTableBodyProps, headerGroups, getTableProps, prepareRow } =
@@ -53,33 +54,41 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData }) => {
           className="min-w-full text-sm divide-y divide-gray-200"
         >
           <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr className="bg-gray-50" {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps()}
-                    className="px-4 py-2 font-medium text-left text-gray-600"
-                  >
-                    {column.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
+            {headerGroups.map((headerGroup) => {
+              const { key, ...restHeaderProps } =
+                headerGroup.getHeaderGroupProps();
+              return (
+                <tr key={key} className="bg-gray-50" {...restHeaderProps}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      key={`${column.id}-${column.accessor}`}
+                      {...restHeaderProps}
+                      className="px-4 py-2 font-medium text-left text-gray-600"
+                    >
+                      {column.render("Header")}
+                    </th>
+                  ))}
+                </tr>
+              );
+            })}
           </thead>
 
           <tbody {...getTableBodyProps()} className="divide-y divide-gray-100">
             {rows.map((row) => {
               prepareRow(row);
+              const { key, ...restProps } = row.getRowProps();
               return (
-                <tr {...row.getRowProps()}>
+                <tr key={key} {...restProps}>
                   {row.cells.map((cell) => {
+                    const { key, ...restCellProps } = cell.getCellProps({
+                      style: {
+                        maxWidth: cell.column.maxWidth,
+                      },
+                    });
                     return (
                       <td
-                        {...cell.getCellProps({
-                          style: {
-                            maxWidth: cell.column.maxWidth,
-                          },
-                        })}
+                        key={key}
+                        {...restCellProps}
                         className="px-4 py-2 text-center truncate"
                       >
                         {cell.render("Cell")}

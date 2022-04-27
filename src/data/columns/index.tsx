@@ -6,7 +6,6 @@ export const Transaction = [
     Header: "Type",
     accessor: "type",
     Cell: ({ row }) => {
-      console.log(row);
       const type = isEmpty(row.original.coin) ? "Deposit" : "Transfer";
       return (
         <div
