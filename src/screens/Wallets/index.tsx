@@ -16,16 +16,14 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal, showModal } from "../../reducers/ui";
 import AppModal from "../../modals";
-import {
-  useGetFiatWalletQuery,
-  useGetWalletQuery,
-} from "../../services/wallet";
+import { useGetFiatWalletQuery, useGetWalletQuery } from "../../services/wallet";
 import { useRedeemVoucherMutation } from "../../services/vouchers";
 import toast, { Toaster } from "react-hot-toast";
 
 import FundSuccess from "./FundSuccess";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { CurrencyFormatter } from "../../lib/currencyFormatter";
 
 type AmountFunded = {
   amountInDollars: string;
@@ -75,12 +73,9 @@ const Wallets = () => {
     useRedeemVoucherMutation();
 
   isSuccessR &&
-    toast.success(
-      "Voucher redeemed successfully, Fiat wallet credited successfully",
-      {
-        id: "voucher-redeemed",
-      }
-    );
+    toast.success("Voucher redeemed successfully, Fiat wallet credited successfully", {
+      id: "voucher-redeemed",
+    });
 
   function closeModal() {
     dispatch(hideModal());
@@ -123,15 +118,15 @@ const Wallets = () => {
             <div>
               <p className="text-lg text-neutral-500">Total Balance</p>
               <p className="text-4xl font-bold">
-                {show ? isSuccess && fiat.payload.amountInNaira : "*********"}
+                {show
+                  ? isSuccess && CurrencyFormatter.format(Number(fiat.payload.amountInNaira))
+                  : "*********"}
               </p>
             </div>
             <div>
               <p className="text-gray-500 ">
                 {show ? walletInfo?.equivalentBTC.toPrecision(7) : "*********"}
-                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">
-                  BTC
-                </span>
+                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">BTC</span>
               </p>
             </div>
           </div>
@@ -148,17 +143,9 @@ const Wallets = () => {
               </p>
             </div>
             <div className="grid grid-cols-4 gap-4">
-              <TransactionButtons
-                text="Send"
-                action={navigateToSend}
-                icon={<Send />}
-              />
+              <TransactionButtons text="Send" action={navigateToSend} icon={<Send />} />
               <TransactionButtons text="Recieve" icon={<Deposit />} />
-              <TransactionButtons
-                text="Trade"
-                icon={<Send />}
-                action={navigateToSingleWallet}
-              />
+              <TransactionButtons text="Trade" icon={<Send />} action={navigateToSingleWallet} />
               <TransactionButtons
                 text="Fund"
                 icon={<Deposit />}
@@ -170,10 +157,7 @@ const Wallets = () => {
               <>
                 {isSuccessR && (
                   <div>
-                    <FundSuccess
-                      amount={amountFunded.amountInNaira}
-                      action={closeModal}
-                    />
+                    <FundSuccess amount={amountFunded.amountInNaira} action={closeModal} />
                   </div>
                 )}
                 {!isSuccessR && (
@@ -217,9 +201,7 @@ const Wallets = () => {
             currency="USD Tether"
             currencyCode="USDT"
             cryptoBalance={0}
-            balance={
-              USDT ? Number(USDT.payload.amount).toPrecision(7) : "0.0000"
-            }
+            balance={USDT ? Number(USDT.payload.amount).toPrecision(7) : "0.0000"}
             dollarBalance={0}
             show={show}
           />
@@ -229,11 +211,7 @@ const Wallets = () => {
             currencyCode="ETH"
             cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
             balance={ETH ? Number(ETH.payload.amount).toPrecision(7) : "0.0000"}
-            dollarBalance={
-              ETH
-                ? Number(ETH.payload.dollar_equivalent).toPrecision(7)
-                : "0.0000"
-            }
+            dollarBalance={ETH ? Number(ETH.payload.dollar_equivalent).toPrecision(7) : "0.0000"}
             show={show}
           />
           <CryptoWallets
@@ -251,11 +229,7 @@ const Wallets = () => {
             currencyCode="XRP"
             cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
             balance={XRP ? Number(XRP.payload.amount).toPrecision(7) : "0.0000"}
-            dollarBalance={
-              XRP
-                ? Number(XRP.payload.dollar_equivalent).toPrecision(7)
-                : "0.0000"
-            }
+            dollarBalance={XRP ? Number(XRP.payload.dollar_equivalent).toPrecision(7) : "0.0000"}
             show={show}
           />
         </div>

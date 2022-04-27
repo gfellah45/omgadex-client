@@ -36,6 +36,7 @@ import Loader from "react-loader-spinner";
 export interface availableNetworkProps {
   shortHand: string;
   fullName: string;
+  properShortHand: string;
   logo: JSX.Element;
   fee: string;
 }
@@ -43,6 +44,7 @@ export interface availableNetworkProps {
 export const availableNetwork: availableNetworkProps[] = [
   {
     shortHand: "eth",
+    properShortHand: "ETH",
     fullName: "Ethereum",
     logo: <Eth width="40" height="40" />,
     fee: "Fee 0.80 eth",
@@ -50,12 +52,14 @@ export const availableNetwork: availableNetworkProps[] = [
   {
     shortHand: "lxrp",
     fullName: "Ripple",
+    properShortHand: "XRP",
     logo: <Ripple width="40" height="40" />,
     fee: "Fee 0.80 lxrp",
   },
   {
     shortHand: "lusdt",
     fullName: "USDT",
+    properShortHand: "USDT",
     logo: <Tether width="40" height="40" />,
     fee: "Fee 0.80 eth",
   },
@@ -406,7 +410,7 @@ const Send = () => {
                     {Object.keys(selectedCoin).length ? (
                       <div className="flex items-center gap-2">
                         <div>{selectedCoin?.logo}</div>
-                        {selectedCoin?.shortHand}
+                        {selectedCoin?.properShortHand}
                       </div>
                     ) : (
                       <p>Select coin</p>
@@ -459,7 +463,7 @@ const Send = () => {
                         <div>
                           {Object.keys(selectNetwork).length ? (
                             <div className="flex items-center gap-2">
-                              <div>{selectNetwork["shortHand"]}</div>
+                              <div>{selectNetwork["properShortHand"]}</div>
                               {selectNetwork["fullName"]}
                             </div>
                           ) : (
@@ -615,7 +619,7 @@ const Send = () => {
                     <div className="flex gap-3">
                       <div>{network.logo}</div>
                       <div className="">
-                        <p className="text-gray-500">{network.shortHand}</p>
+                        <p className="text-gray-500">{network.properShortHand}</p>
                         <p className="text-gray-500">{network.fullName}</p>
                       </div>
                     </div>

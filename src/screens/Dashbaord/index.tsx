@@ -16,6 +16,7 @@ import { useTheme } from "next-themes";
 import clsx from "clsx";
 import Image from "next/image";
 import dark from "../../../public/assets/balance_cover_dark.svg";
+import { CurrencyFormatter } from "../../lib/currencyFormatter";
 
 const Dashboard = () => {
   const { push } = useRouter();
@@ -136,8 +137,8 @@ const Dashboard = () => {
           <div className="flex items-center justify-center mt-12 ">
             <div className="space-y-3 w-11/12">
               <p className="text-sm font-medium  text-neutral-400">Total balance</p>
-              <p className="text-[40px] font-bold truncate w-12/12">
-                {data?.payload?.walletInfo?.balance.toFixed(4)}
+              <p className="text-[40px] font-bold  w-12/12">
+                {CurrencyFormatter.format(Number(data?.payload?.walletInfo?.balance))}
               </p>
               <p className=" text-neutral-500">
                 {data?.payload.walletInfo.equivalentBTC.toPrecision(7)} USDT
