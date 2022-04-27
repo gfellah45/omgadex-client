@@ -1,16 +1,37 @@
+// @ts-nocheck
 import clsx from "clsx";
 import { useTheme } from "next-themes";
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import EmptyState from "../../assets/svg/EmptyState";
 import Selector from "../../assets/svg/Selector";
 import { tableHeader } from "../../data";
+import { useTable } from "react-table";
+import { Transaction } from "../../data/columns";
 
 interface Props {
   showHeader?: boolean;
+  tableData?: {
+    amount: string;
+    coin: string;
+    date: string;
+    fromAddress: string;
+    toAddress: string;
+    transactionId: string;
+  }[];
 }
 
-const TransactionTable: FC<Props> = ({ showHeader }) => {
+const TransactionTable: FC<Props> = ({ showHeader, tableData }) => {
   const { theme } = useTheme();
+
+  const data = useMemo(() => tableData, []);
+  const columns = useMemo(() => Transaction, []);
+
+  const { rows, getTableBodyProps, headerGroups, getTableProps, prepareRow } =
+    useTable({
+      columns,
+      data,
+    });
+
   return (
     <div
       className={clsx(
@@ -26,7 +47,55 @@ const TransactionTable: FC<Props> = ({ showHeader }) => {
 
       {/* table */}
 
+      <div className="overflow-hidden overflow-x-auto border border-gray-100 rounded">
+        <table
+          {...getTableProps}
+          className="min-w-full text-sm divide-y divide-gray-200"
+        >
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr className="bg-gray-50" {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    className="px-4 py-2 font-medium text-left text-gray-600"
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+
+          <tbody {...getTableBodyProps()} className="divide-y divide-gray-100">
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td
+                        {...cell.getCellProps({
+                          style: {
+                            maxWidth: cell.column.maxWidth,
+                          },
+                        })}
+                        className="px-4 py-2 text-center truncate"
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 
       <div className="mt-4 w-full">
+        
         <div className="py-4 grid grid-cols-12 ">
           {tableHeader.map((item, index) => {
             return (
@@ -47,12 +116,12 @@ const TransactionTable: FC<Props> = ({ showHeader }) => {
           })}
         </div>
         <div className="h-px bg-slate-300 w-full"></div>
-      </div>
+      </div> */}
 
-      <div className="flex justify-center flex-1 h-auto my-16 flex-col items-center w-full ">
+      {/* <div className="flex justify-center flex-1 h-auto my-16 flex-col items-center w-full ">
         <EmptyState width="212" height="201" />
         <p className="my-4">No Transaction History</p>
-      </div>
+      </div> */}
     </div>
   );
 };
