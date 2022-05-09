@@ -8,10 +8,7 @@ import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
 import toast, { Toaster } from "react-hot-toast";
 
-import {
-  useUserLoginMutation,
-  useVerificationRequestMutation,
-} from "../services/auth";
+import { useUserLoginMutation, useVerificationRequestMutation } from "../services/auth";
 import AppModal from "../modals";
 import { hideModal, showModal } from "../reducers/ui";
 import { useAppDispatch } from "../hooks/useStoreHooks";
@@ -195,12 +192,7 @@ const Signingpage = (): JSX.Element => {
               <p>
                 {isLoading ? (
                   <p className="flex items-center justify-center w-full">
-                    <Loader
-                      type="ThreeDots"
-                      color="#fff"
-                      height={30}
-                      width={60}
-                    />
+                    <Loader type="ThreeDots" color="#fff" height={30} width={60} />
                   </p>
                 ) : (
                   "Log In"
