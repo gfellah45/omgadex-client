@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import ArrowBack from "../../assets/svg/ArrowBack";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
@@ -10,7 +10,12 @@ import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal, showModal } from "../../reducers/ui";
 import Close from "../../assets/svg/Close";
 import AppModal from "../../modals";
-import { useBuyOrSellCryptoMutation } from "../../services/sendCrypto";
+import {
+  useBuyOrSellCryptoMutation,
+  useConvertRateToCryptoMutation,
+  useVerifyTransactionMutation,
+  useCompleteBuyOrSellMutation,
+} from "../../services/sendCrypto";
 import toast, { Toaster } from "react-hot-toast";
 import SuccessBadge from "../../assets/svg/SuccessBadge";
 import SmallBTC from "../../assets/svg/SmallBTC";
@@ -27,6 +32,10 @@ const BUYING_REJECTED = "BUYING_REJECTED";
 const SELECT_NETWORK_MODAL = "SELECT_NETWORK_MODAL";
 const CRYPTO_STATUS_MODAL = "CRYPTO_STATUS_MODAL";
 
+// Transaction Status
+const TRX_IN_PROGRESS = "TRX_IN_PROGRESS";
+const TRX_RESOLVED = "TRX_RESOLVED";
+
 // minimum purchaseable amount required for a transaction
 const minimumPurchaseableAmount = 5000;
 
@@ -37,8 +46,17 @@ function Buy() {
   const [buyCrptoStatus, setBuyCrptoStatus] = useState(BUYING_PENDING);
   const modalType = useAppSelector((state) => state.ui.modalType);
   const [amount, setAmount] = useState("1000");
+  const [convertedRate, setConvertedRate] = useState("");
+  const [verifyTrxStatus, setVerifyTrxStatus] = useState(TRX_IN_PROGRESS);
+  const [signedResponse, setSignedResponse] = useState({});
 
-  const [buyCrypto, { isLoading }] = useBuyOrSellCryptoMutation();
+  const [buyOrSellCrypto, { isLoading }] = useBuyOrSellCryptoMutation();
+  const [convertRate, { isLoading: loadingConvertedAmount }] = useConvertRateToCryptoMutation();
+  const [verifyTransaction, { isLoading: loadingVerifyTransaction }] =
+    useVerifyTransactionMutation();
+  const [completeBuyOrSell, { isLoading: loadingCompleteBuyOrSell }] =
+    useCompleteBuyOrSellMutation();
+
   const { balance } = useAppSelector((state) => state.dashboard.user.payload.walletInfo);
 
   const {
@@ -56,8 +74,76 @@ function Buy() {
     dispatch(showModal({ showModal: true, modalType: modalType }));
   };
 
+  // verify transaction function
+  const verifyTransactionInterval = async (passedInRes: any) => {
+    toast.success("transaction is taking to long. you will be notified when its completed");
+    let trxTimeOut;
+    if (trxTimeOut) {
+      clearTimeout(trxTimeOut);
+    } else {
+      trxTimeOut = setTimeout(() => {
+        verifyTransaction({
+          txHash: passedInRes?.payload.txHash,
+        })
+          .unwrap()
+          .then((res) => {
+            console.log(res, "this is the response messaged after verification");
+            if (res?.message.includes("successful")) {
+              console.log(res.message, "successfull is included to your response");
+              toast.success("Transaction is successful");
+            } else {
+              toast.success(res?.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err, "error trying to verify your transaction");
+          });
+      }, 10000);
+    }
+  };
+
+  const debounce = function (func: any) {
+    let timer: any | NodeJS.Timeout;
+    return function (...args: any[] | void | any) {
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        timer = null;
+        func.apply(this, args);
+      }, 500);
+    };
+  };
+
+  interface convertedAmountResponse {
+    message: string;
+    payload: {
+      btc: number;
+      eth: number;
+      bnb: number;
+      xrp: number;
+    };
+  }
+
+  const handleOnChange = async function (e: any, args: any) {
+    setAmount(e.target.value);
+    convertRate({ currency: "naira", convertedTo: "crypto", payload: { amount: e.target.value } })
+      .unwrap()
+      .then(({ payload }: any) => {
+        console.log(payload, "the converted rate");
+        setConvertedRate(payload.eth);
+      })
+      .catch((err) => {
+        toast.error("Sorry we couldn't convert your amount at the moment");
+        console.log(err, "error while converting the amount ");
+      });
+  };
+
+  const optimizedFn = useCallback(debounce(handleOnChange), []);
+
+  // On submit function
   const onSubmit = (data: any) => {
-    setAmount(data.amount);
+    console.log(data, "the submitted data");
     for (let value in data) {
       if (!data[value].length) {
         return toast.error("You cant submit an empty form fields");
@@ -76,19 +162,42 @@ function Buy() {
     }
     handleOpen(CRYPTO_STATUS_MODAL);
     setBuyCrptoStatus(BUYING_IN_PROGRESS);
-    buyCrypto({ ...data, type: "buy" })
+    buyOrSellCrypto({
+      ethAmount: convertedRate.toString(),
+      amount: data.amount.toString(),
+      type: "buy",
+    })
       .unwrap()
-      .then((res) => {
-        toast.success("Trade successful");
-        setBuyCrptoStatus(BUYING_RESOLVED);
-        handleOpen(CRYPTO_STATUS_MODAL);
-        console.log(res);
+      .then((res: any) => {
+        toast.success("Transaction Signed successfully");
+        setSignedResponse(res);
+        completeBuyOrSell({ token: res.payload.encoded })
+          .unwrap()
+          .then((res: any) => {
+            handleOpen(CRYPTO_STATUS_MODAL);
+            setBuyCrptoStatus(BUYING_RESOLVED);
+            console.log(res, "youve successfully completed buy or sell");
+          })
+          .catch((err) => {
+            if (err.status === "FETCH_ERROR") {
+              verifyTransactionInterval(signedResponse);
+              handleClose();
+            } else {
+              handleClose();
+              console.log(err, "Trade gone wrong, try again");
+            }
+          });
       })
       .catch((err) => {
-        toast.error("Trade gone wrong, try again");
-        handleOpen(CRYPTO_STATUS_MODAL);
-        setBuyCrptoStatus(BUYING_REJECTED);
-        console.log(err, "there was an error while trying to buy crypto");
+        if (err.status === "FETCH_ERROR") {
+          toast.success("transaction is taking to long. you will be notified when its completed");
+          handleClose();
+        } else {
+          toast.error("Trade gone wrong, try again");
+          handleOpen(CRYPTO_STATUS_MODAL);
+          setBuyCrptoStatus(BUYING_REJECTED);
+          console.log(err, "there was an error while trying to buy crypto");
+        }
       });
   };
 
@@ -138,7 +247,7 @@ function Buy() {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between items-center gap-x-5 my-5 w-10/12">
+                <div className="flex justify-between items-start gap-x-5 my-5 w-10/12">
                   <div className="w-6/12">
                     <label htmlFor="amount" className="font-light text-neutral-400  text-[1rem]">
                       Amount to pay
@@ -155,6 +264,7 @@ function Buy() {
                         {...register("amount", { required: true })}
                         name="amount"
                         id="amount"
+                        onChange={(e) => optimizedFn(e)}
                       />
                       <p>NGN</p>
                     </div>
@@ -163,23 +273,22 @@ function Buy() {
                     </p>
                   </div>
                   <div className="w-6/12">
-                    <label htmlFor="eth_amount" className="font-light text-neutral-400 text-[1rem]">
+                    <label htmlFor="ethAmount" className="font-light text-neutral-400 text-[1rem]">
                       Recieve
                     </label>
                     <div
-                      className={`mt-2 w-full text-gray-400 rounded justify-between border cursor-pointer flex items-center relative px-2  h-12 ${
-                        errors["eth_amount"] ? "border-red-600" : ""
-                      }`}
+                      className={`mt-2 w-full text-gray-400 rounded justify-between border cursor-pointer flex items-center relative px-2  h-12 `}
                     >
                       <input
                         type="text"
-                        className="w-10/12 h-full bg-transparent outline-none border-0"
-                        placeholder="1000"
-                        {...register("eth_amount", { required: true })}
-                        name="eth_amount"
-                        id="eth_amount"
+                        className="w-10/12 h-full pr-1 bg-transparent outline-none border-0"
+                        placeholder="0.1"
+                        {...register("ethAmount", { required: true })}
+                        name="ethAmount"
+                        id="ethAmount"
+                        value={loadingConvertedAmount ? "Converting Amount..." : convertedRate}
                       />
-                      <p>NGN</p>
+                      <p>{selectNetwork ? selectNetwork.shortHand : "ETH"}</p>
                     </div>
                     <p className="text-xs text-neutral-500 my-1">
                       0.90 USD at<b> N580/USD</b>
@@ -191,11 +300,12 @@ function Buy() {
                     type="submit"
                     className={clsx(
                       "text-center w-6/12 text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer",
-                      isLoading ? "bg-secondary" : "bg-primary"
+                      isLoading || loadingConvertedAmount ? "bg-secondary" : "bg-primary"
                     )}
+                    disabled={loadingConvertedAmount}
                   >
-                    {/* {status1.isLoading ? "Sending..." : "Send"} */}
-                    Buy
+                    {isLoading || loadingConvertedAmount ? "Loading..." : "Buy"}
+                    {/* Buy */}
                   </button>
                 </div>
               </form>
@@ -218,7 +328,8 @@ function Buy() {
                     <p className="font-bold text-sm text-gray-500">You will receive</p>
                     <div className="text-2xl font-bold my-3">
                       <p>
-                        1 <span>{selectNetwork.fullName || "BTC"}</span>
+                        {loadingConvertedAmount ? "loading..." : convertedRate || 1}{" "}
+                        <span>{selectNetwork.fullName || "ETH"}</span>
                       </p>
                     </div>
                   </div>
@@ -284,7 +395,7 @@ function Buy() {
             {buyCrptoStatus === BUYING_IN_PROGRESS && (
               <div className="flex flex-col my-3 text-center justify-center items-center">
                 {/* <p>Your transaction has been signed successfully</p> */}
-                <p>Trying to Process your transaction</p>
+                <p>Transaction Signed successfully please</p>
                 <div className="my-2">
                   <Loader type="Audio" color="#683a9e" height={40} width={60} />
                 </div>
@@ -297,9 +408,11 @@ function Buy() {
                 </p>
                 <p className="text-2xl mb-2 text-center font-smeibold">Transfer successful!</p>
 
-                <p className="text-sm justify-center text-center my-2 items-center flex gap-1 font-smeibold">
-                  <SmallETH />
-                  <span>10000 Eth have been transfered successfully!</span>
+                <p className="text-sm w-10/12 mx-auto font-smeibold">
+                  <span className="justify-center text-center my-2 items-start flex">
+                    <SmallETH />
+                    {amount} Eth worth has been transfered to your wallet successfully!
+                  </span>
                 </p>
               </div>
             )}

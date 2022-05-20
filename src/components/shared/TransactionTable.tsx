@@ -24,14 +24,13 @@ interface Props {
 const TransactionTable: FC<Props> = ({ showHeader, tableData }) => {
   const { theme } = useTheme();
 
-  const data = useMemo(() => tableData, [tableData]);
+  const data = useMemo(() => (tableData ? tableData : []), [tableData]);
   const columns = useMemo(() => Transaction, []);
 
-  const { rows, getTableBodyProps, headerGroups, getTableProps, prepareRow } =
-    useTable({
-      columns,
-      data,
-    });
+  const { rows, getTableBodyProps, headerGroups, getTableProps, prepareRow } = useTable({
+    columns,
+    data,
+  });
 
   return (
     <div
@@ -49,14 +48,10 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData }) => {
       {/* table */}
 
       <div className="overflow-hidden overflow-x-auto border border-gray-100 rounded">
-        <table
-          {...getTableProps}
-          className="min-w-full text-sm divide-y divide-gray-200"
-        >
+        <table {...getTableProps} className="min-w-full text-sm divide-y divide-gray-200">
           <thead>
             {headerGroups.map((headerGroup) => {
-              const { key, ...restHeaderProps } =
-                headerGroup.getHeaderGroupProps();
+              const { key, ...restHeaderProps } = headerGroup.getHeaderGroupProps();
               return (
                 <tr key={key} className="bg-gray-50" {...restHeaderProps}>
                   {headerGroup.headers.map((column) => (
@@ -86,11 +81,7 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData }) => {
                       },
                     });
                     return (
-                      <td
-                        key={key}
-                        {...restCellProps}
-                        className="px-4 py-2 text-center truncate"
-                      >
+                      <td key={key} {...restCellProps} className="px-4 py-2 text-center truncate">
                         {cell.render("Cell")}
                       </td>
                     );
