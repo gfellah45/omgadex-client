@@ -19,9 +19,11 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import SuccessBadge from "../../assets/svg/SuccessBadge";
 import SmallBTC from "../../assets/svg/SmallBTC";
+import BackAndForthArrow from "../../../public/assets/backAndForthArrow.png";
 import SmallETH from "../../assets/svg/SmallETH";
 import Loader from "react-loader-spinner";
 import { CurrencyFormatter } from "../../lib/currencyFormatter";
+import Image from "next/image";
 
 const BUYING_PENDING = "BUYING_PENDING";
 const BUYING_IN_PROGRESS = "BUYING_IN_PROGRESS";
@@ -246,7 +248,7 @@ function Sell() {
                   </div>
                 </div>
                 <div className="flex justify-between items-start gap-x-5 my-5 w-10/12">
-                  <div className="w-6/12">
+                  <div className="w-5/12">
                     <label htmlFor="amount" className="font-light text-neutral-400  text-[1rem]">
                       Amount to pay
                     </label>
@@ -270,7 +272,10 @@ function Sell() {
                       Available balance: <b>{equivalentBTC} ETH</b>
                     </p>
                   </div>
-                  <div className="w-6/12">
+                  <div className="h-28 items-center justify-center flex ">
+                    <Image src={BackAndForthArrow} alt="arror" />
+                  </div>
+                  <div className="w-5/12">
                     <label htmlFor="eth_amount" className="font-light text-neutral-400 text-[1rem]">
                       Recieve
                     </label>

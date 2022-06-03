@@ -20,8 +20,10 @@ import toast, { Toaster } from "react-hot-toast";
 import SuccessBadge from "../../assets/svg/SuccessBadge";
 import SmallBTC from "../../assets/svg/SmallBTC";
 import SmallETH from "../../assets/svg/SmallETH";
+import BackAndForthArrow from "../../../public/assets/backAndForthArrow.png";
 import Loader from "react-loader-spinner";
 import { CurrencyFormatter } from "../../lib/currencyFormatter";
+import Image from "next/image";
 
 const BUYING_PENDING = "BUYING_PENDING";
 const BUYING_IN_PROGRESS = "BUYING_IN_PROGRESS";
@@ -63,7 +65,6 @@ function Buy() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm();
 
   const dispatch = useAppDispatch();
@@ -143,7 +144,7 @@ function Buy() {
 
   // On submit function
   const onSubmit = (data: any) => {
-    console.log(data, "the submitted data");
+    console.log(amount, "the amount");
     for (let value in data) {
       if (!data[value].length) {
         return toast.error("You cant submit an empty form fields");
@@ -160,45 +161,45 @@ function Buy() {
         }
       }
     }
-    handleOpen(CRYPTO_STATUS_MODAL);
-    setBuyCrptoStatus(BUYING_IN_PROGRESS);
-    buyOrSellCrypto({
-      ethAmount: convertedRate.toString(),
-      amount: data.amount.toString(),
-      type: "buy",
-    })
-      .unwrap()
-      .then((res: any) => {
-        toast.success("Transaction Signed successfully");
-        setSignedResponse(res);
-        completeBuyOrSell({ token: res.payload.encoded })
-          .unwrap()
-          .then((res: any) => {
-            handleOpen(CRYPTO_STATUS_MODAL);
-            setBuyCrptoStatus(BUYING_RESOLVED);
-            console.log(res, "youve successfully completed buy or sell");
-          })
-          .catch((err) => {
-            if (err.status === "FETCH_ERROR") {
-              verifyTransactionInterval(signedResponse);
-              handleClose();
-            } else {
-              handleClose();
-              console.log(err, "Trade gone wrong, try again");
-            }
-          });
-      })
-      .catch((err) => {
-        if (err.status === "FETCH_ERROR") {
-          toast.success("transaction is taking to long. you will be notified when its completed");
-          handleClose();
-        } else {
-          toast.error("Trade gone wrong, try again");
-          handleOpen(CRYPTO_STATUS_MODAL);
-          setBuyCrptoStatus(BUYING_REJECTED);
-          console.log(err, "there was an error while trying to buy crypto");
-        }
-      });
+    // handleOpen(CRYPTO_STATUS_MODAL);
+    // setBuyCrptoStatus(BUYING_IN_PROGRESS);
+    // buyOrSellCrypto({
+    //   ethAmount: convertedRate.toString(),
+    //   amount: data.amount.toString(),
+    //   type: "buy",
+    // })
+    //   .unwrap()
+    //   .then((res: any) => {
+    //     toast.success("Transaction Signed successfully");
+    //     setSignedResponse(res);
+    //     completeBuyOrSell({ token: res.payload.encoded })
+    //       .unwrap()
+    //       .then((res: any) => {
+    //         handleOpen(CRYPTO_STATUS_MODAL);
+    //         setBuyCrptoStatus(BUYING_RESOLVED);
+    //         console.log(res, "youve successfully completed buy or sell");
+    //       })
+    //       .catch((err) => {
+    //         if (err.status === "FETCH_ERROR") {
+    //           verifyTransactionInterval(signedResponse);
+    //           handleClose();
+    //         } else {
+    //           handleClose();
+    //           console.log(err, "Trade gone wrong, try again");
+    //         }
+    //       });
+    //   })
+    //   .catch((err) => {
+    //     if (err.status === "FETCH_ERROR") {
+    //       toast.success("transaction is taking to long. you will be notified when its completed");
+    //       handleClose();
+    //     } else {
+    //       toast.error("Trade gone wrong, try again");
+    //       handleOpen(CRYPTO_STATUS_MODAL);
+    //       setBuyCrptoStatus(BUYING_REJECTED);
+    //       console.log(err, "there was an error while trying to buy crypto");
+    //     }
+    //   });
   };
 
   return (
@@ -247,8 +248,8 @@ function Buy() {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between items-start gap-x-5 my-5 w-10/12">
-                  <div className="w-6/12">
+                <div className="flex justify-between items-start gap-x-5 my-5 min-h-20 w-10/12">
+                  <div className="w-5/12">
                     <label htmlFor="amount" className="font-light text-neutral-400  text-[1rem]">
                       Amount to pay
                     </label>
@@ -259,7 +260,7 @@ function Buy() {
                     >
                       <input
                         type="text"
-                        className="w-10/12 h-full bg-transparent outline-none border-0"
+                        className="w-10/12 h-full bg-white outline-none border-0"
                         placeholder="1000"
                         {...register("amount", { required: true })}
                         name="amount"
@@ -272,7 +273,10 @@ function Buy() {
                       Available Balance: <b>{balance} NGN</b>
                     </p>
                   </div>
-                  <div className="w-6/12">
+                  <div className="h-28 items-center justify-center flex ">
+                    <Image src={BackAndForthArrow} alt="arror" />
+                  </div>
+                  <div className="w-5/12">
                     <label htmlFor="ethAmount" className="font-light text-neutral-400 text-[1rem]">
                       Recieve
                     </label>
@@ -283,16 +287,16 @@ function Buy() {
                         type="text"
                         className="w-10/12 h-full pr-1 bg-transparent outline-none border-0"
                         placeholder="0.1"
-                        {...register("ethAmount", { required: true })}
+                        {...register("ethAmount")}
                         name="ethAmount"
                         id="ethAmount"
                         value={loadingConvertedAmount ? "Converting Amount..." : convertedRate}
                       />
                       <p>{selectNetwork ? selectNetwork.shortHand : "ETH"}</p>
                     </div>
-                    <p className="text-xs text-neutral-500 my-1">
+                    {/* <p className="text-xs text-neutral-500 my-1">
                       0.90 USD at<b> N580/USD</b>
-                    </p>
+                    </p> */}
                   </div>
                 </div>
                 <div>

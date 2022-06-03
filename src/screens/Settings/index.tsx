@@ -1,5 +1,4 @@
 import React, { FC, useState } from "react";
-import Image from "next/image";
 import ProfileTab from "./Profile/ProfileTab";
 import Security from "./Security/Security";
 import BankDetails from "./BankDetails/BankDetails";
@@ -27,9 +26,7 @@ let settingsScreenData: settingsScreenData[] = [
 ];
 
 function SettingScreen() {
-  const [activeTab, setActiveTab] = useState<settingsScreenData>(
-    settingsScreenData[0]
-  );
+  const [activeTab, setActiveTab] = useState<settingsScreenData>(settingsScreenData[0]);
   const { theme } = useTheme();
   return (
     <div className="flex flex-col flex-1 px-6">
@@ -62,9 +59,7 @@ function SettingScreen() {
                         : "text-neutral-500 "
                     } hover:bg-neutral-600 hover:text-white cursor-pointer 
                  py-1 px-3 text-sm font-bold `}
-                    onClick={() =>
-                      data.tab && setActiveTab(settingsScreenData[index])
-                    }
+                    onClick={() => data.tab && setActiveTab(settingsScreenData[index])}
                   >
                     {data.title}
                   </li>
@@ -74,7 +69,7 @@ function SettingScreen() {
           </div>
         </div>
         <div className="min-h-[60vh]">
-          <div>{activeTab.component}</div>;
+          <div>{activeTab.component}</div>
         </div>
       </section>
     </div>
