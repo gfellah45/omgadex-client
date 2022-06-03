@@ -16,7 +16,10 @@ import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal, showModal } from "../../reducers/ui";
 import AppModal from "../../modals";
-import { useGetFiatWalletQuery, useGetWalletQuery } from "../../services/wallet";
+import {
+  useGetFiatWalletQuery,
+  useGetWalletQuery,
+} from "../../services/wallet";
 import { useRedeemVoucherMutation } from "../../services/vouchers";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -24,6 +27,7 @@ import FundSuccess from "./FundSuccess";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
 import { CurrencyFormatter } from "../../lib/currencyFormatter";
+import TrxToDollar from "./TrxToDollar";
 
 type AmountFunded = {
   amountInDollars: string;
@@ -59,13 +63,12 @@ const Wallets = () => {
   const { data: BTC } = useGetWalletQuery({ address, symbol: "BTC" });
   const { data: XRP } = useGetWalletQuery({ address, symbol: "XRP" });
 
-  const { walletInfo, currentCryptoPrices } = useAppSelector(
-    (state) => state?.dashboard?.user?.payload
-  );
+  const { dashboard, ui } = useAppSelector((state) => state);
+
+  const { walletInfo, currentCryptoPrices } = dashboard?.user?.payload;
 
   const { data: fiat, isSuccess } = useGetFiatWalletQuery(undefined, {
     refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
 
@@ -73,16 +76,19 @@ const Wallets = () => {
     useRedeemVoucherMutation();
 
   isSuccessR &&
-    toast.success("Voucher redeemed successfully, Fiat wallet credited successfully", {
-      id: "voucher-redeemed",
-    });
+    toast.success(
+      "Voucher redeemed successfully, Fiat wallet credited successfully",
+      {
+        id: "voucher-redeemed",
+      }
+    );
 
   function closeModal() {
     dispatch(hideModal());
   }
 
   function openModal() {
-    dispatch(showModal({ showModal: true }));
+    dispatch(showModal({ showModal: true, modalType: "FUND" }));
   }
 
   const toggleState = () => {
@@ -119,14 +125,19 @@ const Wallets = () => {
               <p className="text-lg text-neutral-500">Total Balance</p>
               <p className="text-4xl font-bold">
                 {show
-                  ? isSuccess && CurrencyFormatter.format(Number(fiat.payload.amountInNaira))
+                  ? isSuccess &&
+                    CurrencyFormatter("USD").format(
+                      Number(fiat.payload.amountInDollars)
+                    )
                   : "*********"}
               </p>
             </div>
             <div>
               <p className="text-gray-500 ">
                 {show ? walletInfo?.equivalentBTC.toPrecision(7) : "*********"}
-                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">BTC</span>
+                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">
+                  BTC
+                </span>
               </p>
             </div>
           </div>
@@ -143,24 +154,35 @@ const Wallets = () => {
               </p>
             </div>
             <div className="grid grid-cols-4 gap-4">
-              <TransactionButtons text="Send" action={navigateToSend} icon={<Send />} />
+              <TransactionButtons
+                text="Send"
+                action={navigateToSend}
+                icon={<Send />}
+              />
               <TransactionButtons text="Recieve" icon={<Deposit />} />
-              <TransactionButtons text="Trade" icon={<Send />} action={navigateToSingleWallet} />
+              <TransactionButtons
+                text="Trade"
+                icon={<Send />}
+                action={navigateToSingleWallet}
+              />
               <TransactionButtons
                 text="Fund"
                 icon={<Deposit />}
                 primary={true}
-                action={openModal}
+                // action={openModal}
               />
             </div>
             <AppModal>
               <>
-                {isSuccessR && (
+                {isSuccessR && ui.modalType === "FUND" && (
                   <div>
-                    <FundSuccess amount={amountFunded.amountInNaira} action={closeModal} />
+                    <FundSuccess
+                      amount={amountFunded.amountInNaira}
+                      action={closeModal}
+                    />
                   </div>
                 )}
-                {!isSuccessR && (
+                {!isSuccessR && ui.modalType === "FUND" && (
                   <FundWallet
                     redeem={redeem}
                     isLoading={isLoading}
@@ -172,6 +194,7 @@ const Wallets = () => {
                   />
                 )}
               </>
+              {ui?.modalType === "TRX" && <TrxToDollar />}
             </AppModal>
           </div>
         </div>
@@ -201,7 +224,9 @@ const Wallets = () => {
             currency="USD Tether"
             currencyCode="USDT"
             cryptoBalance={0}
-            balance={USDT ? Number(USDT.payload.amount).toPrecision(7) : "0.0000"}
+            balance={
+              USDT ? Number(USDT.payload.amount).toPrecision(7) : "0.0000"
+            }
             dollarBalance={0}
             show={show}
           />
@@ -211,7 +236,11 @@ const Wallets = () => {
             currencyCode="ETH"
             cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
             balance={ETH ? Number(ETH.payload.amount).toPrecision(7) : "0.0000"}
-            dollarBalance={ETH ? Number(ETH.payload.dollar_equivalent).toPrecision(7) : "0.0000"}
+            dollarBalance={
+              ETH
+                ? Number(ETH.payload.dollar_equivalent).toPrecision(7)
+                : "0.0000"
+            }
             show={show}
           />
           <CryptoWallets
@@ -229,7 +258,11 @@ const Wallets = () => {
             currencyCode="XRP"
             cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
             balance={XRP ? Number(XRP.payload.amount).toPrecision(7) : "0.0000"}
-            dollarBalance={XRP ? Number(XRP.payload.dollar_equivalent).toPrecision(7) : "0.0000"}
+            dollarBalance={
+              XRP
+                ? Number(XRP.payload.dollar_equivalent).toPrecision(7)
+                : "0.0000"
+            }
             show={show}
           />
         </div>

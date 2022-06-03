@@ -90,7 +90,9 @@ const TRXN_SEND_REJECTED = "TRXN_SEND_REJECTED";
 
 const Send = () => {
   const [selectedCoin, setSelectedCoin] = useState<selectedCoinType | any>({});
-  const [selectNetwork, setSeleectedNetwork] = useState<availableNetworkProps | any>({});
+  const [selectNetwork, setSeleectedNetwork] = useState<
+    availableNetworkProps | any
+  >({});
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(UNINITIALIZED);
   const [availableBalance, setAvailableBalance] = useState("");
@@ -137,22 +139,23 @@ const Send = () => {
     };
     recieve(extraParams)
       .unwrap()
-      .then(({ message, payload }) => {
-        setAvailableBalance(payload.balance);
-        setReceiverAddress(payload.address);
+      .then((res: any) => {
+        setAvailableBalance(res.payload.balance);
+        setReceiverAddress(res.payload.address);
         setLoading(RESOLVED);
         toast.success("Payment Recieved successfully");
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(REJECTED);
         toast.error("Something went wrong, please try again shortly");
-        console.table(err);
       });
   };
 
   // verify transaction function
   const verifyTransactionInterval = async (passedInRes: any) => {
-    toast.success("transaction is taking to long. you will be notified when its completed");
+    toast.success(
+      "transaction is taking to long. you will be notified when its completed"
+    );
     let trxTimeOut;
     if (trxTimeOut) {
       clearTimeout(trxTimeOut);
@@ -162,16 +165,18 @@ const Send = () => {
           txHash: passedInRes?.payload.txHash,
         })
           .unwrap()
-          .then((res) => {
-            console.log(res, "this is the response messaged after verification");
+          .then((res: any) => {
             if (res?.message.includes("successful")) {
-              console.log(res.message, "successfull is included to your response");
+              console.log(
+                res.message,
+                "successfull is included to your response"
+              );
               toast.success("Transaction is successful");
             } else {
               toast.success(res?.message);
             }
           })
-          .catch((err) => {
+          .catch((err: any) => {
             console.log(err, "error trying to verify your transaction");
           });
       }, 10000);
@@ -191,7 +196,7 @@ const Send = () => {
     }
     sign(extraParams)
       .unwrap()
-      .then((res) => {
+      .then((res: any) => {
         toast.success(
           "Transaction successfully signed, you will be notified on your transaction status shortly"
         );
@@ -202,12 +207,12 @@ const Send = () => {
           token: res.payload.token,
         })
           .unwrap()
-          .then((res) => {
+          .then(() => {
             toast.success("transaction sent successfully");
             // A varialble constant will be made to update here so we could change the content of the modal after a succesfull transaction
             setSignedTrxnState(TRXN_SEND_RESOLVED);
           })
-          .catch((err) => {
+          .catch((err: any) => {
             if (err.status === "FETCH_ERROR") {
               verifyTransactionInterval(signedResponse);
               handleClose();
@@ -217,8 +222,7 @@ const Send = () => {
             }
           });
       })
-      .catch((err) => {
-        console.log(err, "error while signing transaction");
+      .catch((err: any) => {
         setSignedTrxnState(TRXN_SIGN_REJECTED);
         toast.error("Unable to transfer tokenError");
       });
@@ -271,13 +275,17 @@ const Send = () => {
               theme === "light" ? "bg-white" : "bg-neutral-800"
             )}
           >
-            <div className="text-[27px] font-semibold my-10 ">Select Wallet</div>
+            <div className="text-[27px] font-semibold my-10 ">
+              Select Wallet
+            </div>
 
             <div className=" mt-8 grid grid-cols-2">
               <div className="w-full">
                 <p className="text-gray-400 text-xs">Coins</p>
                 <div
-                  onClick={() => (!selectedCoin ? handleOpen(SELECT_COIN_MODAL) : null)}
+                  onClick={() =>
+                    !selectedCoin ? handleOpen(SELECT_COIN_MODAL) : null
+                  }
                   className="my-4 w-9/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
                 >
                   <div>
@@ -325,7 +333,10 @@ const Send = () => {
                 {selectedCoin && Object.keys(selectedCoin).length ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={clsx("my-10 w-9/12")}>
-                      <label className="text-gray-400 text-xs" htmlFor="receiver_address">
+                      <label
+                        className="text-gray-400 text-xs"
+                        htmlFor="receiver_address"
+                      >
                         Send to Address
                       </label>
                       <div className={clsx("my-3 border ")}>
@@ -335,7 +346,9 @@ const Send = () => {
                           required
                           className={clsx(
                             "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
-                            theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
+                            theme === "light"
+                              ? "bg-neutral-100"
+                              : "bg-neutral-800"
                           )}
                           placeholder="Enter address"
                         />
@@ -343,7 +356,10 @@ const Send = () => {
                     </div>
 
                     <div className="my-10 w-9/12">
-                      <label className="text-gray-400 text-xs" htmlFor="selectNetwork">
+                      <label
+                        className="text-gray-400 text-xs"
+                        htmlFor="selectNetwork"
+                      >
                         Select Network
                       </label>
                       <div
@@ -378,7 +394,9 @@ const Send = () => {
                           maxLength={100}
                           className={clsx(
                             "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
-                            theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
+                            theme === "light"
+                              ? "bg-neutral-100"
+                              : "bg-neutral-800"
                           )}
                           placeholder="Amount"
                           required
@@ -412,20 +430,27 @@ const Send = () => {
                 >
                   <div className="flex items-center space-x-3">
                     {currencyIcons[code] ? currencyIcons[code] : <div />}
-                    <p className="font-bold text-4xl">{tradeProps.currencyCode}</p>
-                    <p className="text-gray-500 text-2xl">{tradeProps.currencyCode} Wallet</p>
+                    <p className="font-bold text-4xl">
+                      {tradeProps.currencyCode}
+                    </p>
+                    <p className="text-gray-500 text-2xl">
+                      {tradeProps.currencyCode} Wallet
+                    </p>
                   </div>
                   <div className="my-6">
                     <p className="text-sm text-gray-500">Available balance</p>
 
                     <div className="text-5xl font-bold my-3">
-                      {Number(tradeProps.balance).toPrecision(7).toLocaleString() || "0.00"}
+                      {Number(tradeProps.balance)
+                        .toPrecision(7)
+                        .toLocaleString() || "0.00"}
                     </div>
                   </div>
 
                   <div className="my-6 flex space-x-3 items-center">
                     <p className="text-gray-400 text-base">
-                      {Number(tradeProps.cryptoBalance).toPrecision(7) || "0.00"}
+                      {Number(tradeProps.cryptoBalance).toPrecision(7) ||
+                        "0.00"}
                     </p>
                     <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
                       {tradeProps.currencyCode}
@@ -447,13 +472,17 @@ const Send = () => {
               theme === "light" ? "bg-white" : "bg-neutral-800"
             )}
           >
-            <div className="text-[27px] font-semibold my-10 ">Select Wallet</div>
+            <div className="text-[27px] font-semibold my-10 ">
+              Select Wallet
+            </div>
 
             <div className=" mt-8 grid grid-cols-2">
               <div className="w-full">
                 <p className="text-gray-400 text-xs">Coins</p>
                 <div
-                  onClick={() => (!selectedCoin ? handleOpen(SELECT_COIN_MODAL) : null)}
+                  onClick={() =>
+                    !selectedCoin ? handleOpen(SELECT_COIN_MODAL) : null
+                  }
                   className="my-4 w-9/12 text-gray-400 justify-between cursor-pointer flex items-center relative px-2 border h-12 "
                 >
                   <div>
@@ -502,7 +531,10 @@ const Send = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   {selectedCoin && Object.keys(selectedCoin).length ? (
                     <div className="my-10 w-9/12">
-                      <label className="text-gray-400 text-xs" htmlFor="selectNetwork">
+                      <label
+                        className="text-gray-400 text-xs"
+                        htmlFor="selectNetwork"
+                      >
                         Select Network
                       </label>
                       <div
@@ -528,19 +560,23 @@ const Send = () => {
                   ) : null}
 
                   {loading === UNINITIALIZED && null}
-                  {loading === INITIALIZED && <h1>Processing Transaction....</h1>}
+                  {loading === INITIALIZED && (
+                    <h1>Processing Transaction....</h1>
+                  )}
                   {loading === RESOLVED && (
                     <div className="my-10 w-9/12 ">
                       <p className="text-center ">Address</p>
                       <p className="text-center w-9/12 mx-auto text-neutral-500 text-sm">
-                        Only send USDT to this address. Sending any other asset to this address may
-                        result in the loss of your deposit!
+                        Only send USDT to this address. Sending any other asset
+                        to this address may result in the loss of your deposit!
                       </p>
 
                       <div
                         className={clsx(
                           "border rounded py-1 my-2 items-center justify-between   pl-2 flex gap-x-2 h-10 w-full",
-                          theme === "light" ? "bg-neutral-100" : "bg-neutral-800"
+                          theme === "light"
+                            ? "bg-neutral-100"
+                            : "bg-neutral-800"
                         )}
                       >
                         <input
@@ -550,8 +586,12 @@ const Send = () => {
                           className="w-full h-full outline-none bg-transparent leading-tight appearance-none"
                         />
                         <CopyIcon
-                          color={theme === "light" ? "#E6E8EC" : "bg-neutral-700"}
-                          bgColor={theme === "light" ? "#E6E8EC" : "bg-neutral-800"}
+                          color={
+                            theme === "light" ? "#E6E8EC" : "bg-neutral-700"
+                          }
+                          bgColor={
+                            theme === "light" ? "#E6E8EC" : "bg-neutral-800"
+                          }
                           onClick={() => {
                             copyAddress(receiverAddress);
                           }}
@@ -565,7 +605,9 @@ const Send = () => {
                     </div>
                   )}
 
-                  {loading === REJECTED && <h1>Something went wrong please try again</h1>}
+                  {loading === REJECTED && (
+                    <h1>Something went wrong please try again</h1>
+                  )}
                 </form>
               </div>
               {/* Avalable Balance box */}
@@ -578,20 +620,27 @@ const Send = () => {
                 >
                   <div className="flex items-center space-x-3">
                     {currencyIcons[code] ? currencyIcons[code] : <div />}
-                    <p className="font-bold text-4xl">{tradeProps.currencyCode}</p>
-                    <p className="text-gray-500 text-2xl">{tradeProps.currencyCode} Wallet</p>
+                    <p className="font-bold text-4xl">
+                      {tradeProps.currencyCode}
+                    </p>
+                    <p className="text-gray-500 text-2xl">
+                      {tradeProps.currencyCode} Wallet
+                    </p>
                   </div>
                   <div className="my-6">
                     <p className="text-sm text-gray-500">Available balance</p>
 
                     <div className="text-5xl font-bold my-3">
-                      {Number(availableBalance).toPrecision(7).toLocaleString() || "0.00"}
+                      {Number(availableBalance)
+                        .toPrecision(7)
+                        .toLocaleString() || "0.00"}
                     </div>
                   </div>
 
                   <div className="my-6 flex space-x-3 items-center">
                     <p className="text-gray-400 text-base">
-                      {Number(tradeProps.cryptoBalance).toPrecision(7) || "0.00"}
+                      {Number(tradeProps.cryptoBalance).toPrecision(7) ||
+                        "0.00"}
                     </p>
                     <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
                       {tradeProps.currencyCode}
@@ -614,8 +663,8 @@ const Send = () => {
                     .
                   </li>
                   <li>
-                    Please be sure that the contract address is related to the tokens that you are
-                    Receiving.
+                    Please be sure that the contract address is related to the
+                    tokens that you are Receiving.
                   </li>
                 </ul>
               </div>
@@ -652,8 +701,8 @@ const Send = () => {
               </div>
 
               <p className="text-sm my-2 font-smeibold">
-                Ensure the network you choose to deposit matches the withdrawal network, or assets
-                may be lost.
+                Ensure the network you choose to deposit matches the withdrawal
+                network, or assets may be lost.
               </p>
 
               <div>
@@ -669,13 +718,17 @@ const Send = () => {
                     }}
                     className={clsx(
                       "flex items-center justify-between group rounded-sm p-3 gap-3 w-12/12 cursor-pointer",
-                      theme === "light" ? "hover:bg-neutral-100" : "hover:bg-neutral-600"
+                      theme === "light"
+                        ? "hover:bg-neutral-100"
+                        : "hover:bg-neutral-600"
                     )}
                   >
                     <div className="flex gap-3">
                       <div>{network.logo}</div>
                       <div className="">
-                        <p className="text-gray-500">{network.properShortHand}</p>
+                        <p className="text-gray-500">
+                          {network.properShortHand}
+                        </p>
                         <p className="text-gray-500">{network.fullName}</p>
                       </div>
                     </div>
@@ -698,7 +751,12 @@ const Send = () => {
                   <p>Your transaction has been signed successfully</p>
                   <p>please check your recent transaction to confirm status</p>
                   <div className="my-2">
-                    <Loader type="Audio" color="#683a9e" height={40} width={60} />
+                    <Loader
+                      type="Audio"
+                      color="#683a9e"
+                      height={40}
+                      width={60}
+                    />
                   </div>
                 </div>
               )}
@@ -710,7 +768,9 @@ const Send = () => {
                   <p className="flex justify-center items-center">
                     <SuccessBadge />
                   </p>
-                  <p className="text-2xl mb-2 text-center font-smeibold">Transfer successful!</p>
+                  <p className="text-2xl mb-2 text-center font-smeibold">
+                    Transfer successful!
+                  </p>
 
                   <p className="text-sm justify-center text-center my-2 items-center flex gap-1 font-smeibold">
                     <SmallETH />
@@ -719,7 +779,9 @@ const Send = () => {
                 </div>
               )}
               {signedTrxnState === TRXN_SEND_REJECTED && (
-                <div className="my-3 text-center">Something went wrong please try again</div>
+                <div className="my-3 text-center">
+                  Something went wrong please try again
+                </div>
               )}
               <div className="mx-auto my-3 flex justify-center items-center">
                 <button

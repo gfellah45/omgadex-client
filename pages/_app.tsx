@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <NextNprogress color="#601ABA" />
-          <ThemeProvider attribute="class">
+          <ThemeProvider enableSystem={false} attribute="class">
             <Component {...pageProps} />
           </ThemeProvider>
         </PersistGate>

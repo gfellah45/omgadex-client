@@ -120,7 +120,8 @@ type UserInfo = {
     };
     recentTransactions: IRecentTrx[];
     walletInfo: {
-      balance: number;
+      dollarBalance: number;
+      nairaBalance: number;
       equivalentBTC: number;
     };
   };

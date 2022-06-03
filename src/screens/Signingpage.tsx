@@ -8,7 +8,10 @@ import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
 import toast, { Toaster } from "react-hot-toast";
 
-import { useUserLoginMutation, useVerificationRequestMutation } from "../services/auth";
+import {
+  useUserLoginMutation,
+  useVerificationRequestMutation,
+} from "../services/auth";
 import AppModal from "../modals";
 import { hideModal, showModal } from "../reducers/ui";
 import { useAppDispatch } from "../hooks/useStoreHooks";
@@ -50,7 +53,7 @@ const Signingpage = (): JSX.Element => {
     const data = JSON.parse(tempData);
     verificationRequest(data)
       .unwrap()
-      .then((res) => {
+      .then((res: any) => {
         if (res.message.includes("activation")) {
           toast.success("Verifcation code has been sent to your email");
           push("/verify-code");
@@ -66,7 +69,7 @@ const Signingpage = (): JSX.Element => {
   const onFinish: SubmitHandler<Iinputs> = (values) => {
     userLogin(values)
       .unwrap()
-      .then((res) => {
+      .then((res: any) => {
         console.log(res, "lests see the res");
         if (res.message) {
           dispatch(
@@ -85,7 +88,7 @@ const Signingpage = (): JSX.Element => {
           push("/dashboard");
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (err.data?.message.includes("password")) {
           toast.error("Invalid login credetials, please confirm and try again");
         }
@@ -192,7 +195,12 @@ const Signingpage = (): JSX.Element => {
               <p>
                 {isLoading ? (
                   <p className="flex items-center justify-center w-full">
-                    <Loader type="ThreeDots" color="#fff" height={30} width={60} />
+                    <Loader
+                      type="ThreeDots"
+                      color="#fff"
+                      height={30}
+                      width={60}
+                    />
                   </p>
                 ) : (
                   "Log In"

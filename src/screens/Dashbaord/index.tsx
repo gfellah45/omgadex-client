@@ -62,7 +62,10 @@ const Dashboard = () => {
         <CoinCard
           name={"BTC"}
           value={data?.payload.currentCryptoPrices.BTC.price || ""}
-          percentage={data?.payload.currentCryptoPrices.BTC.price_change_percentage_24h || ""}
+          percentage={
+            data?.payload.currentCryptoPrices.BTC.price_change_percentage_24h ||
+            ""
+          }
           icon={<Btc />}
           chart={<LineChart />}
           initials={"BTC"}
@@ -70,7 +73,10 @@ const Dashboard = () => {
         <CoinCard
           name={"ETH"}
           value={data?.payload.currentCryptoPrices.ETH.price || ""}
-          percentage={data?.payload.currentCryptoPrices.ETH.price_change_percentage_24h || ""}
+          percentage={
+            data?.payload.currentCryptoPrices.ETH.price_change_percentage_24h ||
+            ""
+          }
           icon={<Eth />}
           chart={<LineChart />}
           initials={"ETH"}
@@ -78,7 +84,10 @@ const Dashboard = () => {
         <CoinCard
           name={"Binace coin"}
           value={data?.payload.currentCryptoPrices.BNB.price || ""}
-          percentage={data?.payload.currentCryptoPrices.BNB.price_change_percentage_24h || ""}
+          percentage={
+            data?.payload.currentCryptoPrices.BNB.price_change_percentage_24h ||
+            ""
+          }
           icon={<Binance />}
           chart={<LineChart />}
           initials={"BNB"}
@@ -92,7 +101,9 @@ const Dashboard = () => {
             theme === "light" ? "bg-white" : "bg-neutral-800"
           )}
         >
-          <div className="px-8 text-2xl font-semibold  text-neutral-500">Recent Transactions</div>
+          <div className="px-8 text-2xl font-semibold  text-neutral-500">
+            Recent Transactions
+          </div>
           <div className="h-px mx-2 mt-5 bg-gray-300"></div>
           {!isLoading && (
             <div className="mt-10 ">
@@ -117,9 +128,16 @@ const Dashboard = () => {
             </div>
           )}
 
-          <div className="flex items-center px-8 space-x-5" onClick={() => push("/transactions")}>
+          <div
+            className="flex items-center px-8 space-x-5"
+            onClick={() => push("/transactions")}
+          >
             <ArrowRight />
-            <p className={clsx(theme === "light" ? "text-blue-500" : "text-gray-300")}>
+            <p
+              className={clsx(
+                theme === "light" ? "text-blue-500" : "text-gray-300"
+              )}
+            >
               View all activity
             </p>
           </div>
@@ -132,17 +150,25 @@ const Dashboard = () => {
           )}
         >
           <div>
-            <p className="mt-4 text-3xl font-bold text-center ">Wallet Overview</p>
+            <p className="mt-4 text-3xl font-bold text-center ">
+              Wallet Overview
+            </p>
           </div>
           <div className="flex items-center justify-center mt-12 ">
             <div className="space-y-3 w-11/12">
-              <p className="text-sm font-medium  text-neutral-400">Total balance</p>
+              <p className="text-sm font-medium  text-neutral-400">
+                Total balance
+              </p>
               <p className="text-[40px] font-bold  w-12/12">
-                {CurrencyFormatter.format(Number(data?.payload?.walletInfo?.balance))}
+                {CurrencyFormatter("USD").format(
+                  Number(data?.payload?.walletInfo?.dollarBalance)
+                )}
               </p>
               <p className=" text-neutral-500">
                 {data?.payload.walletInfo.equivalentBTC.toPrecision(7)} USDT
-                <span className="p-2 mx-4 text-white bg-green-500 rounded-md">BTC</span>
+                <span className="p-2 mx-4 text-white bg-green-500 rounded-md">
+                  BTC
+                </span>
               </p>
             </div>
           </div>
