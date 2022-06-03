@@ -24,6 +24,7 @@ module.exports = {
         omgray3: "#808191",
         auth_bg: "#F6EDFF",
         light_purple: "#9757D7",
+        light_blue: "#4BC9F0",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
@@ -36,6 +37,7 @@ module.exports = {
         pattern: "url('/assets/toppng.svg')",
         side: "url('/assets/balance_cover_dark.svg')",
         comingsoon: "url('/assets/coming_soon_footer.svg')",
+        astronautBg: "url('/assets/astronautBackGround.png')",
       },
     },
   },

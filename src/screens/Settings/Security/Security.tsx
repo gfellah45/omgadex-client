@@ -8,15 +8,77 @@ import ArrowBack from "../../../assets/svg/ArrowBack";
 import GoogleAuth from "../../../assets/svg/GoogleAuth";
 import Image from "next/image";
 import CopyIcon from "../../../assets/svg/CopyIcon";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useChangePasswordMutation } from "../../../services/settings";
+import toast, { Toaster } from "react-hot-toast";
 
 const PASSWORD_MODAL = "PASSWORD_MODAL";
 const TWO_FA_MODAL = "TWO_FA_MODAL";
 
-function Security() {
-  const [twoFaModal, setTwoFaModal] = useState("start");
+interface IchangePassword {
+  oldPassword: string;
+  newPassword: string;
+  newPassword2: string;
+}
+
+type passwordTypes = {
+  oldPassword: boolean;
+  newPassword: boolean;
+  newPassword2: boolean;
+};
+type PasswordVisibilityType = keyof passwordTypes;
+
+type passwordUpdatedResponse = {
+  message: string;
+  payload?: any;
+};
+
+const Security = () => {
+  const [changePassword, status] = useChangePasswordMutation();
   const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const [twoFaModal, setTwoFaModal] = useState("start");
+  const [showPassword, setShowPassword] = useState<passwordTypes>({
+    oldPassword: false,
+    newPassword: false,
+    newPassword2: false,
+  });
 
   const { modalType } = useAppSelector((state) => state.ui);
+
+  const changePasswordVisibility = (oldPassword: PasswordVisibilityType) => {
+    setShowPassword((prevState: passwordTypes) => ({
+      ...prevState,
+      [oldPassword]: showPassword[oldPassword] === false ? true : false,
+    }));
+  };
+
+  const submitPasswordChange = (data: IchangePassword) => {
+    console.log(status.isLoading, "the password submitted");
+    if (data.newPassword !== data.newPassword2) {
+      return toast.error("Your new password doesnt correspond");
+    }
+    changePassword(data)
+      .unwrap()
+      .then((res: any) => {
+        console.log(res, "the password Response");
+        toast.success(res.message);
+        dispatch(hideModal());
+        reset();
+      })
+      .catch((err: any) => {
+        console.error(err, "Please try again, Something went wrong");
+        toast.error(err?.data?.message);
+        return dispatch(hideModal());
+      });
+  };
+
   return (
     <>
       <div className="w-full h-full">
@@ -63,21 +125,23 @@ function Security() {
               <Close />
             </div>
 
-            <form className="md:w-[80%]  mx-auto">
+            <form onSubmit={handleSubmit(submitPasswordChange)} className="md:w-[80%]  mx-auto">
               <div className="mt-4 flex justify-center flex-col items-center">
                 <div className="w-full">
-                  <label className="text-gray-400 text-xs" htmlFor="currentPassword">
+                  <label className="text-gray-400 text-xs" htmlFor="oldPassword">
                     Current Password
                   </label>
                   <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
                     <input
-                      type="password"
-                      name="currentPassword"
-                      id="currentPassword"
+                      type={showPassword.oldPassword ? "text" : "password"}
+                      {...register("oldPassword")}
+                      id="oldPassword"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="Password"
                     />
-                    <Eye />
+                    <span onClick={() => changePasswordVisibility("oldPassword")}>
+                      <Eye />
+                    </span>
                   </div>
                 </div>
                 <div className="w-full">
@@ -86,13 +150,15 @@ function Security() {
                   </label>
                   <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
                     <input
-                      type="password"
-                      name="password"
-                      id="password"
+                      type={showPassword.newPassword ? "text" : "password"}
+                      {...register("newPassword")}
+                      id="newPassword"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
-                      placeholder="password"
+                      placeholder="new password"
                     />
-                    <Eye />
+                    <span onClick={() => changePasswordVisibility("newPassword")}>
+                      <Eye />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -103,13 +169,15 @@ function Security() {
                   </label>
                   <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
                     <input
-                      type="password"
-                      name="password2"
-                      id="password2"
+                      type={showPassword.newPassword2 ? "text" : "password"}
+                      {...register("newPassword2")}
+                      id="newPassword2"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
-                      placeholder="password"
+                      placeholder="Confirm Password"
                     />
-                    <Eye />
+                    <span onClick={() => changePasswordVisibility("newPassword2")}>
+                      <Eye />
+                    </span>
                   </div>
                   <p className="text-sm text-neutral-500">
                     Use at least 8 characters, 1 number, 1 uppercase & 1 lowercase letter
@@ -274,8 +342,9 @@ function Security() {
           </>
         </AppModal>
       )}
+      <Toaster />
     </>
   );
-}
+};
 
 export default Security;
