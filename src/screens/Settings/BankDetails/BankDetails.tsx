@@ -1,82 +1,159 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, ChangeEvent, useEffect } from "react";
+import clsx from "clsx";
+import { useTheme } from "next-themes";
+import { useForm } from "react-hook-form";
+
 import Close from "../../../assets/svg/Close";
-import Eye from "../../../assets/svg/Eye";
 import TrashCan from "../../../assets/svg/TrashCan";
 import AppModal from "../../../modals";
 import { hideModal, showModal } from "../../../reducers/ui";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStoreHooks";
-import clsx from "clsx";
-import { useTheme } from "next-themes";
+import { debounce } from "../../../lib/helpers";
+import {
+  useAddAccountDetailMutation,
+  useDeleteABankDetailMutation,
+  useFetchAccountDetailsMutation,
+  useGetAllBankDetailsQuery,
+} from "../../../services/settings";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  BankDetail,
+  FetchAccountDetailsError,
+  FetchAccountDetailsSuccess,
+  GetBankDetailsInterface,
+} from "../../../types/bankDetails";
 // Types of modals in this component
 const ADD_BANK_DETAILS_MODAL = "ADD_BANK_DETAILS_MODAL";
 const DELETE_ACCOUNT_MODAL = "DELETE_ACCOUNT_MODAL";
 
-interface bankDetails {
-  name: string;
-  accountNumber: string;
-  id: number;
-}
-
-// Dummy available accounts
-const accounts: bankDetails[] = [
-  { name: "Access Bank", accountNumber: "00********3", id: 1 },
-  { name: "Stanbic", accountNumber: "00********3", id: 2 },
-  { name: "First Bank Nigeria", accountNumber: "00********3", id: 3 },
-];
-
 const BankDetails: FC = () => {
-  const [theAccounts, setAccunts] = useState(accounts);
-  const [selectedId, setSelectedId] = useState(0);
+  const [fetchAccountDetails, { isLoading }] = useFetchAccountDetailsMutation();
+  const [selectedId, setSelectedId] = useState("");
   const dispatch = useAppDispatch();
-
+  const { register, handleSubmit, reset } = useForm();
+  const { theme } = useTheme();
+  const [accountDetails, setAccountDetails] = useState<FetchAccountDetailsSuccess>();
+  const { data, isSuccess } = useGetAllBankDetailsQuery("", {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+  });
+  const [bvn, setBvn] = useState("");
+  const [returnBankDetails, setReturnBankDetails] = useState<GetBankDetailsInterface>(data);
+  const [deleteAnAccount, status] = useDeleteABankDetailMutation();
+  const [addAnAccountDetail] = useAddAccountDetailMutation();
   const { modalType } = useAppSelector((state) => state.ui);
 
-  const deleteAccount = () => {
-    setAccunts((prev) => prev.filter((acount) => acount.id !== selectedId));
+  const handleDeleteAccount = (accountNumber: string) => {
+    deleteAnAccount({ accountNumber })
+      .unwrap()
+      .then((res: any) => {
+        toast.success("Account deleted successful");
+      })
+      .catch((error: any) => {
+        console.log(error, "there was an error deleting the account");
+      });
   };
 
-  const { theme } = useTheme();
+  const onSubmit = (data: any) => {
+    addAnAccountDetail({
+      bvn,
+      accountNumber: accountDetails?.account_number,
+      bankName: accountDetails?.bank_name,
+      bankCode: accountDetails?.bank_code,
+      accountName: accountDetails?.account_name,
+    })
+      .unwrap()
+      .then((res: any) => {
+        setReturnBankDetails((prevState) => ({ data, ...prevState }));
+        toast.success("Account added successful");
+        dispatch(hideModal());
+        reset();
+      })
+      .catch((err: any) => {
+        console.error("something went wrong", err);
+        dispatch(hideModal());
+      });
+  };
+
+  const handleBvnFieldChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setBvn(event.target.value);
+  };
+
+  // this function will be modifield if the fields wunt be disabled any more
+  // const handleFieldChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  //   setBvn(event.target.value);
+  // };;
+
+  const handleAccountNumberChange = debounce<ChangeEvent<HTMLInputElement>>(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      console.log("change this", isLoading);
+      fetchAccountDetails({ accountNo: event.target.value })
+        .unwrap()
+        .then((res: any) => {
+          toast.success(res.message);
+          setAccountDetails(res?.payload);
+        })
+        .catch((err: FetchAccountDetailsError) => {
+          if (err?.status === 400) {
+            return toast.error(err?.data?.message);
+          }
+          return toast.error("Something went wrong");
+        });
+    }
+  );
+
+  useEffect(() => {}, []);
+
   return (
     <>
       <div className="w-full min-h-[60vh]">
-        {theAccounts.map(({ name, accountNumber, id }) => {
-          return (
-            <div
-              key={id}
-              className="flex  items-center justify-between w-full py-6 mb-3 border-b"
-            >
-              <div className="flex flex-col items-start">
-                <p className="font-semibold">{name}</p>
-                <span className="text-neutral-500">{accountNumber}</span>
-              </div>
-              <div>
-                <button
-                  onClick={() => {
-                    dispatch(
-                      showModal({
-                        showModal: true,
-                        modalType: DELETE_ACCOUNT_MODAL,
-                      })
-                    );
-                    setSelectedId(id);
-                  }}
-                  className="bg-red-500 text-white rounded-full px-6 py-2 space-x-3  cursor-pointer flex items-center justify-between "
-                >
-                  Delete
-                </button>
-              </div>
+        {returnBankDetails?.payload !== null ? (
+          returnBankDetails?.payload?.bankDetail.length ? (
+            returnBankDetails?.payload?.bankDetail.map(
+              ({ accountName, accountNumber, _id, bankName, bvn }: BankDetail) => {
+                return (
+                  <div
+                    key={_id}
+                    className="flex  items-center justify-between w-full py-6 mb-3 border-b"
+                  >
+                    <div className="flex flex-col items-start">
+                      <p className="font-semibold">{accountName}</p>
+                      <span className="text-neutral-500">{accountNumber}</span>
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => {
+                          dispatch(
+                            showModal({
+                              showModal: true,
+                              modalType: DELETE_ACCOUNT_MODAL,
+                            })
+                          );
+                          setSelectedId(accountNumber);
+                        }}
+                        className="bg-red-500 text-white rounded-full px-6 py-2 space-x-3  cursor-pointer flex items-center justify-between "
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
+            )
+          ) : (
+            <div className="h-20 w-full grid place-items-center mx-aut">
+              <h1 className="text-center text-xl font-bold">Youve not added any bank details</h1>
             </div>
-          );
-        })}
-        <div className="flex items-center h-full flex-col justify-center">
-          {!accounts.length && (
+          )
+        ) : (
+          <div className="h-20 w-full grid place-items-center mx-aut">
             <div className="w-3/12 mx-auto h-auto flex flex-col justify-center items-center ">
               <h3>Bank Details</h3>
-              <p className="text-center">
-                You do not have any bank account added
-              </p>
+              <p className="text-center">You do not have any bank account added</p>
             </div>
-          )}
+          </div>
+        )}
+        <div className="flex items-center h-full flex-col justify-center">
           <button
             onClick={() =>
               dispatch(
@@ -96,9 +173,7 @@ const BankDetails: FC = () => {
         <AppModal maxWidth="md">
           <div>
             <div>
-              <h2 className="text-3xl mt-2  text-center font-bold">
-                Add Bank Account
-              </h2>
+              <h2 className="text-3xl mt-2  text-center font-bold">Add Bank Account</h2>
             </div>
             <div
               onClick={() => dispatch(hideModal())}
@@ -107,8 +182,25 @@ const BankDetails: FC = () => {
               <Close />
             </div>
 
-            <form className="md:w-[90%]  mx-auto">
+            <form className="md:w-[90%]  mx-auto" onSubmit={handleSubmit(onSubmit)}>
+              {isLoading && <p>Trying to fetch your details</p>}
               <div className="mt-4 flex justify-center flex-col items-center">
+                <div className="w-full">
+                  <label className="text-gray-400 text-xs" htmlFor="accountNumber">
+                    Account Number
+                  </label>
+                  <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
+                    <input
+                      type="text"
+                      {...register("accountNumber", { required: true })}
+                      onChange={handleAccountNumberChange}
+                      id="accountNumber"
+                      // value={accountDetails?.account_number ? accountDetails?.account_number : ""}
+                      className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
+                      placeholder="Enter Accunt Number"
+                    />
+                  </div>
+                </div>
                 <div className="w-full">
                   <label className="text-gray-400 text-xs" htmlFor="bankName">
                     Bank Name
@@ -116,44 +208,26 @@ const BankDetails: FC = () => {
                   <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
                     <input
                       type="text"
-                      name="bankName"
+                      value={accountDetails?.bank_name ? accountDetails?.bank_name : ""}
+                      {...register("bankName")}
                       id="bankName"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="Select Bank"
-                    />
-                    <Eye />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <label
-                    className="text-gray-400 text-xs"
-                    htmlFor="accountNumber"
-                  >
-                    Account Number
-                  </label>
-                  <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
-                    <input
-                      type="number"
-                      name="accountNumber"
-                      id="accountNumber"
-                      className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
-                      placeholder="Enter Accunt Number"
+                      // onChange={handleFieldChange}
                     />
                   </div>
                 </div>
               </div>
               <div className="flex justify-center flex-wrap items-center">
                 <div className="w-full">
-                  <label
-                    className="text-gray-400 text-xs"
-                    htmlFor="accountName"
-                  >
+                  <label className="text-gray-400 text-xs" htmlFor="accountName">
                     Account Name
                   </label>
                   <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
                     <input
                       type="text"
-                      name="accountName"
+                      value={accountDetails?.account_name ? accountDetails?.account_name : ""}
+                      {...register("accountName")}
                       id="accountName"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="Account Name"
@@ -167,17 +241,22 @@ const BankDetails: FC = () => {
                   <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
                     <input
                       type="text"
-                      name="bvn"
+                      {...register("bvn")}
                       id="bvn"
+                      value={bvn}
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="BVN"
+                      onChange={handleBvnFieldChange}
                     />
                   </div>
                 </div>
               </div>
 
               <div className="my-2 flex justify-between items-center">
-                <button className="bg-primary text-center w-full text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer">
+                <button
+                  type="submit"
+                  className="bg-primary text-center w-full text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer"
+                >
                   Submit Account
                 </button>
               </div>
@@ -190,9 +269,7 @@ const BankDetails: FC = () => {
         <AppModal>
           <div>
             <div>
-              <h2 className="text-3xl mt-2  text-center font-bold">
-                Delete Bank Account
-              </h2>
+              <h2 className="text-3xl mt-2  text-center font-bold">Delete Bank Account</h2>
             </div>
             <div
               onClick={() => dispatch(hideModal())}
@@ -209,14 +286,13 @@ const BankDetails: FC = () => {
             </div>
             <div>
               <p className="text-center">
-                Are you sure you want to delete this account ? This action
-                cannot be undone
+                Are you sure you want to delete this account ? This action cannot be undone
               </p>
             </div>
             <div className="mb-2 mt-4 w-8/12 mx-auto flex justify-between items-center">
               <button
                 onClick={() => {
-                  deleteAccount();
+                  handleDeleteAccount(selectedId);
                   dispatch(hideModal());
                 }}
                 className="bg-orange-500 text-center w-full text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer"
@@ -227,6 +303,7 @@ const BankDetails: FC = () => {
           </div>
         </AppModal>
       )}
+      <Toaster />
     </>
   );
 };

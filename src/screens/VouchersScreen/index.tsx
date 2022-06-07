@@ -8,10 +8,7 @@ import VoucherLogo from "../../assets/svg/VoucherLogo";
 import AppModal from "../../modals";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
 import { hideModal } from "../../reducers/ui";
-import {
-  useGetRecentRateQuery,
-  useVerifyPaymentQuery,
-} from "../../services/vouchers";
+import { useGetRecentRateQuery, useVerifyPaymentQuery } from "../../services/vouchers";
 import toast, { Toaster } from "react-hot-toast";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
@@ -49,9 +46,7 @@ const VouchersScreen: FC = () => {
 
   useEffect(() => {
     if (confirmSuccess) {
-      toast.success(
-        "Payment Successful. Please Check you Email for your Voucher Code"
-      );
+      toast.success("Payment Successful. Please Check you Email for your Voucher Code");
     }
   }, [confirmSuccess]);
 
@@ -86,33 +81,33 @@ const VouchersScreen: FC = () => {
   const Vouchers = [
     {
       id: 1,
-      value: "1K",
-      icon: <OvalSvg />,
-      amount: 1000,
-    },
-    {
-      id: 2,
-      value: "2K",
-      icon: <RectangleSvg />,
-      amount: 2000,
-    },
-    {
-      id: 3,
-      value: "3K",
-      icon: <OvalSvg />,
-      amount: 3000,
-    },
-    {
-      id: 4,
-      value: "4K",
-      icon: <RectangleSvg />,
-      amount: 4000,
-    },
-    {
-      id: 5,
       value: "5K",
       icon: <OvalSvg />,
       amount: 5000,
+    },
+    {
+      id: 2,
+      value: "10K",
+      icon: <RectangleSvg />,
+      amount: 10000,
+    },
+    {
+      id: 3,
+      value: "20K",
+      icon: <OvalSvg />,
+      amount: 20000,
+    },
+    {
+      id: 4,
+      value: "40K",
+      icon: <RectangleSvg />,
+      amount: 40000,
+    },
+    {
+      id: 5,
+      value: "50K",
+      icon: <OvalSvg />,
+      amount: 50000,
     },
   ];
 
@@ -133,12 +128,7 @@ const VouchersScreen: FC = () => {
 
       <div className="grid grid-cols-3 gap-5 my-5 ">
         {Vouchers.map((item) => (
-          <VoucherCard
-            key={item.id}
-            {...item}
-            setDetails={setDetails}
-            details={details}
-          />
+          <VoucherCard key={item.id} {...item} setDetails={setDetails} details={details} />
         ))}
         <div className="relative flex flex-col items-center justify-center w-full px-4 py-3 bg-gray-700 shadow-sm cursor-pointer rounded-xl">
           <div className="absolute flex flex-col justify-center text-white top-4 left-3">
@@ -155,16 +145,14 @@ const VouchersScreen: FC = () => {
           <div className="py-4 text-lg text-center">
             <div>
               <p>
-                Hello{" "}
-                <span className="font-bold text-primary">{firstName}</span> You
-                are about to purchace a voucher.
+                Hello <span className="font-bold text-primary">{firstName}</span> You are about to
+                purchace a voucher.
               </p>
               <p>
                 Click on
                 <span className="font-semibold text-green-500"> confirm </span>
                 to proceed or
-                <span className="font-semibold text-red-500"> cancel </span> to
-                abort
+                <span className="font-semibold text-red-500"> cancel </span> to abort
               </p>
             </div>
           </div>

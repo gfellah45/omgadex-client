@@ -26,6 +26,8 @@ import toast, { Toaster } from "react-hot-toast";
 import FundSuccess from "./FundSuccess";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { CurrencyFormatter } from "../../lib/currencyFormatter";
+import TrxToDollar from "./TrxToDollar";
 
 type AmountFunded = {
   amountInDollars: string;
@@ -61,13 +63,12 @@ const Wallets = () => {
   const { data: BTC } = useGetWalletQuery({ address, symbol: "BTC" });
   const { data: XRP } = useGetWalletQuery({ address, symbol: "XRP" });
 
-  const { walletInfo, currentCryptoPrices } = useAppSelector(
-    (state) => state?.dashboard?.user?.payload
-  );
+  const { dashboard, ui } = useAppSelector((state) => state);
+
+  const { walletInfo, currentCryptoPrices } = dashboard?.user?.payload;
 
   const { data: fiat, isSuccess } = useGetFiatWalletQuery(undefined, {
     refetchOnFocus: true,
-    refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
 
@@ -87,7 +88,7 @@ const Wallets = () => {
   }
 
   function openModal() {
-    dispatch(showModal({ showModal: true }));
+    dispatch(showModal({ showModal: true, modalType: "FUND" }));
   }
 
   const toggleState = () => {
@@ -123,7 +124,12 @@ const Wallets = () => {
             <div>
               <p className="text-lg text-neutral-500">Total Balance</p>
               <p className="text-4xl font-bold">
-                {show ? isSuccess && fiat.payload.amountInNaira : "*********"}
+                {show
+                  ? isSuccess &&
+                    CurrencyFormatter("USD").format(
+                      Number(fiat.payload.amountInDollars)
+                    )
+                  : "*********"}
               </p>
             </div>
             <div>
@@ -163,12 +169,12 @@ const Wallets = () => {
                 text="Fund"
                 icon={<Deposit />}
                 primary={true}
-                action={openModal}
+                // action={openModal}
               />
             </div>
             <AppModal>
               <>
-                {isSuccessR && (
+                {isSuccessR && ui.modalType === "FUND" && (
                   <div>
                     <FundSuccess
                       amount={amountFunded.amountInNaira}
@@ -176,7 +182,7 @@ const Wallets = () => {
                     />
                   </div>
                 )}
-                {!isSuccessR && (
+                {!isSuccessR && ui.modalType === "FUND" && (
                   <FundWallet
                     redeem={redeem}
                     isLoading={isLoading}
@@ -188,6 +194,7 @@ const Wallets = () => {
                   />
                 )}
               </>
+              {ui?.modalType === "TRX" && <TrxToDollar />}
             </AppModal>
           </div>
         </div>

@@ -5,6 +5,9 @@ import Deposit from "../../assets/svg/Deposit";
 import FiatNaira from "../../assets/svg/FiatNaira";
 import Send from "../../assets/svg/Send";
 import { TransactionButtons } from "../../components/shared/Buttons";
+import { useAppDispatch } from "../../hooks/useStoreHooks";
+import { CurrencyFormatter } from "../../lib/currencyFormatter";
+import { showModal } from "../../reducers/ui";
 
 interface Props {
   icon?: React.ReactElement;
@@ -24,6 +27,17 @@ const FiatCard: FC<Props> = ({
   show,
 }) => {
   const { theme } = useTheme();
+
+  const dispatch = useAppDispatch();
+  const triggerModal = () => {
+    dispatch(
+      showModal({
+        showModal: true,
+        modalType: "TRX",
+      })
+    );
+  };
+
   return (
     <div
       className={clsx(
@@ -43,13 +57,15 @@ const FiatCard: FC<Props> = ({
         <div>
           <p className="text-gray-500 text-sm">Available Balance</p>
           <p className="text-3xl font-semibold">
-            {show ? balance : "*********"}
+            {show
+              ? CurrencyFormatter("USD").format(Number(balance))
+              : "*********"}
           </p>
         </div>
       </div>
 
       <div className="mt-16 w-full">
-        <div className="w-9/12 ml-auto grid grid-cols-3 gap-4">
+        <div className="w-full ml-auto grid grid-cols-4 gap-4">
           <TransactionButtons text="Send" icon={<Deposit />} />
           <TransactionButtons text="Recieve" icon={<Deposit />} />
           <TransactionButtons
@@ -58,6 +74,17 @@ const FiatCard: FC<Props> = ({
             icon={<Send />}
             action={action}
           />
+          <div>
+            <button
+              onClick={triggerModal}
+              className={clsx(
+                "w-full px-4 py-3 flex justify-center items-center space-x-3 font-bold text-[16px] rounded-md lg:px-2 lg:py-3 xl:px-2 xl:py-3 ring-1 text-white bg-primary ring-primary",
+                theme === "dark" && "text-omgray2"
+              )}
+            >
+              Move to Dollar
+            </button>
+          </div>
         </div>
       </div>
     </div>

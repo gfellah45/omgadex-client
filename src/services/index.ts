@@ -9,7 +9,7 @@ import {
 import { logout, registerToken } from "../reducers/auth";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
+  baseUrl: "https://bit-global.herokuapp.com",
   prepareHeaders: (headers, { getState }) => {
     const { auth } = getState() as RootState;
     if (auth.token) {
@@ -18,11 +18,11 @@ const baseQuery = fetchBaseQuery({
     return headers;
   },
 });
-const baseQueryWithReauth: BaseQueryFn<
-  string | FetchArgs,
-  unknown,
-  FetchBaseQueryError
-> = async (args, api, extraOptions) => {
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions
+) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 403) {
     // try to get a new token

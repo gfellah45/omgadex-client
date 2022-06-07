@@ -2,13 +2,7 @@ import React from "react";
 
 const Logo = () => {
   return (
-    <svg
-      width="45"
-      height="38"
-      viewBox="0 0 45 38"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="45" height="38" viewBox="0 0 45 38" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M18.9088 21.2889H0L6.15153 0H25.0585L18.9088 21.2889ZM6.08715 16.7111H15.4682L18.975 4.5743H9.59388L6.08715 16.7111Z"
         fill="url(#paint0_linear_839_14793)"
@@ -27,7 +21,7 @@ const Logo = () => {
           gradientUnits="userSpaceOnUse"
         >
           <stop stopColor="#5510B4" />
-          <stop offset="1" stop-color="#8439CC" />
+          <stop offset="1" stopColor="#8439CC" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_839_14793"

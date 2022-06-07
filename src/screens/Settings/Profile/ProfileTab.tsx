@@ -1,12 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import AppModal from "../../../modals";
 import { hideModal, showModal } from "../../../reducers/ui";
 import { useDispatch } from "react-redux";
 import Close from "../../../assets/svg/Close";
+import { useGetUserProfileQuery, useUpdateUserProfileMutation } from "../../../services/settings";
+import { useForm, SubmitHandler } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+
+let AccountUpdatedSuccessfullyRes = {
+  message: "success",
+  payload: {
+    loginToken:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjIyMTI3Y2QyMDNlMGI1ZGE0N2MwMjMiLCJlbWFpbCI6ImFsYW5kNjIwOUBnbWFpbC5jb20iLCJpc3MiOiJEb2xhd2F5IHRlY2giLCJpYXQiOjE2NTQxNzA1NzEsImV4cCI6MTY1NDI1Njk3MX0.3H-sGCDDuZ62QYYmk0_j4LrB9dQF6v81tyWNCUIzWXg",
+    refreshToken:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjIyMTI3Y2QyMDNlMGI1ZGE0N2MwMjMiLCJpc3MiOiJEb2xhd2F5IHRlY2giLCJpYXQiOjE2NTQxNzA1NzF9.XFL92PDdBBsEFvVB6dzPrLU9vtXMy32HqJOYAxd91Ow",
+    user: {
+      _id: "6222127cd203e0b5da47c023",
+      email: "aland6209@gmail.com",
+      firstName: "Alan",
+      lastName: "Douglas",
+      isAdmin: true,
+      phone: "08133814442",
+      enable2fa: true,
+      address: "0x465f1c46F713F6b8580A124B8fd4C8c09A96953B",
+    },
+  },
+};
+
+interface userResponseInterface {
+  createdAt: string;
+  email: string;
+  firstName: string;
+  isActivated: boolean;
+  lastName: string;
+  phone: string;
+  updatedAt: string;
+  _id: string;
+}
+
+export type Inputs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+};
 
 function ProfileTab() {
   const dispatch = useDispatch();
+  const { data, isLoading, status } = useGetUserProfileQuery("", {
+    refetchOnMountOrArgChange: true,
+  });
+  const [updateUserInfo] = useUpdateUserProfileMutation();
+  const [userData, setUserData] = useState<userResponseInterface>(data?.payload);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target;
+    let modifiedState: any = () => ({
+      ...userData,
+      [name]: value,
+    });
+    setUserData(modifiedState);
+  };
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    updateUserInfo(data)
+      .unwrap()
+      .then((res: any) => {
+        console.log(res, "cause data was successfull");
+        toast.success("Profile updated successful");
+      })
+      .catch((err: any) => console.error("something went wrong", err));
+  };
+
   return (
     <>
       <div className="h-full">
@@ -22,8 +94,10 @@ function ProfileTab() {
               height={"100%"}
             />
             <div>
-              <p className="text-[1.6rem] font-[500]">David Johnson</p>
-              <p className="text-neutral-500 font-[500]">schinner@ui8.net</p>
+              <p className="text-[1.6rem] font-[500]">
+                {userData?.firstName} {userData?.lastName}
+              </p>
+              <p className="text-neutral-500 font-[500]">{userData?.email}</p>
             </div>
           </div>
           <div>
@@ -32,8 +106,7 @@ function ProfileTab() {
             </button>
           </div>
         </header>
-
-        <form className="md:w-[90%]">
+        <form className="md:w-[90%]" onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-4 flex justify-between flex-wrap items-center">
             <div className="w-full md:w-5/12">
               <label className="text-gray-400 text-xs" htmlFor="firstName">
@@ -42,9 +115,11 @@ function ProfileTab() {
               <div className="my-3 border rounded-xl">
                 <input
                   type="text"
-                  name="firstName"
                   id="firstName"
-                  className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
+                  value={userData?.firstName}
+                  {...register("firstName")}
+                  onChange={handleFieldChange}
+                  className="w-full py-3 px-1 rounded-xl text-gray-400 focus:outline-none placeholder:text-sm"
                   placeholder="David"
                 />
               </div>
@@ -56,9 +131,12 @@ function ProfileTab() {
               <div className="my-3 border rounded-xl">
                 <input
                   type="text"
-                  name="lastname"
+                  {...register("lastName")}
+                  onChange={handleFieldChange}
                   id="lastname"
-                  className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
+                  // defaultValue={userData?.lastName}
+                  value={userData?.lastName}
+                  className="w-full py-3 text-gray-400 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                   placeholder="Johnson"
                 />
               </div>
@@ -72,9 +150,11 @@ function ProfileTab() {
               <div className="my-3 border rounded-xl">
                 <input
                   type="email"
-                  name="email"
+                  {...register("email")}
+                  onChange={handleFieldChange}
                   id="email"
-                  className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
+                  value={userData?.email}
+                  className="w-full py-3 px-1 text-gray-400 rounded-xl focus:outline-none placeholder:text-sm"
                   placeholder="David.johnson@gmail.com"
                 />
               </div>
@@ -85,10 +165,12 @@ function ProfileTab() {
               </label>
               <div className="my-3 border rounded-xl">
                 <input
-                  type="text"
-                  name="phone"
+                  type="tel"
+                  {...register("phone")}
                   id="phone"
-                  className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
+                  value={userData?.phone}
+                  onChange={handleFieldChange}
+                  className="w-full py-3 px-1 text-gray-400 rounded-xl focus:outline-none placeholder:text-sm"
                   placeholder="Enter Phone Number"
                 />
               </div>
@@ -125,6 +207,7 @@ function ProfileTab() {
           </div>
         </div>
       </AppModal>
+      <Toaster />
     </>
   );
 }

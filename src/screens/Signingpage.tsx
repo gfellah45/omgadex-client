@@ -53,7 +53,7 @@ const Signingpage = (): JSX.Element => {
     const data = JSON.parse(tempData);
     verificationRequest(data)
       .unwrap()
-      .then((res) => {
+      .then((res: any) => {
         if (res.message.includes("activation")) {
           toast.success("Verifcation code has been sent to your email");
           push("/verify-code");
@@ -69,7 +69,7 @@ const Signingpage = (): JSX.Element => {
   const onFinish: SubmitHandler<Iinputs> = (values) => {
     userLogin(values)
       .unwrap()
-      .then((res) => {
+      .then((res: any) => {
         console.log(res, "lests see the res");
         if (res.message) {
           dispatch(
@@ -88,7 +88,7 @@ const Signingpage = (): JSX.Element => {
           push("/dashboard");
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (err.data?.message.includes("password")) {
           toast.error("Invalid login credetials, please confirm and try again");
         }
@@ -107,7 +107,7 @@ const Signingpage = (): JSX.Element => {
   return (
     <AuthLayout>
       <FormLayout
-        heading="Sign in to Omega DEX"
+        heading="Sign in to Lajeni"
         next="Don't have an account ?"
         action="Sign up for free"
         link="/signup"

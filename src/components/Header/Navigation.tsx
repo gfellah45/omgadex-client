@@ -42,13 +42,13 @@ const Navigation: FC = () => {
             {/* desktop navigation */}
 
             {/* loging and language buttons */}
-            <div className="items-center justify-between hidden lg:w-[27%] xl:w-[30%] lg:flex">
+            <div className="items-center justify-between  lg:w-[27%] xl:w-[30%] lg:flex">
               <Switcher />
-              <button className="flex items-center space-x-2">
+              <button className="lg:flex items-center hidden space-x-2">
                 <span className="text-sm lg:text-sm">{"EN"}</span>{" "}
                 <FaCaretDown />
               </button>
-              <div className="flex lg:space-x-3 ">
+              <div className="lg:flex hidden lg:space-x-3 ">
                 <p onClick={() => router.push("/signup")}>
                   <FilledButtons text="Sign Up" />
                 </p>
