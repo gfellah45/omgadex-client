@@ -1,20 +1,21 @@
-import React, { useState } from "react";
-import ArrowBack from "../../../assets/svg/ArrowBack";
-import Deposit from "../../../assets/svg/Deposit";
-import FiatNaira from "../../../assets/svg/FiatNaira";
-import Send from "../../../assets/svg/Send";
-import { TransactionButtons } from "../../../components/shared/Buttons";
-import { useRouter } from "next/router";
-import TransactionTable from "../../../components/shared/TransactionTable";
-import { useTheme } from "next-themes";
-import clsx from "clsx";
-import { useAppDispatch, useAppSelector } from "../../../hooks/useStoreHooks";
-import { CurrencyFormatter } from "../../../lib/currencyFormatter";
-import { hideModal, showModal } from "../../../reducers/ui";
-import AppModal from "../../../modals";
-import FundSuccess from "../FundSuccess";
-import FundWallet from "../FundWallet";
-import { useRedeemVoucherMutation } from "../../../services/vouchers";
+// @ts-nocheck
+import React, { useState } from 'react';
+import ArrowBack from '../../../assets/svg/ArrowBack';
+import Deposit from '../../../assets/svg/Deposit';
+import FiatNaira from '../../../assets/svg/FiatNaira';
+import Send from '../../../assets/svg/Send';
+import { TransactionButtons } from '../../../components/shared/Buttons';
+import { useRouter } from 'next/router';
+import TransactionTable from '../../../components/shared/TransactionTable';
+import { useTheme } from 'next-themes';
+import clsx from 'clsx';
+import { useAppDispatch, useAppSelector } from '../../../hooks/useStoreHooks';
+import { CurrencyFormatter } from '../../../lib/currencyFormatter';
+import { hideModal, showModal } from '../../../reducers/ui';
+import AppModal from '../../../modals';
+import FundSuccess from '../FundSuccess';
+import FundWallet from '../FundWallet';
+import { useRedeemVoucherMutation } from '../../../services/vouchers';
 
 type AmountFunded = {
   amountInDollars: string;
@@ -25,14 +26,14 @@ const TransactionTrade = () => {
   const { back, push } = useRouter();
 
   const [amountFunded, setAmountFunded] = useState<AmountFunded>({
-    amountInDollars: "",
-    amountInNaira: "",
+    amountInDollars: '',
+    amountInNaira: '',
   });
 
   const { theme } = useTheme();
 
   const { balance, equivalentBTC } = useAppSelector(
-    (state) => state.dashboard.user.payload.walletInfo
+    (state) => state.dashboard.user.payload.walletInfo,
   );
 
   const dispatch = useAppDispatch();
@@ -47,19 +48,19 @@ const TransactionTrade = () => {
     useRedeemVoucherMutation();
 
   const routeToBuy = () => {
-    push("/wallets/buy");
+    push('/wallets/buy');
   };
 
   const routeToSell = () => {
-    push("/wallets/sell");
+    push('/wallets/sell');
   };
 
   return (
     <div className="flex flex-1 flex-col h-full px-8 py-6">
       <div
         className={clsx(
-          "rounded-2xl shadow-sm",
-          theme === "light" ? "bg-white" : "bg-neutral-800"
+          'rounded-2xl shadow-sm',
+          theme === 'light' ? 'bg-white' : 'bg-neutral-800',
         )}
       >
         <div className="flex justify-between flex-wrap items-center px-6 py-4">
@@ -106,7 +107,7 @@ const TransactionTrade = () => {
             {Number(equivalentBTC).toFixed(8)}
             <span className="bg-gray-700 text-white py-2 px-2 text-sm rounded-lg mx-3">
               BTC
-            </span>{" "}
+            </span>{' '}
           </p>
         </div>
       </div>

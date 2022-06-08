@@ -1,32 +1,33 @@
-import React, { useState } from "react";
-import { BiChevronDown } from "react-icons/bi";
-import Image from "next/image";
-import btc from "../../../public/assets/btc.png";
-import mastercard from "../../../public/assets/XMLID_328_.png";
-import Visa from "../../../public/assets/visa.png";
-import googlepay from "../../../public/assets/googlePay.png";
-import { useAppDispatch } from "../../hooks/useStoreHooks";
-import { hideModal, showModal } from "../../reducers/ui";
-import AppModal from "../../modals";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { PaystackButton } from "react-paystack";
+// @ts-nocheck
+import React, { useState } from 'react';
+import { BiChevronDown } from 'react-icons/bi';
+import Image from 'next/image';
+import btc from '../../../public/assets/btc.png';
+import mastercard from '../../../public/assets/XMLID_328_.png';
+import Visa from '../../../public/assets/visa.png';
+import googlepay from '../../../public/assets/googlePay.png';
+import { useAppDispatch } from '../../hooks/useStoreHooks';
+import { hideModal, showModal } from '../../reducers/ui';
+import AppModal from '../../modals';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { PaystackButton } from 'react-paystack';
 import {
   useGetRateQuery,
   usePurchaseVoucherNonLoggedInMutation,
   useVerifyPaymentQuery,
-} from "../../services/vouchers";
-import { isEmpty } from "lodash";
-import { formatCurrency } from "../../utils";
+} from '../../services/vouchers';
+import { isEmpty } from 'lodash';
+import { formatCurrency } from '../../utils';
 
 interface Props {}
 
 const Form = (props: Props) => {
   const [voucher, setVoucher] = useState([
-    "$20",
-    "$50",
-    "$100",
-    "$200",
-    "$500",
+    '$20',
+    '$50',
+    '$100',
+    '$200',
+    '$500',
   ]);
 
   const {
@@ -46,15 +47,15 @@ const Form = (props: Props) => {
     amountInDollars: number;
     view: boolean;
   }>({
-    email: "",
+    email: '',
     amountInNaira: 0,
-    txnRef: "",
+    txnRef: '',
     rate: 0,
     amountInDollars: 0,
     view: false,
   });
 
-  const [ref, setRef] = useState("");
+  const [ref, setRef] = useState('');
 
   // rate hook
 
@@ -62,13 +63,13 @@ const Form = (props: Props) => {
 
   // set amount in naira
   const amountInNaira =
-    Number(rate?.payload.nairaEquivalence) * parseInt(current.replace("$", ""));
+    Number(rate?.payload.nairaEquivalence) * parseInt(current.replace('$', ''));
 
   const dispatch = useAppDispatch();
 
   // trigger modal
   const triggerModal = () => {
-    dispatch(showModal({ showModal: true, modalType: "buy vouucher" }));
+    dispatch(showModal({ showModal: true, modalType: 'buy vouucher' }));
   };
 
   const choose = (item: string) => {
@@ -78,7 +79,7 @@ const Form = (props: Props) => {
   // paystack key
 
   const config = {
-    publicKey: "pk_test_8a379d8bc67e6c9e77c337fa852de6c641d81063",
+    publicKey: 'pk_test_8a379d8bc67e6c9e77c337fa852de6c641d81063',
     email: voucherResponse.email,
     amount: voucherResponse.amountInNaira * 100,
     reference: voucherResponse.txnRef,
@@ -97,16 +98,16 @@ const Form = (props: Props) => {
 
   const componentProps = {
     ...config,
-    text: "Confirm",
+    text: 'Confirm',
     onSuccess: (reference: any) => handlePaystackSuccessAction(reference),
     onClose: () => {
-      console.log("closed");
+      console.log('closed');
     },
   };
 
   const onFinish: SubmitHandler<{ email: string }> = async (data) => {
     const resp = await purchased({
-      amountInDollars: parseInt(current.replace("$", "")),
+      amountInDollars: parseInt(current.replace('$', '')),
       amountInNaira,
       email: data.email,
       rate: Number(rate?.payload.nairaEquivalence),
@@ -138,37 +139,37 @@ const Form = (props: Props) => {
 
             <div className="space-y-3">
               <div className="text-xl">
-                Amount in dollars:{" "}
+                Amount in dollars:{' '}
                 <span className="font-semibold text-secondary">
                   {formatCurrency(
                     voucherResponse ? voucherResponse.amountInDollars : 0,
-                    "USD"
+                    'USD',
                   )}
                 </span>
               </div>
               <div className="text-xl">
-                Amount in naira:{" "}
+                Amount in naira:{' '}
                 <span className="font-semibold text-secondary">
                   {formatCurrency(
                     voucherResponse ? voucherResponse.amountInNaira : 0,
-                    "NGN"
+                    'NGN',
                   )}
                 </span>
               </div>
               <div className="text-xl">
-                Transaction Rate:{" "}
+                Transaction Rate:{' '}
                 <span className="font-semibold text-secondary">
                   {voucherResponse.rate}
                 </span>
               </div>
               <div className="text-xl">
-                Transaction Reference:{" "}
+                Transaction Reference:{' '}
                 <span className="font-semibold text-secondary">
                   {voucherResponse.txnRef}
                 </span>
               </div>
               <div className="text-xl">
-                Email:{" "}
+                Email:{' '}
                 <span className="font-semibold text-secondary">
                   {voucherResponse.email}
                 </span>
@@ -195,7 +196,7 @@ const Form = (props: Props) => {
           <div>
             <div className="my-3 text-3xl font-semibold">Hello!</div>
             <p className="my-2 text-base text-gray-500">
-              Your are about to purchase a Voucher with the following details{" "}
+              Your are about to purchase a Voucher with the following details{' '}
             </p>
 
             <div className="flex flex-col w-full p-3 my-4 space-y-3 bg-gray-100 rounded shadow">
@@ -203,11 +204,11 @@ const Form = (props: Props) => {
                 Amount in Dollar: <span className="font-bold">{current}</span>
               </div>
               <div className="text-lg">
-                Equivalent in Naira:{" "}
+                Equivalent in Naira:{' '}
                 <span className="font-bold">
-                  {amountInNaira.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "NGN",
+                  {amountInNaira.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'NGN',
                   })}
                 </span>
               </div>
@@ -219,7 +220,7 @@ const Form = (props: Props) => {
               </label>
 
               <input
-                {...register("email", { required: "This is required" })}
+                {...register('email', { required: 'This is required' })}
                 type="email"
                 id="email"
                 className="w-full p-1 my-3 border-2"
@@ -231,7 +232,7 @@ const Form = (props: Props) => {
 
               <div className="my-4 text-gray-500">
                 <p>
-                  {" "}
+                  {' '}
                   Please ensure you crosscheck and input your correct email
                   address before proceeding
                 </p>
@@ -278,7 +279,7 @@ const Form = (props: Props) => {
               <p
                 onClick={() => choose(item)}
                 className={` ${
-                  current === item ? "bg-white border" : "bg-gray"
+                  current === item ? 'bg-white border' : 'bg-gray'
                 }  flex items-center cursor-pointer border-blue-500 font-medium justify-center p-2 rounded-md  text-secondary`}
                 key={index}
               >
@@ -323,7 +324,7 @@ const Form = (props: Props) => {
                 <Image src={Visa} alt="visa" />
               </div>
               <div className="mx-2.5">
-                {" "}
+                {' '}
                 <Image src={googlepay} alt="google pay" />
               </div>
             </div>

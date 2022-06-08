@@ -1,13 +1,14 @@
-import React, { FC } from "react";
-import Close from "../../assets/svg/Close";
-import { useAppDispatch } from "../../hooks/useStoreHooks";
-import { hideModal } from "../../reducers/ui";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useGetRateQuery } from "../../services/vouchers";
-import toast from "react-hot-toast";
-import { CurrencyFormatter } from "../../lib/currencyFormatter";
-import { useTransferToDollarWalletMutation } from "../../services/wallet";
-import Loader from "react-loader-spinner";
+// @ts-nocheck
+import React, { FC } from 'react';
+import Close from '../../assets/svg/Close';
+import { useAppDispatch } from '../../hooks/useStoreHooks';
+import { hideModal } from '../../reducers/ui';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useGetRateQuery } from '../../services/vouchers';
+import toast from 'react-hot-toast';
+import { CurrencyFormatter } from '../../lib/currencyFormatter';
+import { useTransferToDollarWalletMutation } from '../../services/wallet';
+import Loader from 'react-loader-spinner';
 
 const TrxToDollar: FC = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +16,7 @@ const TrxToDollar: FC = () => {
   const { handleSubmit, register, watch, reset } = useForm();
 
   const { data } = useGetRateQuery();
-  const amount = watch("amount");
+  const amount = watch('amount');
 
   const rate = Number(data?.payload.nairaEquivalence);
 
@@ -26,13 +27,13 @@ const TrxToDollar: FC = () => {
       const res = await transfer(data.amount).unwrap();
       toast.success(
         `${res.message.dollarBalance.toFixed(
-          2
-        )} has been transferred to your Dollar wallet`
+          2,
+        )} has been transferred to your Dollar wallet`,
       );
       dispatch(hideModal());
       reset();
     } catch (e) {
-      toast.error("Something went wrong, please try again");
+      toast.error('Something went wrong, please try again');
     }
   };
 
@@ -55,14 +56,14 @@ const TrxToDollar: FC = () => {
         <div>
           <label className="text-gray-600 my-2">Amount</label>
           <input
-            {...register("amount", { required: true })}
+            {...register('amount', { required: true })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
             type="number"
             placeholder="Enter Amount"
           />
         </div>
         <p className="mt-2 text-neutral-700">
-          You are getting {CurrencyFormatter("USD").format(amount / rate)} at
+          You are getting {CurrencyFormatter('USD').format(amount / rate)} at
           the rate of {rate}/dollar
         </p>
 
@@ -73,7 +74,7 @@ const TrxToDollar: FC = () => {
                 <Loader type="ThreeDots" color="#fff" height={30} width={60} />
               </p>
             ) : (
-              " Transfer"
+              ' Transfer'
             )}
           </button>
         </div>

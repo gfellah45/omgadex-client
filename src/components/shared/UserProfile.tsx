@@ -1,16 +1,17 @@
-import React, { FC, useState } from "react";
-import { FaCaretDown } from "react-icons/fa";
-import NotifIcon from "../../assets/svg/NotifIcon";
-import Image from "next/image";
-import CarretDown from "../../assets/svg/CarretDown";
-import { Menu, Transition, Switch } from "@headlessui/react";
-import Profile from "../../assets/svg/Profile";
-import Settings from "../../assets/svg/Settings";
-import Logout from "../../assets/svg/Logout";
-import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
-import { useRouter } from "next/router";
-import { logout } from "../../reducers/auth";
-import Switcher from "./Switcher";
+// @ts-nocheck
+import React, { FC, useState } from 'react';
+import { FaCaretDown } from 'react-icons/fa';
+import NotifIcon from '../../assets/svg/NotifIcon';
+import Image from 'next/image';
+import CarretDown from '../../assets/svg/CarretDown';
+import { Menu, Transition, Switch } from '@headlessui/react';
+import Profile from '../../assets/svg/Profile';
+import Settings from '../../assets/svg/Settings';
+import Logout from '../../assets/svg/Logout';
+import { useAppDispatch, useAppSelector } from '../../hooks/useStoreHooks';
+import { useRouter } from 'next/router';
+import { logout } from '../../reducers/auth';
+import Switcher from './Switcher';
 
 const UserProfile: FC = () => {
   const user = useAppSelector(({ auth }) => auth.user);
@@ -24,7 +25,7 @@ const UserProfile: FC = () => {
     // dispatch(clearUserInfo());
     dispatch(logout());
 
-    push("/login");
+    push('/login');
   };
 
   return (
@@ -32,7 +33,7 @@ const UserProfile: FC = () => {
       <Switcher />
       <div>
         <button className="flex items-center space-x-2">
-          <span className="text-sm lg:text-sm">{"EN"}</span> <FaCaretDown />
+          <span className="text-sm lg:text-sm">{'EN'}</span> <FaCaretDown />
         </button>
       </div>
 
@@ -41,13 +42,19 @@ const UserProfile: FC = () => {
       </div>
 
       <div className="w-10 h-10 overflow-hidden rounded-full">
-        <Image src="/assets/user.svg" alt="user" width={"100%"} height={"100%"} />
+        <Image
+          src="/assets/user.svg"
+          alt="user"
+          width={'100%'}
+          height={'100%'}
+        />
       </div>
 
       <Menu as="div" className="relative inline-block text-left">
         <div className="cursor-pointer">
           <Menu.Button className="flex items-center space-x-2">
-            <span className="text-sm lg:text-sm">{user.firstName}</span> <CarretDown />
+            <span className="text-sm lg:text-sm">{user.firstName}</span>{' '}
+            <CarretDown />
           </Menu.Button>
         </div>
 
@@ -66,7 +73,7 @@ const UserProfile: FC = () => {
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-50 shadow-sm " : "text-gray-900"
+                      active ? 'bg-gray-50 shadow-sm ' : 'text-gray-900'
                     } group flex space-x-4  items-center w-full px-4 rounded  py-2 text-base`}
                   >
                     <Profile />
@@ -78,7 +85,7 @@ const UserProfile: FC = () => {
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? "bg-gray-50 shadow-sm " : "text-gray-900"
+                      active ? 'bg-gray-50 shadow-sm ' : 'text-gray-900'
                     } group flex space-x-4  items-center w-full px-4 rounded  py-2 text-base`}
                   >
                     <Settings />
@@ -91,7 +98,7 @@ const UserProfile: FC = () => {
                   <button
                     onClick={() => logUserOut()}
                     className={`${
-                      active ? "bg-gray-50 shadow-sm " : "text-gray-900"
+                      active ? 'bg-gray-50 shadow-sm ' : 'text-gray-900'
                     } group flex space-x-4  items-center w-full px-4 rounded  py-2 text-base`}
                   >
                     <Logout />

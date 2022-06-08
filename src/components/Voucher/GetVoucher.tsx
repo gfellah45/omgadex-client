@@ -1,9 +1,10 @@
-import React from "react";
-import Container from "../shared/Container";
+// @ts-nocheck
+import React from 'react';
+import Container from '../shared/Container';
 
-import { voucherList } from "../../data";
-import VoucherCard from "./VoucherCard";
-import Form from "./Form";
+import { voucherList } from '../../data';
+import VoucherCard from './VoucherCard';
+import Form from './Form';
 
 interface Props {}
 

@@ -1,15 +1,16 @@
-import React from "react";
-import AuthLayout from "../components/shared/AuthLayout";
-import FormLayout from "../components/shared/FormLayout";
-import Inputs from "../components/shared/Inputs";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+// @ts-nocheck
+import React from 'react';
+import AuthLayout from '../components/shared/AuthLayout';
+import FormLayout from '../components/shared/FormLayout';
+import Inputs from '../components/shared/Inputs';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 
-import toast, { Toaster } from "react-hot-toast";
-import { useRouter } from "next/router";
-import { passwordValidator } from "../utils";
-import Loader from "react-loader-spinner";
-import PhoneNumberInput from "../components/shared/PhoneNumberInput";
-import { useCreateUserMutation } from "../services/auth";
+import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/router';
+import { passwordValidator } from '../utils';
+import Loader from 'react-loader-spinner';
+import PhoneNumberInput from '../components/shared/PhoneNumberInput';
+import { useCreateUserMutation } from '../services/auth';
 
 interface Iinputs {
   firstName: string;
@@ -33,7 +34,7 @@ const Signuppage = (): JSX.Element => {
 
   const { push } = useRouter();
 
-  const password = watch("password");
+  const password = watch('password');
 
   const [createUser, result] = useCreateUserMutation();
 
@@ -43,17 +44,19 @@ const Signuppage = (): JSX.Element => {
     createUser(values)
       .unwrap()
       .then((res) => {
-        if (res.message.includes("successfully created ")) {
-          localStorage.setItem("tempdata", JSON.stringify(values));
-          toast.success("Succesfully signed up. please select a suitable verification method");
-          push("/verify-code");
+        if (res.message.includes('successfully created ')) {
+          localStorage.setItem('tempdata', JSON.stringify(values));
+          toast.success(
+            'Succesfully signed up. please select a suitable verification method',
+          );
+          push('/verify-code');
         }
       })
       .catch((err) => {
-        if (err.data?.message.includes("already" || "exists")) {
-          toast.error("A user already exists with the email");
+        if (err.data?.message.includes('already' || 'exists')) {
+          toast.error('A user already exists with the email');
         } else {
-          toast.error("Something went wrong please try again later");
+          toast.error('Something went wrong please try again later');
         }
       });
   };
@@ -69,7 +72,7 @@ const Signuppage = (): JSX.Element => {
           <div className="mt-6">
             <Inputs
               validation={{
-                required: "This is required",
+                required: 'This is required',
               }}
               register={register}
               type="text"
@@ -82,7 +85,7 @@ const Signuppage = (): JSX.Element => {
           <div className="mt-6">
             <Inputs
               validation={{
-                required: "This is required",
+                required: 'This is required',
               }}
               register={register}
               type="text"
@@ -95,10 +98,10 @@ const Signuppage = (): JSX.Element => {
           <div className="mt-6">
             <Inputs
               validation={{
-                required: "This is required",
+                required: 'This is required',
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
+                  message: 'Invalid email address',
                 },
               }}
               register={register}
@@ -129,10 +132,10 @@ const Signuppage = (): JSX.Element => {
 
             <Inputs
               validation={{
-                required: "This is required",
+                required: 'This is required',
                 pattern: {
                   value: /^[0]\d{10}$/,
-                  message: "Invalid phone",
+                  message: 'Invalid phone',
                 },
               }}
               register={register}
@@ -146,7 +149,7 @@ const Signuppage = (): JSX.Element => {
           <div className="relative mt-6">
             <Inputs
               validation={{
-                required: "This is required",
+                required: 'This is required',
                 validate: (value: string) => passwordValidator(value),
               }}
               register={register}
@@ -158,7 +161,8 @@ const Signuppage = (): JSX.Element => {
             />
             {password && !passwordValidator(password) && (
               <span className="text-xs text-red-500 ">
-                Must include at least 1 upper case 1 special character min of 8 in length
+                Must include at least 1 upper case 1 special character min of 8
+                in length
               </span>
             )}
           </div>
@@ -166,8 +170,9 @@ const Signuppage = (): JSX.Element => {
           <div className="mt-6">
             <Inputs
               validation={{
-                required: "This is required",
-                validate: (value: string) => value === password || "The passwords do not match",
+                required: 'This is required',
+                validate: (value: string) =>
+                  value === password || 'The passwords do not match',
               }}
               register={register}
               type="password"
@@ -178,7 +183,7 @@ const Signuppage = (): JSX.Element => {
             />
           </div>
           <div className="flex mt-8 space-x-1">
-            <input type="checkbox" {...register("terms", { required: true })} />
+            <input type="checkbox" {...register('terms', { required: true })} />
             <p className="text-xs text-links">
               By signing up I agree that I’m 18 years of age or older, to the
               <span className="mx-2 font-semibold text-black">
@@ -195,10 +200,15 @@ const Signuppage = (): JSX.Element => {
             >
               {isLoading ? (
                 <div className="flex items-center justify-center w-full">
-                  <Loader type="ThreeDots" color="#fff" height={30} width={60} />
+                  <Loader
+                    type="ThreeDots"
+                    color="#fff"
+                    height={30}
+                    width={60}
+                  />
                 </div>
               ) : (
-                "Sign up"
+                'Sign up'
               )}
             </button>
           </div>
