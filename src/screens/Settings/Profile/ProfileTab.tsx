@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import AppModal from "../../../modals";
 import { hideModal, showModal } from "../../../reducers/ui";
@@ -46,13 +46,13 @@ export type Inputs = {
   phone: string;
 };
 
-function ProfileTab() {
+function ProfileTab({ payload }: { children?: ReactNode; payload: userResponseInterface }) {
   const dispatch = useDispatch();
-  const { data, isLoading, status } = useGetUserProfileQuery("", {
-    refetchOnMountOrArgChange: true,
-  });
+  // const { data, {isLoading}, } = useGetUserProfileQuery("", {
+  //   refetchOnMountOrArgChange: true,
+  // });
   const [updateUserInfo] = useUpdateUserProfileMutation();
-  const [userData, setUserData] = useState<userResponseInterface>(data?.payload);
+  const [userData, setUserData] = useState<userResponseInterface>(payload);
 
   const {
     register,

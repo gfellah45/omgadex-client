@@ -4,30 +4,53 @@ import Security from "./Security/Security";
 import BankDetails from "./BankDetails/BankDetails";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
+import { useGetAllBankDetailsQuery, useGetUserProfileQuery } from "../../services/settings";
 
 interface settingsScreenData {
   title: string;
   tab: boolean;
-  component?: JSX.Element | (() => JSX.Element);
 }
 
 let settingsScreenData: settingsScreenData[] = [
   {
     title: "Profile",
     tab: true,
-    component: <ProfileTab />,
   },
   {
     title: "Security",
     tab: true,
-    component: <Security />,
   },
-  { title: "Bank Details", tab: true, component: <BankDetails /> },
+  { title: "Bank Details", tab: true },
 ];
 
 function SettingScreen() {
-  const [activeTab, setActiveTab] = useState<settingsScreenData>(settingsScreenData[0]);
+  const [activeTab, setActiveTab] = useState(0);
+  const { data, isLoading } = useGetUserProfileQuery("", {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const { data: allBankDetials, isLoading: bankDetailsLoading } = useGetAllBankDetailsQuery("", {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+  });
   const { theme } = useTheme();
+
+  console.log(bankDetailsLoading, "status of the profile page");
+
+  // useEffect(() => {}, [])
+
+  const renderedTab = function (tab: number) {
+    switch (tab) {
+      case 0:
+        return <ProfileTab payload={data.payload} />;
+      case 1:
+        return <Security />;
+      case 2:
+        return <BankDetails data={allBankDetials} />;
+      default:
+        return <ProfileTab payload={data.payload} />;
+    }
+  };
   return (
     <div className="flex flex-col flex-1 px-6">
       {/* heading */}
@@ -54,12 +77,12 @@ function SettingScreen() {
                   <li
                     key={index}
                     className={` rounded-2xl ${
-                      data.title === activeTab.title
+                      data.title === settingsScreenData[activeTab].title
                         ? "bg-neutral-600 text-white"
                         : "text-neutral-500 "
                     } hover:bg-neutral-600 hover:text-white cursor-pointer 
                  py-1 px-3 text-sm font-bold `}
-                    onClick={() => data.tab && setActiveTab(settingsScreenData[index])}
+                    onClick={() => setActiveTab(index)}
                   >
                     {data.title}
                   </li>
@@ -69,7 +92,10 @@ function SettingScreen() {
           </div>
         </div>
         <div className="min-h-[60vh]">
-          <div>{activeTab.component}</div>
+          <div>
+            {/* {settingsScreenData[activeTab].component} */}
+            {renderedTab(activeTab)}
+          </div>
         </div>
       </section>
     </div>

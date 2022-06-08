@@ -1,4 +1,4 @@
-import React, { useState, FC, ChangeEvent, useEffect } from "react";
+import React, { useState, FC, ChangeEvent, useEffect, ReactNode } from "react";
 import clsx from "clsx";
 import { useTheme } from "next-themes";
 import { useForm } from "react-hook-form";
@@ -26,22 +26,27 @@ import {
 const ADD_BANK_DETAILS_MODAL = "ADD_BANK_DETAILS_MODAL";
 const DELETE_ACCOUNT_MODAL = "DELETE_ACCOUNT_MODAL";
 
-const BankDetails: FC = () => {
+interface BankFormFields {
+  accountNumber: string;
+  bankName: string;
+  accountName: string;
+  bvn: string;
+}
+
+const BankDetails = ({ data }: { children?: ReactNode; data: GetBankDetailsInterface }) => {
   const [fetchAccountDetails, { isLoading }] = useFetchAccountDetailsMutation();
   const [selectedId, setSelectedId] = useState("");
   const dispatch = useAppDispatch();
   const { register, handleSubmit, reset } = useForm();
   const { theme } = useTheme();
   const [accountDetails, setAccountDetails] = useState<FetchAccountDetailsSuccess>();
-  const { data, isSuccess } = useGetAllBankDetailsQuery("", {
-    refetchOnMountOrArgChange: true,
-    refetchOnFocus: true,
-  });
+  const [bankformFields, setBankFormFields] = useState<BankFormFields>();
   const [bvn, setBvn] = useState("");
   const [returnBankDetails, setReturnBankDetails] = useState<GetBankDetailsInterface>(data);
   const [deleteAnAccount, status] = useDeleteABankDetailMutation();
   const [addAnAccountDetail] = useAddAccountDetailMutation();
   const { modalType } = useAppSelector((state) => state.ui);
+  const [errorFromBankDetails, setErrorsFromBankDetails] = useState("");
 
   const handleDeleteAccount = (accountNumber: string) => {
     deleteAnAccount({ accountNumber })
@@ -54,7 +59,7 @@ const BankDetails: FC = () => {
       });
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: BankFormFields) => {
     addAnAccountDetail({
       bvn,
       accountNumber: accountDetails?.account_number,
@@ -80,21 +85,24 @@ const BankDetails: FC = () => {
   };
 
   // this function will be modifield if the fields wunt be disabled any more
-  // const handleFieldChange = (event: ChangeEvent<HTMLInputElement>): void => {
-  //   setBvn(event.target.value);
-  // };;
+  const handleFieldChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target;
+    name as keyof BankFormFields;
+    setBankFormFields((prevState: any) => ({ ...prevState, [name]: value }));
+  };
 
   const handleAccountNumberChange = debounce<ChangeEvent<HTMLInputElement>>(
     (event: ChangeEvent<HTMLInputElement>) => {
-      console.log("change this", isLoading);
       fetchAccountDetails({ accountNo: event.target.value })
         .unwrap()
         .then((res: any) => {
           toast.success(res.message);
+          setErrorsFromBankDetails("");
           setAccountDetails(res?.payload);
         })
         .catch((err: FetchAccountDetailsError) => {
           if (err?.status === 400) {
+            setErrorsFromBankDetails(err?.data?.message);
             return toast.error(err?.data?.message);
           }
           return toast.error("Something went wrong");
@@ -183,13 +191,17 @@ const BankDetails: FC = () => {
             </div>
 
             <form className="md:w-[90%]  mx-auto" onSubmit={handleSubmit(onSubmit)}>
-              {isLoading && <p>Trying to fetch your details</p>}
+              {isLoading && <p className="text-center">Trying to fetch your details</p>}
               <div className="mt-4 flex justify-center flex-col items-center">
                 <div className="w-full">
                   <label className="text-gray-400 text-xs" htmlFor="accountNumber">
                     Account Number
                   </label>
-                  <div className="my-3 flex justify-between items-center px-2 border rounded-xl">
+                  <div
+                    className={`mt-3 mb-1 flex justify-between flex-col items-center px-2 border rounded-xl ${
+                      errorFromBankDetails.length ? "border-red-500" : null
+                    }`}
+                  >
                     <input
                       type="text"
                       {...register("accountNumber", { required: true })}
@@ -200,6 +212,9 @@ const BankDetails: FC = () => {
                       placeholder="Enter Accunt Number"
                     />
                   </div>
+                  {errorFromBankDetails.length ? (
+                    <span className="text-red-500 text-sm">{errorFromBankDetails}</span>
+                  ) : null}
                 </div>
                 <div className="w-full">
                   <label className="text-gray-400 text-xs" htmlFor="bankName">
@@ -213,7 +228,8 @@ const BankDetails: FC = () => {
                       id="bankName"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="Select Bank"
-                      // onChange={handleFieldChange}
+                      disabled
+                      onChange={handleFieldChange}
                     />
                   </div>
                 </div>
@@ -231,6 +247,8 @@ const BankDetails: FC = () => {
                       id="accountName"
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="Account Name"
+                      onChange={handleFieldChange}
+                      disabled
                     />
                   </div>
                 </div>
@@ -247,6 +265,7 @@ const BankDetails: FC = () => {
                       className="w-full py-3 px-1 rounded-xl focus:outline-none placeholder:text-sm"
                       placeholder="BVN"
                       onChange={handleBvnFieldChange}
+                      required
                     />
                   </div>
                 </div>

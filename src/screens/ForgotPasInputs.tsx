@@ -82,8 +82,7 @@ function ForgotPasInputs(): ReactElement {
               errors={errors}
               validation={{
                 required: "This is required",
-                validate: (value: string) =>
-                  value === password || "Passwords do not match",
+                validate: (value: string) => value === password || "Passwords do not match",
               }}
               name="password2"
               label="Repeat Password"
@@ -106,20 +105,15 @@ function ForgotPasInputs(): ReactElement {
           </div>
 
           <div className="mt-8">
-            <button className="w-full px-4 py-3 text-white rounded-md shadow hover:opacity-75 bg-primary">
+            <div className="w-full px-4 py-3 text-white rounded-md shadow hover:opacity-75 bg-primary">
               {isLoading ? (
                 <div className="flex items-center justify-center w-full">
-                  <Loader
-                    type="ThreeDots"
-                    color="#fff"
-                    height={30}
-                    width={60}
-                  />
+                  <Loader type="ThreeDots" color="#fff" height={30} width={60} />
                 </div>
               ) : (
                 " Submit"
               )}
-            </button>
+            </div>
           </div>
         </form>
       </div>
