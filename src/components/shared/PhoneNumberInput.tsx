@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 import {
   getCountries,
   getCountryCallingCode,
-} from "react-phone-number-input/input";
-import en from "react-phone-number-input/locale/en.json";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
+} from 'react-phone-number-input/input';
+
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 interface Props {
   value?: string;
@@ -28,8 +28,8 @@ const PhoneNumberInput: FC<Props> = ({
     <>
       <label
         className="inline-block my-1"
-        style={{ color: "#B1B5C4" }}
-        htmlFor={"Phone"}
+        style={{ color: '#B1B5C4' }}
+        htmlFor={'Phone'}
       >
         Mobile
       </label>
@@ -38,14 +38,14 @@ const PhoneNumberInput: FC<Props> = ({
           onChange={onChange}
           value={value}
           placeholder="Enter phone number"
-          style={{ borderColor: "#E5E5E5" }}
+          style={{ borderColor: '#E5E5E5' }}
           international
           defaultCountry="NG"
           className="w-3/12 px-2 py-2 text-xs border-2 rounded-md lg:text-lg lg:py-3 focus:outline-none active:bg-opacity-0 active:bg-white"
         />
         <input
           {...register(name, { ...validation })}
-          style={{ borderColor: "#E5E5E5" }}
+          style={{ borderColor: '#E5E5E5' }}
           type="tel"
           className="w-8/12 px-2 border-2 rounded-md py- lg:text-lg lg:py-3 focus:outline-none active:bg-opacity-0 active:bg-white"
         />

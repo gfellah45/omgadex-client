@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import AppModal from "../../../modals";

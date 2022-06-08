@@ -1,38 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
-import clsx from "clsx";
-import ArrowBack from "../../assets/svg/ArrowBack";
-import { useRouter } from "next/router";
-import CarretDown from "../../assets/svg/CarretDown";
-import SelectCoin from "./SelectCoin";
-import SmallNaira from "../../assets/svg/SmallNaira";
-import SmallBTC from "../../assets/svg/SmallBTC";
-import SmallETH from "../../assets/svg/SmallETH";
-import SmallTether from "../../assets/svg/SmallTether";
-import SmallXRP from "../../assets/svg/SmallXRP";
-import SmallBNB from "../../assets/svg/SmallBNB";
-import Tether from "../../assets/svg/Tether";
-import AppModal from "../../modals";
-import { hideModal, showModal } from "../../reducers/ui";
-import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
-import Eth from "../../assets/svg/Eth";
-import Btc from "../../assets/svg/Btc";
-import Binance from "../../assets/svg/Binance";
-import Ripple from "../../assets/svg/Ripple";
-import FiatNaira from "../../assets/svg/FiatNaira";
-import Close from "../../assets/svg/Close";
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import clsx from 'clsx';
+import ArrowBack from '../../assets/svg/ArrowBack';
+import { useRouter } from 'next/router';
+import CarretDown from '../../assets/svg/CarretDown';
+import SelectCoin from './SelectCoin';
+import SmallNaira from '../../assets/svg/SmallNaira';
+import SmallBTC from '../../assets/svg/SmallBTC';
+import SmallETH from '../../assets/svg/SmallETH';
+import SmallTether from '../../assets/svg/SmallTether';
+import SmallXRP from '../../assets/svg/SmallXRP';
+import SmallBNB from '../../assets/svg/SmallBNB';
+import Tether from '../../assets/svg/Tether';
+import AppModal from '../../modals';
+import { hideModal, showModal } from '../../reducers/ui';
+import { useAppDispatch, useAppSelector } from '../../hooks/useStoreHooks';
+import Eth from '../../assets/svg/Eth';
+import Btc from '../../assets/svg/Btc';
+import Binance from '../../assets/svg/Binance';
+import Ripple from '../../assets/svg/Ripple';
+import FiatNaira from '../../assets/svg/FiatNaira';
+import Close from '../../assets/svg/Close';
 import {
   useSignTransactionMutation,
   useSendTransactionMutation,
   useRecieveTransactionMutation,
   useVerifyTransactionMutation,
-} from "../../services/sendCrypto";
-import toast, { Toaster } from "react-hot-toast";
-import { useForm } from "react-hook-form";
-import SuccessBadge from "../../assets/svg/SuccessBadge";
-import CopyIcon from "../../assets/svg/CopyIcon";
-import QRCode from "react-qr-code";
-import Loader from "react-loader-spinner";
+} from '../../services/sendCrypto';
+import toast, { Toaster } from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
+import SuccessBadge from '../../assets/svg/SuccessBadge';
+import CopyIcon from '../../assets/svg/CopyIcon';
+import QRCode from 'react-qr-code';
+import Loader from 'react-loader-spinner';
 
 export interface availableNetworkProps {
   shortHand: string;
@@ -44,25 +45,25 @@ export interface availableNetworkProps {
 
 export const availableNetwork: availableNetworkProps[] = [
   {
-    shortHand: "eth",
-    properShortHand: "ETH",
-    fullName: "Ethereum",
+    shortHand: 'eth',
+    properShortHand: 'ETH',
+    fullName: 'Ethereum',
     logo: <Eth width="40" height="40" />,
-    fee: "Fee 0.80 eth",
+    fee: 'Fee 0.80 eth',
   },
   {
-    shortHand: "lxrp",
-    fullName: "Ripple",
-    properShortHand: "XRP",
+    shortHand: 'lxrp',
+    fullName: 'Ripple',
+    properShortHand: 'XRP',
     logo: <Ripple width="40" height="40" />,
-    fee: "Fee 0.80 lxrp",
+    fee: 'Fee 0.80 lxrp',
   },
   {
-    shortHand: "lusdt",
-    fullName: "USDT",
-    properShortHand: "USDT",
+    shortHand: 'lusdt',
+    fullName: 'USDT',
+    properShortHand: 'USDT',
     logo: <Tether width="40" height="40" />,
-    fee: "Fee 0.80 eth",
+    fee: 'Fee 0.80 eth',
   },
 ];
 
@@ -72,31 +73,31 @@ export interface selectedCoinType {
   logo: JSX.Element;
 }
 
-const SELECT_COIN_MODAL = "SELECT_COIN";
-const SELECT_NETWORK_MODAL = "SELECT_NETWORK_MODAL";
-const TRANSFER_SUCCESSFUL_MODAL = "TRANSFER_SUCCESSFUL_MODAL";
+const SELECT_COIN_MODAL = 'SELECT_COIN';
+const SELECT_NETWORK_MODAL = 'SELECT_NETWORK_MODAL';
+const TRANSFER_SUCCESSFUL_MODAL = 'TRANSFER_SUCCESSFUL_MODAL';
 
 // RECIEVE NETWORK
-const UNINITIALIZED = "UNINITIALIZED";
-const INITIALIZED = "INITIALIZED";
-const RESOLVED = "RESOLVED";
-const REJECTED = "REJECTED";
+const UNINITIALIZED = 'UNINITIALIZED';
+const INITIALIZED = 'INITIALIZED';
+const RESOLVED = 'RESOLVED';
+const REJECTED = 'REJECTED';
 
-const TRXN_SIGN_INITIALIZED = "TRXN_SIGN_INITIALIZED";
-const TRXN_SIGN_APPROVED = "TRXN_SIGNED";
-const TRXN_SIGN_REJECTED = "TRXN_FAILED";
-const TRXN_SEND_RESOLVED = "TRXN_SEND_RESOLVED";
-const TRXN_SEND_REJECTED = "TRXN_SEND_REJECTED";
+const TRXN_SIGN_INITIALIZED = 'TRXN_SIGN_INITIALIZED';
+const TRXN_SIGN_APPROVED = 'TRXN_SIGNED';
+const TRXN_SIGN_REJECTED = 'TRXN_FAILED';
+const TRXN_SEND_RESOLVED = 'TRXN_SEND_RESOLVED';
+const TRXN_SEND_REJECTED = 'TRXN_SEND_REJECTED';
 
 const Send = () => {
   const [selectedCoin, setSelectedCoin] = useState<selectedCoinType | any>({});
   const [selectNetwork, setSeleectedNetwork] = useState<
     availableNetworkProps | any
   >({});
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(UNINITIALIZED);
-  const [availableBalance, setAvailableBalance] = useState("");
-  const [receiverAddress, setReceiverAddress] = useState("");
+  const [availableBalance, setAvailableBalance] = useState('');
+  const [receiverAddress, setReceiverAddress] = useState('');
   const [signedTrxnState, setSignedTrxnState] = useState(TRXN_SIGN_INITIALIZED);
   const { theme } = useTheme();
   const [verifyTrxStatus, setVerifyTrxStatus] = useState(false);
@@ -122,7 +123,7 @@ const Send = () => {
 
   const copyAddress = (address: string) => {
     navigator.clipboard.writeText(address);
-    toast.success("Address successfully Copied");
+    toast.success('Address successfully Copied');
   };
 
   const [sign, status1] = useSignTransactionMutation();
@@ -135,7 +136,7 @@ const Send = () => {
     setLoading(INITIALIZED);
     const extraParams = {
       token: selectedCoin?.shortHand.toLowerCase(),
-      network: "erc-20",
+      network: 'erc-20',
     };
     recieve(extraParams)
       .unwrap()
@@ -143,18 +144,18 @@ const Send = () => {
         setAvailableBalance(res.payload.balance);
         setReceiverAddress(res.payload.address);
         setLoading(RESOLVED);
-        toast.success("Payment Recieved successfully");
+        toast.success('Payment Recieved successfully');
       })
       .catch(() => {
         setLoading(REJECTED);
-        toast.error("Something went wrong, please try again shortly");
+        toast.error('Something went wrong, please try again shortly');
       });
   };
 
   // verify transaction function
   const verifyTransactionInterval = async (passedInRes: any) => {
     toast.success(
-      "transaction is taking to long. you will be notified when its completed"
+      'transaction is taking to long. you will be notified when its completed',
     );
     let trxTimeOut;
     if (trxTimeOut) {
@@ -166,18 +167,18 @@ const Send = () => {
         })
           .unwrap()
           .then((res: any) => {
-            if (res?.message.includes("successful")) {
+            if (res?.message.includes('successful')) {
               console.log(
                 res.message,
-                "successfull is included to your response"
+                'successfull is included to your response',
               );
-              toast.success("Transaction is successful");
+              toast.success('Transaction is successful');
             } else {
               toast.success(res?.message);
             }
           })
           .catch((err: any) => {
-            console.log(err, "error trying to verify your transaction");
+            console.log(err, 'error trying to verify your transaction');
           });
       }, 10000);
     }
@@ -192,13 +193,13 @@ const Send = () => {
     setAmount(data.amount);
 
     if (data.amount > tradeProps.balance) {
-      return toast.error("Oops! You Cant transfer more than your balance");
+      return toast.error('Oops! You Cant transfer more than your balance');
     }
     sign(extraParams)
       .unwrap()
       .then((res: any) => {
         toast.success(
-          "Transaction successfully signed, you will be notified on your transaction status shortly"
+          'Transaction successfully signed, you will be notified on your transaction status shortly',
         );
         // Transfer signed succesfully modal will be triggered here and the content state wil be updated here too
         handleOpen(TRANSFER_SUCCESSFUL_MODAL);
@@ -208,23 +209,23 @@ const Send = () => {
         })
           .unwrap()
           .then(() => {
-            toast.success("transaction sent successfully");
+            toast.success('transaction sent successfully');
             // A varialble constant will be made to update here so we could change the content of the modal after a succesfull transaction
             setSignedTrxnState(TRXN_SEND_RESOLVED);
           })
           .catch((err: any) => {
-            if (err.status === "FETCH_ERROR") {
+            if (err.status === 'FETCH_ERROR') {
               verifyTransactionInterval(signedResponse);
               handleClose();
             } else {
               setSignedTrxnState(TRXN_SEND_REJECTED);
-              toast.error("Transaction couldnt be processed at the moment");
+              toast.error('Transaction couldnt be processed at the moment');
             }
           });
       })
       .catch((err: any) => {
         setSignedTrxnState(TRXN_SIGN_REJECTED);
-        toast.error("Unable to transfer tokenError");
+        toast.error('Unable to transfer tokenError');
       });
   };
 
@@ -257,8 +258,8 @@ const Send = () => {
     <div className=" px-8 w-full h-full">
       <div
         className={clsx(
-          "py-8 px-7 rounded-xl flex items-center space-x-4",
-          theme === "light" ? "bg-offwhite" : "bg-neutral-800"
+          'py-8 px-7 rounded-xl flex items-center space-x-4',
+          theme === 'light' ? 'bg-offwhite' : 'bg-neutral-800',
         )}
       >
         <div onClick={() => back()} className="cursor-pointer">
@@ -267,12 +268,12 @@ const Send = () => {
         <div className="text-3xl font-bold capitalize">{trade}</div>
       </div>
 
-      {trade === "Send" && (
+      {trade === 'Send' && (
         <div className="overflow-hidden h-[450px] mt-10 py-2">
           <div
             className={clsx(
-              "flex flex-1 overflow-y-auto flex-col px-8 h-full rounded-xl text-xl ",
-              theme === "light" ? "bg-white" : "bg-neutral-800"
+              'flex flex-1 overflow-y-auto flex-col px-8 h-full rounded-xl text-xl ',
+              theme === 'light' ? 'bg-white' : 'bg-neutral-800',
             )}
           >
             <div className="text-[27px] font-semibold my-10 ">
@@ -332,23 +333,23 @@ const Send = () => {
                 {/* form to send a coin */}
                 {selectedCoin && Object.keys(selectedCoin).length ? (
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className={clsx("my-10 w-9/12")}>
+                    <div className={clsx('my-10 w-9/12')}>
                       <label
                         className="text-gray-400 text-xs"
                         htmlFor="receiver_address"
                       >
                         Send to Address
                       </label>
-                      <div className={clsx("my-3 border ")}>
+                      <div className={clsx('my-3 border ')}>
                         <input
                           type="text"
-                          {...register("receiver_address")}
+                          {...register('receiver_address')}
                           required
                           className={clsx(
-                            "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
-                            theme === "light"
-                              ? "bg-neutral-100"
-                              : "bg-neutral-800"
+                            'w-full py-3  px-1 focus:outline-none placeholder:text-sm',
+                            theme === 'light'
+                              ? 'bg-neutral-100'
+                              : 'bg-neutral-800',
                           )}
                           placeholder="Enter address"
                         />
@@ -370,8 +371,8 @@ const Send = () => {
                         <div>
                           {Object.keys(selectNetwork).length ? (
                             <div className="flex items-center gap-2">
-                              <div>{selectNetwork["shortHand"]}</div>
-                              {selectNetwork["fullName"]}
+                              <div>{selectNetwork['shortHand']}</div>
+                              {selectNetwork['fullName']}
                             </div>
                           ) : (
                             <p>Select Network</p>
@@ -390,13 +391,13 @@ const Send = () => {
                       <div className="my-3 border">
                         <input
                           type="text"
-                          {...register("amount")}
+                          {...register('amount')}
                           maxLength={100}
                           className={clsx(
-                            "w-full py-3  px-1 focus:outline-none placeholder:text-sm",
-                            theme === "light"
-                              ? "bg-neutral-100"
-                              : "bg-neutral-800"
+                            'w-full py-3  px-1 focus:outline-none placeholder:text-sm',
+                            theme === 'light'
+                              ? 'bg-neutral-100'
+                              : 'bg-neutral-800',
                           )}
                           placeholder="Amount"
                           required
@@ -410,11 +411,11 @@ const Send = () => {
                       <button
                         type="submit"
                         className={clsx(
-                          "text-center w-9/12 text-white rounded-lg px-3 py-2 space-x-3 mb-3  cursor-pointer",
-                          status1.isLoading ? "bg-secondary" : "bg-primary"
+                          'text-center w-9/12 text-white rounded-lg px-3 py-2 space-x-3 mb-3  cursor-pointer',
+                          status1.isLoading ? 'bg-secondary' : 'bg-primary',
                         )}
                       >
-                        {status1.isLoading ? "Sending..." : "Send"}
+                        {status1.isLoading ? 'Sending...' : 'Send'}
                       </button>
                     </div>
                   </form>
@@ -424,8 +425,8 @@ const Send = () => {
               <div className="text-left px-12">
                 <div
                   className={clsx(
-                    " shadow rounded-lg w-10/12 ml-auto p-5",
-                    theme === "light" ? "bg-gray-200" : "bg-neutral-700"
+                    ' shadow rounded-lg w-10/12 ml-auto p-5',
+                    theme === 'light' ? 'bg-gray-200' : 'bg-neutral-700',
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -443,14 +444,14 @@ const Send = () => {
                     <div className="text-5xl font-bold my-3">
                       {Number(tradeProps.balance)
                         .toPrecision(7)
-                        .toLocaleString() || "0.00"}
+                        .toLocaleString() || '0.00'}
                     </div>
                   </div>
 
                   <div className="my-6 flex space-x-3 items-center">
                     <p className="text-gray-400 text-base">
                       {Number(tradeProps.cryptoBalance).toPrecision(7) ||
-                        "0.00"}
+                        '0.00'}
                     </p>
                     <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
                       {tradeProps.currencyCode}
@@ -464,12 +465,12 @@ const Send = () => {
       )}
 
       {/* Receive component */}
-      {trade === "Recieve" && (
+      {trade === 'Recieve' && (
         <div className="overflow-hidden h-[450px] mt-10 ">
           <div
             className={clsx(
-              "flex flex-1 flex-col  overflow-y-auto px-8 h-full rounded-xl text-xl",
-              theme === "light" ? "bg-white" : "bg-neutral-800"
+              'flex flex-1 flex-col  overflow-y-auto px-8 h-full rounded-xl text-xl',
+              theme === 'light' ? 'bg-white' : 'bg-neutral-800',
             )}
           >
             <div className="text-[27px] font-semibold my-10 ">
@@ -545,8 +546,8 @@ const Send = () => {
                         <div>
                           {Object.keys(selectNetwork).length ? (
                             <div className="flex items-center gap-2">
-                              <div>{selectNetwork["properShortHand"]}</div>
-                              {selectNetwork["fullName"]}
+                              <div>{selectNetwork['properShortHand']}</div>
+                              {selectNetwork['fullName']}
                             </div>
                           ) : (
                             <p>Select Network</p>
@@ -573,10 +574,10 @@ const Send = () => {
 
                       <div
                         className={clsx(
-                          "border rounded py-1 my-2 items-center justify-between   pl-2 flex gap-x-2 h-10 w-full",
-                          theme === "light"
-                            ? "bg-neutral-100"
-                            : "bg-neutral-800"
+                          'border rounded py-1 my-2 items-center justify-between   pl-2 flex gap-x-2 h-10 w-full',
+                          theme === 'light'
+                            ? 'bg-neutral-100'
+                            : 'bg-neutral-800',
                         )}
                       >
                         <input
@@ -587,10 +588,10 @@ const Send = () => {
                         />
                         <CopyIcon
                           color={
-                            theme === "light" ? "#E6E8EC" : "bg-neutral-700"
+                            theme === 'light' ? '#E6E8EC' : 'bg-neutral-700'
                           }
                           bgColor={
-                            theme === "light" ? "#E6E8EC" : "bg-neutral-800"
+                            theme === 'light' ? '#E6E8EC' : 'bg-neutral-800'
                           }
                           onClick={() => {
                             copyAddress(receiverAddress);
@@ -614,8 +615,8 @@ const Send = () => {
               <div className="text-left px-12">
                 <div
                   className={clsx(
-                    "shadow rounded-lg w-10/12 ml-auto p-5",
-                    theme === "light" ? "bg-gray-200" : "bg-neutral-700"
+                    'shadow rounded-lg w-10/12 ml-auto p-5',
+                    theme === 'light' ? 'bg-gray-200' : 'bg-neutral-700',
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -633,14 +634,14 @@ const Send = () => {
                     <div className="text-5xl font-bold my-3">
                       {Number(availableBalance)
                         .toPrecision(7)
-                        .toLocaleString() || "0.00"}
+                        .toLocaleString() || '0.00'}
                     </div>
                   </div>
 
                   <div className="my-6 flex space-x-3 items-center">
                     <p className="text-gray-400 text-base">
                       {Number(tradeProps.cryptoBalance).toPrecision(7) ||
-                        "0.00"}
+                        '0.00'}
                     </p>
                     <p className="bg-gray-400 text-sm shadow text-white rounded p-1">
                       {tradeProps.currencyCode}
@@ -649,16 +650,16 @@ const Send = () => {
                 </div>
                 <ul className="w-9/12 list-disc pr-5 ml-auto mt-8 text-[1rem]">
                   <li>
-                    Send{" "}
+                    Send{' '}
                     <span className="text-orange-600">
-                      only {selectedCoin ? selectedCoin?.shortHand : "BTC"}
-                    </span>{" "}
+                      only {selectedCoin ? selectedCoin?.shortHand : 'BTC'}
+                    </span>{' '}
                     to this deposit address
                   </li>
                   <li>
                     Ensure the network is
                     <span className="text-orange-600">
-                      {selectedCoin ? selectedCoin?.fullName : "BTC"}
+                      {selectedCoin ? selectedCoin?.fullName : 'BTC'}
                     </span>
                     .
                   </li>
@@ -693,8 +694,8 @@ const Send = () => {
               <div
                 onClick={() => handleClose()}
                 className={clsx(
-                  "absolute right-0 top-6 pl-6 cursor-pointer pr-3 py-3 flex justify-center items-center rounded-l-lg bg-gray-100",
-                  theme === "light" ? "bg-neutral-100" : "bg-neutral-600"
+                  'absolute right-0 top-6 pl-6 cursor-pointer pr-3 py-3 flex justify-center items-center rounded-l-lg bg-gray-100',
+                  theme === 'light' ? 'bg-neutral-100' : 'bg-neutral-600',
                 )}
               >
                 <Close />
@@ -712,15 +713,15 @@ const Send = () => {
                     onClick={() => {
                       setSeleectedNetwork(network);
                       handleClose();
-                      if (trade === "Recieve") {
+                      if (trade === 'Recieve') {
                         goReceiveMyCoins();
                       }
                     }}
                     className={clsx(
-                      "flex items-center justify-between group rounded-sm p-3 gap-3 w-12/12 cursor-pointer",
-                      theme === "light"
-                        ? "hover:bg-neutral-100"
-                        : "hover:bg-neutral-600"
+                      'flex items-center justify-between group rounded-sm p-3 gap-3 w-12/12 cursor-pointer',
+                      theme === 'light'
+                        ? 'hover:bg-neutral-100'
+                        : 'hover:bg-neutral-600',
                     )}
                   >
                     <div className="flex gap-3">
@@ -742,8 +743,8 @@ const Send = () => {
             <div className="w-full">
               <div>
                 <p className="text-xl text-center justify-center items-center flex gap-2 font-bold">
-                  <span className="">{selectNetwork["logo"]}</span>
-                  <span className="">{selectNetwork["fullName"]}</span>
+                  <span className="">{selectNetwork['logo']}</span>
+                  <span className="">{selectNetwork['fullName']}</span>
                 </p>
               </div>
               {signedTrxnState === TRXN_SIGN_APPROVED && (
@@ -787,7 +788,7 @@ const Send = () => {
                 <button
                   onClick={() => {
                     handleClose();
-                    push("/wallets");
+                    push('/wallets');
                   }}
                   type="submit"
                   className="bg-primary mx-center text-center w-6/12 text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer"

@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import AuthLayout from "../components/shared/AuthLayout";
-import Inputs from "../components/shared/Inputs";
-import { useForm, SubmitHandler } from "react-hook-form";
-import FormLayout from "../components/shared/FormLayout";
-import { useRouter } from "next/router";
-import Loader from "react-loader-spinner";
-import toast, { Toaster } from "react-hot-toast";
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import AuthLayout from '../components/shared/AuthLayout';
+import Inputs from '../components/shared/Inputs';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import FormLayout from '../components/shared/FormLayout';
+import { useRouter } from 'next/router';
+import Loader from 'react-loader-spinner';
+import toast, { Toaster } from 'react-hot-toast';
 
 import {
   useUserLoginMutation,
   useVerificationRequestMutation,
-} from "../services/auth";
-import AppModal from "../modals";
-import { hideModal, showModal } from "../reducers/ui";
-import { useAppDispatch } from "../hooks/useStoreHooks";
-import { login, registerToken } from "../reducers/auth";
+} from '../services/auth';
+import AppModal from '../modals';
+import { hideModal, showModal } from '../reducers/ui';
+import { useAppDispatch } from '../hooks/useStoreHooks';
+import { login, registerToken } from '../reducers/auth';
 
 interface Iinputs {
   email: string;
@@ -24,12 +25,12 @@ interface Iinputs {
 
 const Signingpage = (): JSX.Element => {
   const [isEmail, setIsEmail] = useState(true);
-  const [tempData, setTempData] = useState("");
+  const [tempData, setTempData] = useState('');
 
   const [userLogin, result] = useUserLoginMutation();
 
   useEffect(() => {
-    setTempData(localStorage?.getItem("tempdata") || "");
+    setTempData(localStorage?.getItem('tempdata') || '');
     sessionStorage.clear();
   }, []);
 
@@ -54,14 +55,14 @@ const Signingpage = (): JSX.Element => {
     verificationRequest(data)
       .unwrap()
       .then((res: any) => {
-        if (res.message.includes("activation")) {
-          toast.success("Verifcation code has been sent to your email");
-          push("/verify-code");
+        if (res.message.includes('activation')) {
+          toast.success('Verifcation code has been sent to your email');
+          push('/verify-code');
           onClose();
         }
       })
       .catch(() => {
-        toast.error("something went wrong pls try again later");
+        toast.error('something went wrong pls try again later');
       });
   };
 
@@ -70,33 +71,33 @@ const Signingpage = (): JSX.Element => {
     userLogin(values)
       .unwrap()
       .then((res: any) => {
-        console.log(res, "lests see the res");
+        console.log(res, 'lests see the res');
         if (res.message) {
           dispatch(
             login({
               ...res.payload.user,
               address: res.payload.user.address,
-            })
+            }),
           );
           dispatch(
             registerToken({
               loginToken: res.payload.loginToken,
               refreshToken: res.payload.refreshToken,
-            })
+            }),
           );
-          toast.success("Login successful, redirecting to dashboard");
-          push("/dashboard");
+          toast.success('Login successful, redirecting to dashboard');
+          push('/dashboard');
         }
       })
       .catch((err: any) => {
-        if (err.data?.message.includes("password")) {
-          toast.error("Invalid login credetials, please confirm and try again");
+        if (err.data?.message.includes('password')) {
+          toast.error('Invalid login credetials, please confirm and try again');
         }
-        if (err.data?.message.includes("email" || "phone")) {
-          toast.error("Invalid email or phone number");
+        if (err.data?.message.includes('email' || 'phone')) {
+          toast.error('Invalid email or phone number');
         }
-        if (err.data?.message.includes("activated")) {
-          localStorage.setItem("tempdata", JSON.stringify(values));
+        if (err.data?.message.includes('activated')) {
+          localStorage.setItem('tempdata', JSON.stringify(values));
           onOpen();
         }
       });
@@ -116,7 +117,7 @@ const Signingpage = (): JSX.Element => {
           <button
             onClick={() => setIsEmail(!isEmail)}
             className={`p-1 px-4 py-2 font-semibold tracking-wide ${
-              isEmail ? "text-white bg-black" : "text-black"
+              isEmail ? 'text-white bg-black' : 'text-black'
             }  rounded-full shadow-sm `}
           >
             Email
@@ -124,7 +125,7 @@ const Signingpage = (): JSX.Element => {
           <button
             onClick={() => setIsEmail(!isEmail)}
             className={`p-1 px-4 py-2 font-semibold${
-              !isEmail ? " bg-black text-white" : "text-white"
+              !isEmail ? ' bg-black text-white' : 'text-white'
             } tracking-wide  rounded-full shadow-sm `}
           >
             Mobile
@@ -135,10 +136,10 @@ const Signingpage = (): JSX.Element => {
             {isEmail ? (
               <Inputs
                 validation={{
-                  required: "This is required",
+                  required: 'This is required',
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
+                    message: 'Invalid email address',
                   },
                 }}
                 register={register}
@@ -152,10 +153,10 @@ const Signingpage = (): JSX.Element => {
             ) : (
               <Inputs
                 validation={{
-                  required: "This is required",
+                  required: 'This is required',
                   pattern: {
                     value: /^[0]\d{10}$/,
-                    message: "Invalid phone number",
+                    message: 'Invalid phone number',
                   },
                 }}
                 register={register}
@@ -169,7 +170,7 @@ const Signingpage = (): JSX.Element => {
           </div>
           <div className="mt-6">
             <Inputs
-              validation={{ required: "This is required" }}
+              validation={{ required: 'This is required' }}
               register={register}
               type="password"
               placeholder="Password"
@@ -203,7 +204,7 @@ const Signingpage = (): JSX.Element => {
                     />
                   </p>
                 ) : (
-                  "Log In"
+                  'Log In'
                 )}
               </p>
             </button>

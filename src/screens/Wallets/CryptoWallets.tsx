@@ -1,14 +1,15 @@
-import React, { FC } from "react";
-import Tether from "../../assets/svg/Tether";
-import { TransactionButtons } from "../../components/shared/Buttons";
-import Deposit from "../../assets/svg/Deposit";
+// @ts-nocheck
+import React, { FC } from 'react';
+import Tether from '../../assets/svg/Tether';
+import { TransactionButtons } from '../../components/shared/Buttons';
+import Deposit from '../../assets/svg/Deposit';
 
-import Send from "../../assets/svg/Send";
-import { useAppDispatch } from "../../hooks/useStoreHooks";
-import { tradeType } from "../../reducers/ui";
-import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
-import clsx from "clsx";
+import Send from '../../assets/svg/Send';
+import { useAppDispatch } from '../../hooks/useStoreHooks';
+import { tradeType } from '../../reducers/ui';
+import { useRouter } from 'next/router';
+import { useTheme } from 'next-themes';
+import clsx from 'clsx';
 
 interface Props {
   icon?: React.ReactElement;
@@ -31,10 +32,10 @@ const CryptoWallets: FC<Props> = ({
   show,
 }) => {
   const formatter = (code: string) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
       currency: code,
-      signDisplay: "never",
+      signDisplay: 'never',
     });
 
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ const CryptoWallets: FC<Props> = ({
   const sendAction = () => {
     dispatch(
       tradeType({
-        tradeType: "Send",
+        tradeType: 'Send',
         tradeProps: {
           currency,
           currencyCode,
@@ -52,9 +53,9 @@ const CryptoWallets: FC<Props> = ({
           cryptoBalance,
           dollarBalance,
         },
-      })
+      }),
     );
-    push("/wallets/trade");
+    push('/wallets/trade');
   };
 
   const { theme } = useTheme();
@@ -62,7 +63,7 @@ const CryptoWallets: FC<Props> = ({
   const recieveAction = () => {
     dispatch(
       tradeType({
-        tradeType: "Recieve",
+        tradeType: 'Recieve',
         tradeProps: {
           currency,
           currencyCode,
@@ -70,16 +71,16 @@ const CryptoWallets: FC<Props> = ({
           cryptoBalance,
           dollarBalance,
         },
-      })
+      }),
     );
-    push("/wallets/trade");
+    push('/wallets/trade');
   };
 
   return (
     <div
       className={clsx(
-        " shadow-sm rounded-lg px-10 py-8",
-        theme === "light" ? "bg-white" : "bg-neutral-800"
+        ' shadow-sm rounded-lg px-10 py-8',
+        theme === 'light' ? 'bg-white' : 'bg-neutral-800',
       )}
     >
       <div className="flex justify-between items-center">
@@ -89,7 +90,7 @@ const CryptoWallets: FC<Props> = ({
             <p className="text-lg font-bold ">{currency}</p>
             <p className="text-gray-400">{currencyCode}</p>
             <p className="text-sm font-bold">
-              {cryptoBalance ? cryptoBalance : "0.00"}
+              {cryptoBalance ? cryptoBalance : '0.00'}
             </p>
           </div>
         </div>
@@ -97,13 +98,13 @@ const CryptoWallets: FC<Props> = ({
         <div>
           <p className="text-gray-500 text-sm">Available Balance</p>
           <p className="text-3xl font-semibold">
-            {" "}
-            {show ? (balance ? balance : "0.00") : "*********"}
+            {' '}
+            {show ? (balance ? balance : '0.00') : '*********'}
           </p>
           <p className="text-gray-500 text-sm">
             {dollarBalance
-              ? formatter("USD").format(Number(dollarBalance))
-              : "0.00"}{" "}
+              ? formatter('USD').format(Number(dollarBalance))
+              : '0.00'}{' '}
             USD
           </p>
         </div>

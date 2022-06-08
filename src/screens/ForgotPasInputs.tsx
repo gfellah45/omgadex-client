@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { ReactElement } from "react";
 import AuthLayout from "../components/shared/AuthLayout";
 import Inputs from "../components/shared/Inputs";

@@ -1,10 +1,11 @@
-import clsx from "clsx";
-import { useTheme } from "next-themes";
-import React from "react";
-import Close from "../../assets/svg/Close";
-import Eth from "../../assets/svg/Eth";
-import Ripple from "../../assets/svg/Ripple";
-import Tether from "../../assets/svg/Tether";
+// @ts-nocheck
+import clsx from 'clsx';
+import { useTheme } from 'next-themes';
+import React from 'react';
+import Close from '../../assets/svg/Close';
+import Eth from '../../assets/svg/Eth';
+import Ripple from '../../assets/svg/Ripple';
+import Tether from '../../assets/svg/Tether';
 
 const availableCoinList: {
   shortHand: string;
@@ -12,18 +13,18 @@ const availableCoinList: {
   logo: JSX.Element;
 }[] = [
   {
-    shortHand: "USDT",
-    fullName: "USD Tether",
+    shortHand: 'USDT',
+    fullName: 'USD Tether',
     logo: <Tether width="40" height="40" />,
   },
   {
-    shortHand: "ETH",
-    fullName: "Ethereum",
+    shortHand: 'ETH',
+    fullName: 'Ethereum',
     logo: <Eth width="40" height="40" />,
   },
   {
-    shortHand: "LRXP",
-    fullName: "Ripple",
+    shortHand: 'LRXP',
+    fullName: 'Ripple',
     logo: <Ripple width="40" height="40" />,
   },
 ];
@@ -51,8 +52,8 @@ const AvailableCoins = ({
       <div
         onClick={onClick}
         className={clsx(
-          "flex items-center group rounded-sm p-3 gap-3 w-12/12 cursor-pointer",
-          theme === "light" ? "hover:bg-neutral-100" : "hover:bg-neutral-600"
+          'flex items-center group rounded-sm p-3 gap-3 w-12/12 cursor-pointer',
+          theme === 'light' ? 'hover:bg-neutral-100' : 'hover:bg-neutral-600',
         )}
       >
         <div>{logo}</div>

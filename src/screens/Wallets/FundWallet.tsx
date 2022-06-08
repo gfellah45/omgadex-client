@@ -1,8 +1,9 @@
-import React, { FC } from "react";
-import Close from "../../assets/svg/Close";
-import Link from "next/link";
-import { useForm, SubmitHandler } from "react-hook-form";
-import Loader from "react-loader-spinner";
+// @ts-nocheck
+import React, { FC } from 'react';
+import Close from '../../assets/svg/Close';
+import Link from 'next/link';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import Loader from 'react-loader-spinner';
 
 interface Props {
   action?: () => void;
@@ -54,7 +55,7 @@ const FundWallet: FC<Props> = ({
               Voucher Code
             </label>
             <input
-              {...register("voucher", { required: true })}
+              {...register('voucher', { required: true })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
               type="text"
               placeholder="9H4R3-F98F4-34U34-4398Y"
@@ -72,7 +73,7 @@ const FundWallet: FC<Props> = ({
                   />
                 </p>
               ) : (
-                " Redeem Code"
+                ' Redeem Code'
               )}
             </button>
           </div>
@@ -89,7 +90,7 @@ const FundWallet: FC<Props> = ({
 
         <div className="flex justify-center mt-2 item-center ">
           <p className="text-xs text-gray-500">
-            Don’t have a voucher?{" "}
+            Don’t have a voucher?{' '}
             <span>
               <Link href="/vouchers">
                 <a className="text-blue-600">Get new vouchers here</a>
