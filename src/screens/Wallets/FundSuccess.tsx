@@ -1,7 +1,8 @@
-import Link from "next/link";
-import React, { FC } from "react";
-import Close from "../../assets/svg/Close";
-import SuccessBadge from "../../assets/svg/SuccessBadge";
+// @ts-nocheck
+import Link from 'next/link';
+import React, { FC } from 'react';
+import Close from '../../assets/svg/Close';
+import SuccessBadge from '../../assets/svg/SuccessBadge';
 
 interface Props {
   action?: () => void;

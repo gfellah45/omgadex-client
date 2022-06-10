@@ -12,10 +12,10 @@ const dashboardSlice = createSlice({
   name: "dashboard",
   initialState,
   reducers: {
-    saveUserInfo: (state, action: PayloadAction<UserInfo>) => {
+    saveUserInfo: (state: { user: any }, action: PayloadAction<UserInfo>) => {
       state.user = action.payload;
     },
-    clearUserInfo: (state) => {
+    clearUserInfo: (state: { user: {} }) => {
       state.user = {};
     },
   },

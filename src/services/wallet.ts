@@ -17,7 +17,25 @@ const walletApi = baseApi.injectEndpoints({
       query: () => "/api/client/fiat_balance",
       providesTags: ["RedeemVoucher"],
     }),
+
+    // transfer to dollar wallet
+    transferToDollarWallet: builder.mutation<any, number>({
+      query: (amount) => ({
+        url: "/api/client/transfer",
+        method: "POST",
+        body: {
+          amount,
+          destinationWallet: "dollar",
+        },
+        invalidatesTags: ["RedeemVoucher"],
+      }),
+    }),
   }),
+  overrideExisting: true,
 });
 
-export const { useGetWalletQuery, useGetFiatWalletQuery } = walletApi;
+export const {
+  useGetWalletQuery,
+  useGetFiatWalletQuery,
+  useTransferToDollarWalletMutation,
+} = walletApi;

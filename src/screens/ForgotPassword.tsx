@@ -1,11 +1,12 @@
-import React, { FC } from "react";
-import AuthLayout from "../components/shared/AuthLayout";
-import Inputs from "../components/shared/Inputs";
-import { useForm, SubmitHandler } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
-import Loader from "react-loader-spinner";
-import { useRouter } from "next/router";
-import { useForgotPasswordMutation } from "../services/auth";
+// @ts-nocheck
+import React, { FC } from 'react';
+import AuthLayout from '../components/shared/AuthLayout';
+import Inputs from '../components/shared/Inputs';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import toast, { Toaster } from 'react-hot-toast';
+import Loader from 'react-loader-spinner';
+import { useRouter } from 'next/router';
+import { useForgotPasswordMutation } from '../services/auth';
 
 interface Iinputs {
   email: string;
@@ -24,13 +25,13 @@ const ForgotPassword: FC = () => {
     forgotPassword(values)
       .unwrap()
       .then((resp) => {
-        toast.success("Check your email for a reset link");
-        push("/forgetpassordinput");
-        localStorage.setItem("tempToken", JSON.stringify(resp.payload));
+        toast.success('Check your email for a reset link');
+        push('/forgetpassordinput');
+        localStorage.setItem('tempToken', JSON.stringify(resp.payload));
       })
       .catch((err) => {
         if (err.status === 404) {
-          toast.error("User not found");
+          toast.error('User not found');
         }
       });
   };
@@ -82,7 +83,7 @@ const ForgotPassword: FC = () => {
                   />
                 </div>
               ) : (
-                "Submit"
+                'Submit'
               )}
             </button>
           </div>
