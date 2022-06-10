@@ -1,33 +1,30 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import AppModal from '../../../modals';
-import { hideModal, showModal } from '../../../reducers/ui';
-import { useDispatch } from 'react-redux';
-import Close from '../../../assets/svg/Close';
-import {
-  useGetUserProfileQuery,
-  useUpdateUserProfileMutation,
-} from '../../../services/settings';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import React, { ReactNode, useEffect, useState } from "react";
+import Image from "next/image";
+import AppModal from "../../../modals";
+import { hideModal, showModal } from "../../../reducers/ui";
+import { useDispatch } from "react-redux";
+import Close from "../../../assets/svg/Close";
+import { useGetUserProfileQuery, useUpdateUserProfileMutation } from "../../../services/settings";
+import { useForm, SubmitHandler } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
 
 let AccountUpdatedSuccessfullyRes = {
-  message: 'success',
+  message: "success",
   payload: {
     loginToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjIyMTI3Y2QyMDNlMGI1ZGE0N2MwMjMiLCJlbWFpbCI6ImFsYW5kNjIwOUBnbWFpbC5jb20iLCJpc3MiOiJEb2xhd2F5IHRlY2giLCJpYXQiOjE2NTQxNzA1NzEsImV4cCI6MTY1NDI1Njk3MX0.3H-sGCDDuZ62QYYmk0_j4LrB9dQF6v81tyWNCUIzWXg',
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjIyMTI3Y2QyMDNlMGI1ZGE0N2MwMjMiLCJlbWFpbCI6ImFsYW5kNjIwOUBnbWFpbC5jb20iLCJpc3MiOiJEb2xhd2F5IHRlY2giLCJpYXQiOjE2NTQxNzA1NzEsImV4cCI6MTY1NDI1Njk3MX0.3H-sGCDDuZ62QYYmk0_j4LrB9dQF6v81tyWNCUIzWXg",
     refreshToken:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjIyMTI3Y2QyMDNlMGI1ZGE0N2MwMjMiLCJpc3MiOiJEb2xhd2F5IHRlY2giLCJpYXQiOjE2NTQxNzA1NzF9.XFL92PDdBBsEFvVB6dzPrLU9vtXMy32HqJOYAxd91Ow',
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjIyMTI3Y2QyMDNlMGI1ZGE0N2MwMjMiLCJpc3MiOiJEb2xhd2F5IHRlY2giLCJpYXQiOjE2NTQxNzA1NzF9.XFL92PDdBBsEFvVB6dzPrLU9vtXMy32HqJOYAxd91Ow",
     user: {
-      _id: '6222127cd203e0b5da47c023',
-      email: 'aland6209@gmail.com',
-      firstName: 'Alan',
-      lastName: 'Douglas',
+      _id: "6222127cd203e0b5da47c023",
+      email: "aland6209@gmail.com",
+      firstName: "Alan",
+      lastName: "Douglas",
       isAdmin: true,
-      phone: '08133814442',
+      phone: "08133814442",
       enable2fa: true,
-      address: '0x465f1c46F713F6b8580A124B8fd4C8c09A96953B',
+      address: "0x465f1c46F713F6b8580A124B8fd4C8c09A96953B",
     },
   },
 };
@@ -50,15 +47,13 @@ export type Inputs = {
   phone: string;
 };
 
-function ProfileTab() {
+function ProfileTab({ payload }: { children?: ReactNode; payload: userResponseInterface }) {
   const dispatch = useDispatch();
-  const { data, isLoading, status } = useGetUserProfileQuery('', {
-    refetchOnMountOrArgChange: true,
-  });
+  // const { data, {isLoading}, } = useGetUserProfileQuery("", {
+  //   refetchOnMountOrArgChange: true,
+  // });
   const [updateUserInfo] = useUpdateUserProfileMutation();
-  const [userData, setUserData] = useState<userResponseInterface>(
-    data?.payload,
-  );
+  const [userData, setUserData] = useState<userResponseInterface>(payload);
 
   const {
     register,
@@ -66,9 +61,7 @@ function ProfileTab() {
     formState: { errors },
   } = useForm();
 
-  const handleFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
     let modifiedState: any = () => ({
       ...userData,
@@ -81,10 +74,10 @@ function ProfileTab() {
     updateUserInfo(data)
       .unwrap()
       .then((res: any) => {
-        console.log(res, 'cause data was successfull');
-        toast.success('Profile updated successful');
+        console.log(res, "cause data was successfull");
+        toast.success("Profile updated successful");
       })
-      .catch((err: any) => console.error('something went wrong', err));
+      .catch((err: any) => console.error("something went wrong", err));
   };
 
   return (
@@ -98,8 +91,8 @@ function ProfileTab() {
                 dispatch(showModal({ showModal: true }));
               }}
               alt="user"
-              width={'100%'}
-              height={'100%'}
+              width={"100%"}
+              height={"100%"}
             />
             <div>
               <p className="text-[1.6rem] font-[500]">
@@ -125,7 +118,7 @@ function ProfileTab() {
                   type="text"
                   id="firstName"
                   value={userData?.firstName}
-                  {...register('firstName')}
+                  {...register("firstName")}
                   onChange={handleFieldChange}
                   className="w-full py-3 px-1 rounded-xl text-gray-400 focus:outline-none placeholder:text-sm"
                   placeholder="David"
@@ -139,7 +132,7 @@ function ProfileTab() {
               <div className="my-3 border rounded-xl">
                 <input
                   type="text"
-                  {...register('lastName')}
+                  {...register("lastName")}
                   onChange={handleFieldChange}
                   id="lastname"
                   // defaultValue={userData?.lastName}
@@ -158,7 +151,7 @@ function ProfileTab() {
               <div className="my-3 border rounded-xl">
                 <input
                   type="email"
-                  {...register('email')}
+                  {...register("email")}
                   onChange={handleFieldChange}
                   id="email"
                   value={userData?.email}
@@ -174,7 +167,7 @@ function ProfileTab() {
               <div className="my-3 border rounded-xl">
                 <input
                   type="tel"
-                  {...register('phone')}
+                  {...register("phone")}
                   id="phone"
                   value={userData?.phone}
                   onChange={handleFieldChange}
@@ -195,9 +188,7 @@ function ProfileTab() {
       <AppModal>
         <div>
           <div>
-            <p className="text-2xl mt-4  text-center font-bold">
-              Change Profile Photo
-            </p>
+            <p className="text-2xl mt-4  text-center font-bold">Change Profile Photo</p>
           </div>
           <div
             onClick={() => dispatch(hideModal())}
@@ -207,16 +198,11 @@ function ProfileTab() {
           </div>
 
           <div className="text-center">
-            <p className="py-5 border-b-[1px] w-[70%] cursor-pointer  mx-auto">
-              Upload Photo
-            </p>
+            <p className="py-5 border-b-[1px] w-[70%] cursor-pointer  mx-auto">Upload Photo</p>
             <p className="py-5 text-red-600 border-b-[1px] cursor-pointer mx-auto w-[70%]">
               Delete Current Photo
             </p>
-            <p
-              onClick={() => dispatch(hideModal())}
-              className="py-5 cursor-pointer"
-            >
+            <p onClick={() => dispatch(hideModal())} className="py-5 cursor-pointer">
               Cancel
             </p>
           </div>

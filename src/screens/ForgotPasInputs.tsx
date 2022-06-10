@@ -1,14 +1,14 @@
 // @ts-nocheck
-import React, { ReactElement } from 'react';
-import AuthLayout from '../components/shared/AuthLayout';
-import Inputs from '../components/shared/Inputs';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { passwordValidator } from '../utils';
+import React, { ReactElement } from "react";
+import AuthLayout from "../components/shared/AuthLayout";
+import Inputs from "../components/shared/Inputs";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { passwordValidator } from "../utils";
 
-import Loader from 'react-loader-spinner';
-import toast, { Toaster } from 'react-hot-toast';
-import { useRouter } from 'next/router';
-import { useForgotPasswordMutation } from '../services/forgotPass';
+import Loader from "react-loader-spinner";
+import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
+import { useForgotPasswordMutation } from "../services/forgotPass";
 
 interface Iinputs {
   password: string;
@@ -24,7 +24,7 @@ function ForgotPasInputs(): ReactElement {
     formState: { errors },
   } = useForm();
 
-  const password = watch('password');
+  const password = watch("password");
 
   const { push } = useRouter();
 
@@ -42,13 +42,13 @@ function ForgotPasInputs(): ReactElement {
       .unwrap()
       .then((res) => {
         if (res) {
-          toast.success('Password changed successfully');
-          push('/login');
+          toast.success("Password changed successfully");
+          push("/login");
         }
       })
       .catch((err) => {
         if (err.status === 400) {
-          toast.error('Code invalid Kindly input the correct code');
+          toast.error("Code invalid Kindly input the correct code");
         }
         console.log(err);
       });
@@ -64,10 +64,10 @@ function ForgotPasInputs(): ReactElement {
               register={register}
               errors={errors}
               validation={{
-                required: 'This is required',
+                required: "This is required",
                 validate: (value: string) =>
                   passwordValidator(value) ||
-                  'Must be min of 8 in length, at least 1 uppercase and 1 character and number',
+                  "Must be min of 8 in length, at least 1 uppercase and 1 character and number",
               }}
               name="password"
               label="New Password"
@@ -82,9 +82,8 @@ function ForgotPasInputs(): ReactElement {
               register={register}
               errors={errors}
               validation={{
-                required: 'This is required',
-                validate: (value: string) =>
-                  value === password || 'Passwords do not match',
+                required: "This is required",
+                validate: (value: string) => value === password || "Passwords do not match",
               }}
               name="password2"
               label="Repeat Password"
@@ -97,7 +96,7 @@ function ForgotPasInputs(): ReactElement {
               type="text"
               register={register}
               errors={errors}
-              validation={{ required: 'This is required' }}
+              validation={{ required: "This is required" }}
               name="code"
               label="Verification Code"
               placeholder="Verification code"
@@ -107,20 +106,15 @@ function ForgotPasInputs(): ReactElement {
           </div>
 
           <div className="mt-8">
-            <button className="w-full px-4 py-3 text-white rounded-md shadow hover:opacity-75 bg-primary">
+            <div className="w-full px-4 py-3 text-white rounded-md shadow hover:opacity-75 bg-primary">
               {isLoading ? (
                 <div className="flex items-center justify-center w-full">
-                  <Loader
-                    type="ThreeDots"
-                    color="#fff"
-                    height={30}
-                    width={60}
-                  />
+                  <Loader type="ThreeDots" color="#fff" height={30} width={60} />
                 </div>
               ) : (
-                ' Submit'
+                " Submit"
               )}
-            </button>
+            </div>
           </div>
         </form>
       </div>
