@@ -15,8 +15,6 @@ import Loader from 'react-loader-spinner';
 import EmptyState from '../../assets/svg/EmptyState';
 import { useTheme } from 'next-themes';
 import clsx from 'clsx';
-import Image from 'next/image';
-import dark from '../../../public/assets/balance_cover_dark.svg';
 import { CurrencyFormatter } from '../../lib/currencyFormatter';
 
 const Dashboard = () => {
@@ -31,8 +29,6 @@ const Dashboard = () => {
   const { theme } = useTheme();
 
   const dispatch = useAppDispatch();
-
-  const user = useAppSelector(({ dashboard }) => dashboard.user);
 
   useEffect(() => {
     if (data) {
