@@ -10,7 +10,12 @@ import { CurrencyFormatter } from '../../lib/currencyFormatter';
 import { useTransferToDollarWalletMutation } from '../../services/wallet';
 import Loader from 'react-loader-spinner';
 
-const TrxToDollar: FC = () => {
+type IProps = {
+  type?: string;
+  heading?: string;
+};
+
+const TrxToDollar: FC<IProps> = ({ type, heading }) => {
   const dispatch = useAppDispatch();
 
   const { handleSubmit, register, watch, reset } = useForm();
@@ -24,11 +29,11 @@ const TrxToDollar: FC = () => {
 
   const onFinish: SubmitHandler<{ amount: number }> = async (data) => {
     try {
-      const res = await transfer(data.amount).unwrap();
+      const res = await transfer({ amount: data.amount, type }).unwrap();
       toast.success(
         `${res.message.dollarBalance.toFixed(
           2,
-        )} has been transferred to your Dollar wallet`,
+        )} has been transferred to your ${type} wallet`,
       );
       dispatch(hideModal());
       reset();
@@ -36,6 +41,11 @@ const TrxToDollar: FC = () => {
       toast.error('Something went wrong, please try again');
     }
   };
+
+  const currentCurrency =
+    type === 'dollar'
+      ? CurrencyFormatter('USD').format(amount / rate)
+      : CurrencyFormatter('NGN').format(amount * rate);
 
   return (
     <div className="w-full ">
@@ -49,7 +59,7 @@ const TrxToDollar: FC = () => {
       </div>
 
       <div className="mt-16 text-center w-8/12 mx-auto font-semibold">
-        Transfer funds from your Naira wallet to Dollar wallet
+        {heading}
       </div>
 
       <form className="my-4" onSubmit={handleSubmit(onFinish)}>
@@ -63,8 +73,7 @@ const TrxToDollar: FC = () => {
           />
         </div>
         <p className="mt-2 text-neutral-700">
-          You are getting {CurrencyFormatter('USD').format(amount / rate)} at
-          the rate of {rate}/dollar
+          You are getting {currentCurrency} at the rate of {rate}/dollar
         </p>
 
         <div className="text-right my-6">

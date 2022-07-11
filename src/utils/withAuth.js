@@ -1,18 +1,19 @@
-import { useAppSelector } from "../hooks/useStoreHooks";
-import { useRouter } from "next/router";
+/* eslint-disable react/display-name */
+import { useAppSelector } from '../hooks/useStoreHooks';
+import { useRouter } from 'next/router';
 
 const withAuth = (WrappedComponent) => {
   return (props) => {
     // checks whether we are on client / browser or server.
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const authRoute = [
-        "/",
-        "/login",
-        "/signup",
-        "/verify-code",
-        "/verify",
-        "/forgot-password",
-        "/forgotpassordinput",
+        '/',
+        '/login',
+        '/signup',
+        // "/verify-code",
+        '/verify',
+        '/forgot-password',
+        '/forgotpassordinput',
       ];
       const Router = useRouter();
       const token = useAppSelector((state) => state.auth.token);
@@ -21,7 +22,7 @@ const withAuth = (WrappedComponent) => {
 
       // If there is no access token we redirect to "/" page.
       if (!token && !authRoute.includes(Router.pathname)) {
-        Router.replace("/login");
+        Router.replace('/login');
         return null;
       }
 

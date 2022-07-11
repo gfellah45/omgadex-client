@@ -105,6 +105,11 @@ const Wallets = () => {
     push(`wallets/send/${5}`);
   };
 
+  // dollar to naira
+  const triigerDollarToNairaModal = () => {
+    dispatch(showModal({ showModal: true, modalType: 'TRX_TO_NAIRA' }));
+  };
+
   useEffect(() => {
     const storage = localStorage.getItem('show_wallets') || false;
 
@@ -120,7 +125,7 @@ const Wallets = () => {
             theme === 'light' ? 'bg-white' : 'bg-neutral-800',
           )}
         >
-          <div className="w-6/12 space-y-7">
+          <div className="w-4/12 space-y-7">
             <p className="text-3xl font-bold">Wallet Overview</p>
             <div>
               <p className="text-lg text-neutral-500">Total Balance</p>
@@ -142,18 +147,28 @@ const Wallets = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-between w-6/12">
-            <div className="flex justify-end ml-auto space-x-2 ">
-              <p
-                onClick={() => toggleState()}
-                className="flex px-2 py-2 space-x-3 border-2 rounded-lg cursor-pointer text-neutral-500"
-              >
-                <span>Show Balance</span> <Eye />
-              </p>
-              <p className="flex items-center px-4 py-1 space-x-2 bg-gray-300 cursor-pointer rounded-2xl text-neutral-800">
-                <span>NGN</span> <CarretDown />
-              </p>
+          <div className="flex flex-col justify-between w-8/12">
+            <div className="flex space-x-5">
+              <div className="flex justify-end ml-auto space-x-2 ">
+                <p
+                  onClick={() => toggleState()}
+                  className="flex px-2 py-2 space-x-3 border-2 rounded-lg cursor-pointer text-neutral-500"
+                >
+                  <span>Show Balance</span> <Eye />
+                </p>
+                {/* <p className="flex items-center px-4 py-1 space-x-2 bg-gray-300 cursor-pointer rounded-2xl text-neutral-800">
+                  <span>USD</span> <CarretDown />
+                </p> */}
+              </div>
+              <div>
+                <TransactionButtons
+                  text="Move to Naira"
+                  primary={true}
+                  action={triigerDollarToNairaModal}
+                />
+              </div>
             </div>
+
             <div className="grid grid-cols-4 gap-4">
               <TransactionButtons
                 text="Send"
@@ -195,7 +210,19 @@ const Wallets = () => {
                   />
                 )}
               </>
-              {ui?.modalType === 'TRX' && <TrxToDollar />}
+              {ui?.modalType === 'TRX' && (
+                <TrxToDollar
+                  type="dollar"
+                  heading="Transfer funds from your Naira wallet to Dollar wallet"
+                />
+              )}
+
+              {ui?.modalType === 'TRX_TO_NAIRA' && (
+                <TrxToDollar
+                  type="naira"
+                  heading="Transfer funds from your Dollar wallet to Naira wallet"
+                />
+              )}
             </AppModal>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import baseApi from ".";
+import baseApi from '.';
 
 interface IwalletReq {
   address: string;
@@ -14,21 +14,24 @@ const walletApi = baseApi.injectEndpoints({
 
     // getting fiat wallet balance
     getFiatWallet: builder.query<any, void>({
-      query: () => "/api/client/fiat_balance",
-      providesTags: ["RedeemVoucher"],
+      query: () => '/api/client/fiat_balance',
+      providesTags: ['RedeemVoucher'],
     }),
 
     // transfer to dollar wallet
-    transferToDollarWallet: builder.mutation<any, number>({
-      query: (amount) => ({
-        url: "/api/client/transfer",
-        method: "POST",
+    transferToDollarWallet: builder.mutation<
+      any,
+      { amount: number; type: string }
+    >({
+      query: ({ amount, type }) => ({
+        url: '/api/client/transfer',
+        method: 'POST',
         body: {
           amount,
-          destinationWallet: "dollar",
+          destinationWallet: type,
         },
-        invalidatesTags: ["RedeemVoucher"],
       }),
+      invalidatesTags: ['RedeemVoucher'],
     }),
   }),
   overrideExisting: true,

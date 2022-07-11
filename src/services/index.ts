@@ -1,32 +1,32 @@
-import { RootState } from "./../store/index";
+import { RootState } from './../store/index';
 import {
   BaseQueryFn,
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
   createApi,
-} from "@reduxjs/toolkit/query/react";
-import { logout, registerToken } from "../reducers/auth";
+} from '@reduxjs/toolkit/query/react';
+import { logout, registerToken } from '../reducers/auth';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://bit-global.herokuapp.com",
+  baseUrl: 'https://bit-global.herokuapp.com',
   prepareHeaders: (headers, { getState }) => {
     const { auth } = getState() as RootState;
     if (auth.token) {
-      headers.set("Authorization", `Bearer ${auth.token}`);
+      headers.set('Authorization', `Bearer ${auth.token}`);
     }
     return headers;
   },
 });
-const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-  args,
-  api,
-  extraOptions
-) => {
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 403) {
     // try to get a new token
-    const refreshResult = await baseQuery("/client/refresh", api, extraOptions);
+    const refreshResult = await baseQuery('/client/refresh', api, extraOptions);
     if (refreshResult.data) {
       // store the new token
       api.dispatch(registerToken({ loginToken: refreshResult.data as string }));
@@ -40,11 +40,11 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 };
 
 const baseApi = createApi({
-  reducerPath: "baseApi",
+  reducerPath: 'baseApi',
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
   //  cache , The default time is seconds , Default duration 60 second
-  tagTypes: ["RedeemVoucher", "PurchaseVoucher", "Dashboard"],
+  tagTypes: ['RedeemVoucher', 'PurchaseVoucher', 'Dashboard', 'BankDetails'],
   keepUnusedDataFor: 5 * 60,
   refetchOnMountOrArgChange: 30 * 60,
 });

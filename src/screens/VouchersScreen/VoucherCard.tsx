@@ -1,12 +1,12 @@
-import React, { FC } from "react";
-import Deposit from "../../assets/svg/Deposit";
-import Send from "../../assets/svg/Send";
-import VoucherLogo from "../../assets/svg/VoucherLogo";
-import { useAppDispatch } from "../../hooks/useStoreHooks";
-import { showModal } from "../../reducers/ui";
-import { usePurchaseVoucherMutation } from "../../services/vouchers";
-import clsx from "clsx";
-import { useTheme } from "next-themes";
+import React, { FC } from 'react';
+import Deposit from '../../assets/svg/Deposit';
+import Send from '../../assets/svg/Send';
+import VoucherLogo from '../../assets/svg/VoucherLogo';
+import { useAppDispatch } from '../../hooks/useStoreHooks';
+import { showModal } from '../../reducers/ui';
+import { usePurchaseVoucherMutation } from '../../services/vouchers';
+import clsx from 'clsx';
+import { useTheme } from 'next-themes';
 
 type IPaymentDetails = {
   amountInDollars: number;
@@ -42,7 +42,8 @@ const VoucherCard: FC<Props> = ({
         rate: details.rate,
       }).unwrap();
       if (response) {
-        dispatch(showModal({ showModal: true }));
+        dispatch(showModal({ showModal: true, modalType: 'initial' }));
+
         setDetails({ ...response.payload });
       }
     } catch (error) {
@@ -53,8 +54,8 @@ const VoucherCard: FC<Props> = ({
   return (
     <div
       className={clsx(
-        "relative flex flex-col justify-between w-full px-4 py-3  shadow-sm cursor-pointer rounded-xl",
-        theme === "light" ? "bg-white" : "bg-neutral-800"
+        'relative flex flex-col justify-between w-full px-4 py-3  shadow-sm cursor-pointer rounded-xl',
+        theme === 'light' ? 'bg-white' : 'bg-neutral-800',
       )}
     >
       <div className="flex justify-between w-full mb-4">

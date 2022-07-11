@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import Msg from "../../assets/svg/Msg";
-import Eye from "../../assets/svg/Eye";
+import Msg from '../../assets/svg/Msg';
+import Eye from '../../assets/svg/Eye';
 
 interface Props {
   type?: string;
@@ -35,13 +35,13 @@ const Inputs = ({
     <>
       <label
         className="inline-block my-1"
-        style={{ color: "#B1B5C4" }}
+        style={{ color: '#B1B5C4' }}
         htmlFor={name}
       >
         {label}
       </label>
       <div
-        style={{ borderColor: "#E5E5E5" }}
+        style={{ borderColor: '#E5E5E5' }}
         className="relative flex w-full border rounded-md "
       >
         <input
@@ -49,11 +49,11 @@ const Inputs = ({
           minLength={minLength}
           maxLength={maxLength}
           name={name}
-          type={showPassword ? "text" : type}
+          type={showPassword ? 'text' : type}
           placeholder={placeholder}
-          className="w-full h-full px-2 py-2 text-sm rounded-md lg:text-lg lg:py-3 focus:outline-none active:bg-opacity-0 active:bg-white"
+          className="w-full h-full px-2 py-2 text-sm rounded-md lg:text-lg lg:py-3 focus:outline-none focus:ring-1 focus:ring-primary active:bg-opacity-0 active:bg-white"
         />
-        {type === "password" && (
+        {type === 'password' && (
           <p
             className="absolute cursor-pointer right-2 top-1 lg:top-2"
             onClick={() => setShowPassword(!showPassword)}
