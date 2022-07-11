@@ -10,6 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import ProtectedRoutes from '../src/authRoute/ProtectedRoutes';
 
 import { ThemeProvider } from 'next-themes';
+import Protected from '../src/utils/Protected';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -18,7 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <PersistGate loading={null} persistor={persistor}>
           <NextNprogress color="#601ABA" />
           <ThemeProvider enableSystem={false} attribute="class">
-            <Component {...pageProps} />
+            <Protected>
+              <Component {...pageProps} />
+            </Protected>
           </ThemeProvider>
         </PersistGate>
       </Provider>

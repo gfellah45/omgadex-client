@@ -127,14 +127,14 @@ const Form = (props: Props) => {
   return (
     <div className="w-full px-8 py-10 bg-white shadow-2xl lg:w-11/12 xl:w-9/12 lg:px-4 xl:px-14 rounded-2xl">
       <h3 className="w-full text-2xl font-semibold md:text-center lg:text-left md:text-4xl lg:w-8/12 text-secondary">
-        Buy Omega Voucher
+        Buy Lajeni Voucher
       </h3>
 
       <AppModal>
         {voucherResponse.view && (
           <div className="w-92">
             <div className="my-8 text-2xl font-bold text-center">
-              Transaction Destails
+              Transaction Details
             </div>
 
             <div className="space-y-3">

@@ -15,11 +15,11 @@ const GetVoucher = (props: Props) => {
         <div className="flex flex-col flex-wrap lg:flex-row">
           <div className="w-full mt-8 lg:w-6/12">
             <h2 className="font-sans text-3xl font-bold text-center text-white md:text-5xl md:pl-8 lg:text-left">
-              Omega Voucher
+              Lajeni Voucher
             </h2>
             <p className="lg:w-10/12 text-center lg:text-left xl:w-7/12 md:pl-8 mt-4 leading-6 text-xs md:text-[16px] text-links tracking-wider">
-              Purchase Omega Voucher instantly and convert to a cryptocurrency
-              of your choice and get it straight to your Dolaway wallet.
+              Purchase Lajeni Voucher instantly and convert to a cryptocurrency
+              of your choice and get it straight to your Lajeni wallet.
             </p>
 
             {/* details */}

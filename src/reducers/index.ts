@@ -1,23 +1,23 @@
-import { combineReducers } from "@reduxjs/toolkit";
-import ui from "./ui";
-import auth from "./auth";
-import { persistReducer } from "redux-persist";
-import { encryptTransform } from "redux-persist-transform-encrypt";
-import baseApi from "../services";
-import storageSession from "redux-persist/lib/storage/session";
-import dashboard from "./dashboard";
+import { combineReducers } from '@reduxjs/toolkit';
+import ui from './ui';
+import auth from './auth';
+import { persistReducer } from 'redux-persist';
+import { encryptTransform } from 'redux-persist-transform-encrypt';
+import baseApi from '../services';
+import storageSession from 'redux-persist/lib/storage/session';
+import dashboard from './dashboard';
 
 const persistConfig = {
   transforms: [
     encryptTransform({
-      secretKey: "teejay2022",
+      secretKey: 'teejay2022',
       onError: function (error) {
         console.log(error);
       },
     }),
   ],
   storage: storageSession,
-  key: "omega",
+  key: 'omega',
   // whitelist: ["auth"],
 };
 

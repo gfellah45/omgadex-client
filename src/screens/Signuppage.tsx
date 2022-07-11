@@ -11,6 +11,7 @@ import { passwordValidator } from '../utils';
 import Loader from 'react-loader-spinner';
 import PhoneNumberInput from '../components/shared/PhoneNumberInput';
 import { useCreateUserMutation } from '../services/auth';
+import { isEmpty } from 'lodash';
 
 interface Iinputs {
   firstName: string;
@@ -53,8 +54,12 @@ const Signuppage = (): JSX.Element => {
         }
       })
       .catch((err) => {
-        if (err.data?.message.includes('already' || 'exists')) {
-          toast.error('A user already exists with the email');
+        if (!isEmpty(err.message)) {
+          if (err.data?.message.includes('already' || 'exists')) {
+            toast.error('A user already exists with the email');
+          } else {
+            toast.error('Something went wrong please try again later');
+          }
         } else {
           toast.error('Something went wrong please try again later');
         }

@@ -1,7 +1,7 @@
-import React, { FC } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import logo from "../../../public/assets/logo.svg";
+import React, { FC } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import logo from '../../../public/assets/logo.svg';
 
 interface Props {
   heading?: string;
@@ -24,7 +24,7 @@ const FormLayout: FC<Props> = ({
       <div className="w-full  lg:hidden">
         <div className="flex items-center justify-center my-3 space-x-2 text-center">
           <Image src={logo} alt="logo" />
-          <p className="text-2xl font-bold">Omega Dex</p>
+          <p className="text-2xl font-bold">Lajeni</p>
         </div>
 
         <div className="flex justify-center w-full space-x-1 text-xs font-semibold text-balck lg:flex font-display md:text-sm">
@@ -57,7 +57,7 @@ const FormLayout: FC<Props> = ({
             />
           </svg>
           https://
-          <span className="text-omgray-700">account.omegadex.com</span>
+          <span className="text-omgray-700">account.lajeni.com</span>
         </div>
       </div>
 

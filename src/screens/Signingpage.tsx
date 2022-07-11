@@ -17,6 +17,7 @@ import AppModal from '../modals';
 import { hideModal, showModal } from '../reducers/ui';
 import { useAppDispatch } from '../hooks/useStoreHooks';
 import { login, registerToken } from '../reducers/auth';
+import { isEmpty } from 'lodash';
 
 interface Iinputs {
   email: string;
@@ -61,7 +62,7 @@ const Signingpage = (): JSX.Element => {
           onClose();
         }
       })
-      .catch(() => {
+      .catch((err) => {
         toast.error('something went wrong pls try again later');
       });
   };
@@ -90,15 +91,21 @@ const Signingpage = (): JSX.Element => {
         }
       })
       .catch((err: any) => {
-        if (err.data?.message.includes('password')) {
-          toast.error('Invalid login credetials, please confirm and try again');
-        }
-        if (err.data?.message.includes('email' || 'phone')) {
-          toast.error('Invalid email or phone number');
-        }
-        if (err.data?.message.includes('activated')) {
-          localStorage.setItem('tempdata', JSON.stringify(values));
-          onOpen();
+        if (!isEmpty(!err.data?.message)) {
+          if (err.data?.message.includes('password')) {
+            toast.error(
+              'Invalid login credetials, please confirm and try again',
+            );
+          }
+          if (err.data?.message.includes('email' || 'phone')) {
+            toast.error('Invalid email or phone number');
+          }
+          if (err.data?.message.includes('activated')) {
+            localStorage.setItem('tempdata', JSON.stringify(values));
+            onOpen();
+          }
+        } else {
+          toast.error('Something went wrong please try again later');
         }
       });
   };

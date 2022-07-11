@@ -59,7 +59,7 @@ const FiatCard: FC<Props> = ({
           <p className="text-gray-500 text-sm">Available Balance</p>
           <p className="text-3xl font-semibold">
             {show
-              ? CurrencyFormatter('USD').format(Number(balance))
+              ? CurrencyFormatter('NGN').format(Number(balance))
               : '*********'}
           </p>
         </div>
