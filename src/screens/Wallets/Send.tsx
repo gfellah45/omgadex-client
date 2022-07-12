@@ -269,7 +269,7 @@ const Send = () => {
       </div>
 
       {trade === 'Send' && (
-        <div className="overflow-hidden h-[450px] mt-10 py-2">
+        <div className="overflow-hidden flex flex-1 mt-10 py-2">
           <div
             className={clsx(
               'flex flex-1 overflow-y-auto flex-col px-8 h-full rounded-xl text-xl ',

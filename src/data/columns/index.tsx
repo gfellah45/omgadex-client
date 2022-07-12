@@ -1,19 +1,19 @@
 // @ts-nocheck
-import clsx from "clsx";
-import { isEmpty } from "lodash";
+import clsx from 'clsx';
+import { isEmpty } from 'lodash';
 export const Transaction = [
   {
-    Header: "Type",
-    accessor: "type",
+    Header: 'Type',
+    accessor: 'type',
     Cell: ({ row }) => {
-      const type = isEmpty(row.original.coin) ? "Deposit" : "Transfer";
+      const type = isEmpty(row.original.coin) ? 'Deposit' : 'Transfer';
       return (
         <div
           className={clsx(
-            " text-center px-2 py-1 mx-2 rounded-md",
-            type === "Deposit"
-              ? "bg-purple-500 text-white"
-              : "bg-green-500 text-white"
+            ' text-center p-2  rounded-md',
+            type === 'Deposit'
+              ? 'bg-purple-500 text-white'
+              : 'bg-green-500 text-white',
           )}
         >
           {type}
@@ -22,16 +22,16 @@ export const Transaction = [
     },
   },
   {
-    Header: "Coin",
-    accessor: "coin",
+    Header: 'Coin',
+    accessor: 'coin',
     Cell: ({ cell: { value } }) => {
-      const type = isEmpty(value) ? "Fiat" : value;
+      const type = isEmpty(value) ? 'Fiat' : value;
       return <div className="flex items-center uppercase">{type}</div>;
     },
   },
   {
-    Header: "Amount",
-    accessor: "amount",
+    Header: 'Amount',
+    accessor: 'amount',
     Cell: ({ cell: { value } }) => {
       return (
         <div className="flex items-center">{Number(value).toFixed(2)}</div>
@@ -39,30 +39,43 @@ export const Transaction = [
     },
   },
   {
-    Header: "Address",
-    accessor: "fromAddress",
+    Header: 'Address',
+    accessor: 'fromAddress',
     minWidth: 60,
     maxWidth: 100,
     width: 50,
     Cell: ({ cell: { value } }) => {
-      return <div className="flex items-center">{value}</div>;
+      return (
+        <div className="flex items-center">
+          {isEmpty(value) ? 'N/A' : value}
+        </div>
+      );
     },
   },
   {
-    Header: "Transaction ID",
-    accessor: "transactionId",
+    Header: 'Transaction ID',
+    accessor: 'transactionId',
     minWidth: 60,
     maxWidth: 100,
     width: 50,
     Cell: ({ cell: { value } }) => {
-      return <div className="flex items-center">{value}</div>;
+      return (
+        <div className="flex items-center">
+          {isEmpty(value) ? 'N/A' : value}
+        </div>
+      );
     },
   },
   {
-    Header: "Date",
-    accessor: "date",
+    Header: 'Date',
+    accessor: 'date',
     Cell: ({ cell: { value } }) => {
-      return <div className="flex items-center">{value}</div>;
+      return (
+        <div className="flex items-center">
+          {new Date(value).toDateString()} |{' '}
+          {new Date(value).toLocaleTimeString()}
+        </div>
+      );
     },
   },
 ];
