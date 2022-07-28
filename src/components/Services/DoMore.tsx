@@ -11,22 +11,26 @@ import { gsap } from "gsap";
 const DoMore = (): JSX.Element => {
   gsap.registerPlugin(ScrollTrigger);
   return (
-    <div className="pb-8 mt-32">
+    <div className="pb-8 mt-20 md:mt-32">
       <Container>
         <Reveal trigger={<div />}>
           <FadeLeft>
-            <h2 className="text-5xl font-bold text-center md:text-5xl">
-              Do more with Omega DEX
-            </h2>
+            <h2 className="text-3xl font-bold text-center md:text-5xl">Do more with Omega DEX</h2>
           </FadeLeft>
         </Reveal>
         <Reveal trigger={<p />}>
           <FadeIn delay={0.8}>
-            <p className="w-11/12 mx-auto mt-6 text-xs leading-6 text-center md:w-7/12 lg:text-sm xl:text-lg text-links">
-              Promoting the culture of wealth building in African communities,
-              by Africans and for Africans. With the service of our savvy
-              professionals, choose and invest in plans that future you would
-              thank you for all
+            <p className="w-10/12 hidden md:block mx-auto mt-14 text-xs leading-6 text-center md:w-7/12 lg:text-sm xl:text-lg text-links md:px-0">
+              Promoting the culture of wealth building in African communities, by Africans and for
+              Africans. With the service of our savvy professionals, choose and invest in plans that
+              future you would thank you for all
+            </p>
+            <p className="w-10/12 md:hidden mb-10 mx-auto mt-14 text-md leading-6 text-center md:w-7/12 lg:text-sm xl:text-lg text-links md:px-0">
+              Promoting the culture of wealth building in African communities, by Africans and for
+              <br /> Africans.
+              <br />
+              With the service of our savvy professionals, choose and invest in plans that future
+              you would thank you for all
             </p>
           </FadeIn>
         </Reveal>
@@ -49,11 +53,7 @@ const DoMore = (): JSX.Element => {
             }}
           >
             {service.slice(0, 3).map((item, index) => (
-              <ServiceCard
-                key={index}
-                title={item.title}
-                description={item.text}
-              />
+              <ServiceCard key={index} title={item.title} description={item.text} />
             ))}
           </Tween>
         </div>
@@ -65,22 +65,14 @@ const DoMore = (): JSX.Element => {
         </div>
         <div className="hidden grid-cols-2 lg:grid lg:grid-cols-3 lg:gap-0 xl:gap-4 lg:mt-16 xl:mt-12">
           {service.slice(3, 6).map((item, index) => (
-            <ServiceCard
-              key={index}
-              title={item.title}
-              description={item.text}
-            />
+            <ServiceCard key={index} title={item.title} description={item.text} />
           ))}
         </div>
 
         {/* mobile */}
-        <div className="grid grid-cols-2 gap-0 md:grid-cols-2 lg:hidden lg:grid-cols-3 lg:gap-0 xl:gap-4 lg:mt-16 xl:mt-28">
+        <div className="grid grid-cols-1 border-b gap-0 md:grid-cols-2 lg:hidden lg:grid-cols-3 lg:gap-0 xl:gap-4 lg:mt-16 xl:mt-28">
           {service.map((item, index) => (
-            <ServiceCard
-              key={index}
-              title={item.title}
-              description={item.text}
-            />
+            <ServiceCard key={index} title={item.title} description={item.text} />
           ))}
         </div>
       </Container>

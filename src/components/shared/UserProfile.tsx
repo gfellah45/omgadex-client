@@ -1,20 +1,22 @@
 // @ts-nocheck
-import React, { FC, useState } from 'react';
-import { FaCaretDown } from 'react-icons/fa';
-import NotifIcon from '../../assets/svg/NotifIcon';
-import Image from 'next/image';
-import CarretDown from '../../assets/svg/CarretDown';
-import { Menu, Transition, Switch } from '@headlessui/react';
-import Profile from '../../assets/svg/Profile';
-import Settings from '../../assets/svg/Settings';
-import Logout from '../../assets/svg/Logout';
-import { useAppDispatch, useAppSelector } from '../../hooks/useStoreHooks';
-import { useRouter } from 'next/router';
-import { logout } from '../../reducers/auth';
-import Switcher from './Switcher';
+import React, { FC, useState } from "react";
+import { FaCaretDown, FaHamburger } from "react-icons/fa";
+import NotifIcon from "../../assets/svg/NotifIcon";
+import Image from "next/image";
+import CarretDown from "../../assets/svg/CarretDown";
+import { Menu, Transition, Switch } from "@headlessui/react";
+import Profile from "../../assets/svg/Profile";
+import Settings from "../../assets/svg/Settings";
+import Logout from "../../assets/svg/Logout";
+import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
+import { useRouter } from "next/router";
+import { logout } from "../../reducers/auth";
+import Switcher from "./Switcher";
+import Hambuger from "../Header/Hambuger";
 
 const UserProfile: FC = () => {
   const user = useAppSelector(({ auth }) => auth.user);
+  const [open, setOpen] = useState(false);
 
   const { push } = useRouter();
 
@@ -25,36 +27,32 @@ const UserProfile: FC = () => {
     // dispatch(clearUserInfo());
     dispatch(logout());
 
-    push('/login');
+    push("/login");
   };
 
   return (
     <div className="flex items-center space-x-6">
-      <Switcher />
-      <div>
+      <span className="hidden md:block">
+        <Switcher />
+      </span>
+      <div className="hidden md:block">
         <button className="flex items-center space-x-2">
-          <span className="text-sm lg:text-sm">{'EN'}</span> <FaCaretDown />
+          <span className="text-sm lg:text-sm">{"EN"}</span> <FaCaretDown />
         </button>
       </div>
 
-      <div className="">
+      <div className="mx-auto self-center">
         <NotifIcon />
       </div>
 
-      <div className="w-10 h-10 overflow-hidden rounded-full">
-        <Image
-          src="/assets/user.svg"
-          alt="user"
-          width={'100%'}
-          height={'100%'}
-        />
+      <div className="w-10 h-10 hidden md:inline-block overflow-hidden rounded-full">
+        <Image src="/assets/user.svg" alt="user" width={"100%"} height={"100%"} />
       </div>
 
-      <Menu as="div" className="relative inline-block text-left">
+      <Menu as="div" className="relative hidden md:inline-block text-left">
         <div className="cursor-pointer">
           <Menu.Button className="flex items-center space-x-2">
-            <span className="text-sm lg:text-sm">{user.firstName}</span>{' '}
-            <CarretDown />
+            <span className="text-sm lg:text-sm">{user.firstName}</span> <CarretDown />
           </Menu.Button>
         </div>
 
@@ -73,7 +71,7 @@ const UserProfile: FC = () => {
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? 'bg-gray-50 shadow-sm ' : 'text-gray-900'
+                      active ? "bg-gray-50 shadow-sm " : "text-gray-900"
                     } group flex space-x-4  items-center w-full px-4 rounded  py-2 text-base`}
                   >
                     <Profile />
@@ -85,7 +83,7 @@ const UserProfile: FC = () => {
                 {({ active }) => (
                   <button
                     className={`${
-                      active ? 'bg-gray-50 shadow-sm ' : 'text-gray-900'
+                      active ? "bg-gray-50 shadow-sm " : "text-gray-900"
                     } group flex space-x-4  items-center w-full px-4 rounded  py-2 text-base`}
                   >
                     <Settings />
@@ -98,7 +96,7 @@ const UserProfile: FC = () => {
                   <button
                     onClick={() => logUserOut()}
                     className={`${
-                      active ? 'bg-gray-50 shadow-sm ' : 'text-gray-900'
+                      active ? "bg-gray-50 shadow-sm " : "text-gray-900"
                     } group flex space-x-4  items-center w-full px-4 rounded  py-2 text-base`}
                   >
                     <Logout />
@@ -110,6 +108,10 @@ const UserProfile: FC = () => {
           </Menu.Items>
         </Transition>
       </Menu>
+
+      <div className="md:hidden">
+        <Hambuger open={open} setOpen={setOpen} />
+      </div>
     </div>
   );
 };

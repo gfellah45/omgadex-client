@@ -1,36 +1,36 @@
-import clsx from 'clsx';
-import { useTheme } from 'next-themes';
-import React, { useState } from 'react';
-import ArrowDown from '../../assets/svg/ArrowDown';
-import Calendar from '../../assets/svg/Calendar';
-import Search from '../../assets/svg/Search';
-import TransactionTable from '../../components/shared/TransactionTable';
-import { useGetAllTransactionsQuery } from '../../services/transactions';
-import { useRouter } from 'next/router';
+import clsx from "clsx";
+import { useTheme } from "next-themes";
+import React, { useState } from "react";
+import ArrowDown from "../../assets/svg/ArrowDown";
+import Calendar from "../../assets/svg/Calendar";
+import Search from "../../assets/svg/Search";
+import TransactionTable from "../../components/shared/TransactionTable";
+import { useGetAllTransactionsQuery } from "../../services/transactions";
+import { useRouter } from "next/router";
 
 const Trx = () => {
   const { query, push } = useRouter();
   const transationTypes = [
     {
       id: 1,
-      name: 'All type',
-      query: 'all',
+      name: "All type",
+      query: "all",
     },
     {
       id: 2,
-      name: 'Withdrawals',
-      query: 'withdrawal',
+      name: "Withdrawals",
+      query: "withdrawal",
     },
     {
       id: 3,
-      name: 'Deposits',
-      query: 'deposit',
+      name: "Deposits",
+      query: "deposit",
     },
 
     {
       id: 4,
-      name: 'Transfers',
-      query: 'transfer',
+      name: "Transfers",
+      query: "transfer",
     },
   ];
 
@@ -54,21 +54,19 @@ const Trx = () => {
   return (
     <div
       className={clsx(
-        'flex flex-1 h-full mx-4 flex-col px-6 rounded-2xl shadow-sm',
-        theme === 'light' ? 'bg-white' : ' bg-neutral-800',
+        "flex flex-1 h-full mx-4 flex-col px-6 rounded-2xl shadow-sm",
+        theme === "light" ? "bg-white" : " bg-neutral-800"
       )}
     >
-      <div className="flex flex-wrap border-b w-full py-8  items-center justify-between ">
-        <div className="w-4/12">
-          <ul className="flex justify-between">
+      <div className="flex flex-wrap border-b w-full md:py-8 py-5 md:items-center items-baseline justify-between ">
+        <div className="md:w-4/12 w-full">
+          <ul className="flex justify-between items-center mb-4 md:mb-0">
             {transationTypes.map(({ name, id, query }) => (
               <li
                 onClick={() => changeFilterType(id, query)}
                 key={id}
                 className={` rounded-2xl hover:bg-neutral-600 hover:text-white cursor-pointer ${
-                  selectedType === id
-                    ? 'bg-neutral-600 text-white '
-                    : ' text-neutral-500'
+                  selectedType === id ? "bg-neutral-600 text-white " : " text-neutral-500"
                 } py-1 px-3 text-sm font-bold `}
               >
                 {name}

@@ -36,8 +36,6 @@ const TransactionTrade = () => {
     (state) => state.dashboard.user.payload.walletInfo
   );
 
-  console.log(dollarBalance, " dollar balance");
-
   const dispatch = useAppDispatch();
 
   function openModal() {
@@ -58,12 +56,12 @@ const TransactionTrade = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col h-full px-8 py-6">
+    <div className="flex flex-1 flex-col h-full px-6 md:px-8 py-6">
       <div
         className={clsx("rounded-2xl shadow-sm", theme === "light" ? "bg-white" : "bg-neutral-800")}
       >
         <div className="flex justify-between flex-wrap items-center px-6 py-4">
-          <div className="flex space-x-2 items-center w-5/12">
+          <div className="flex flex-wrap space-x-2 items-center w-full md:w-5/12">
             <p className="cursor-pointer" onClick={() => back()}>
               <ArrowBack />
             </p>
@@ -73,7 +71,7 @@ const TransactionTrade = () => {
             <p className="text-4xl font-bold">NGN</p>
             <p className="text-gray-400 text-lg font-semibold">Naira</p>
           </div>
-          <div className="grid grid-cols-4 gap-4 w-6/12">
+          <div className="grid mt-3 md:mt-0 grid-cols-2 md:grid-cols-4 w-full md:mx-0 gap-4 md:w-6/12">
             <TransactionButtons text="Buy" icon={<Send />} action={routeToBuy} />
             <TransactionButtons text="Sell" icon={<Deposit />} action={routeToSell} />
             <TransactionButtons text="Withdraw" icon={<Send />} />

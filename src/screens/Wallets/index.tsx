@@ -1,45 +1,54 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
-import Btc from '../../assets/svg/Btc';
-import CarretDown from '../../assets/svg/CarretDown';
-import Deposit from '../../assets/svg/Deposit';
-import Eth from '../../assets/svg/Eth';
-import Eye from '../../assets/svg/Eye';
-import FiatNaira from '../../assets/svg/FiatNaira';
-import Ripple from '../../assets/svg/Ripple';
-import Send from '../../assets/svg/Send';
-import Tether from '../../assets/svg/Tether';
-import { TransactionButtons } from '../../components/shared/Buttons';
-import CryptoWallets from './CryptoWallets';
-import FiatCard from './FiatCard';
-import FundWallet from './FundWallet';
-import { useRouter } from 'next/router';
-import { useAppDispatch, useAppSelector } from '../../hooks/useStoreHooks';
-import { hideModal, showModal } from '../../reducers/ui';
-import AppModal from '../../modals';
-import {
-  useGetFiatWalletQuery,
-  useGetWalletQuery,
-} from '../../services/wallet';
-import { useRedeemVoucherMutation } from '../../services/vouchers';
-import toast, { Toaster } from 'react-hot-toast';
+import React, { useEffect, useState } from "react";
+import Btc from "../../assets/svg/Btc";
+import CarretDown from "../../assets/svg/CarretDown";
+import Deposit from "../../assets/svg/Deposit";
+import Eth from "../../assets/svg/Eth";
+import Eye from "../../assets/svg/Eye";
+import FiatNaira from "../../assets/svg/FiatNaira";
+import Ripple from "../../assets/svg/Ripple";
+import Send from "../../assets/svg/Send";
+import Tether from "../../assets/svg/Tether";
+import { TransactionButtons } from "../../components/shared/Buttons";
+import CryptoWallets from "./CryptoWallets";
+import FiatCard from "./FiatCard";
+import FundWallet from "./FundWallet";
+import { useRouter } from "next/router";
+import { useAppDispatch, useAppSelector } from "../../hooks/useStoreHooks";
+import { hideModal, showModal } from "../../reducers/ui";
+import AppModal from "../../modals";
+import { useGetFiatWalletQuery, useGetWalletQuery } from "../../services/wallet";
+import { useRedeemVoucherMutation } from "../../services/vouchers";
+import toast, { Toaster } from "react-hot-toast";
 
-import FundSuccess from './FundSuccess';
-import { useTheme } from 'next-themes';
-import clsx from 'clsx';
-import { CurrencyFormatter } from '../../lib/currencyFormatter';
-import TrxToDollar from './TrxToDollar';
+import FundSuccess from "./FundSuccess";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
+import { CurrencyFormatter } from "../../lib/currencyFormatter";
+import TrxToDollar from "./TrxToDollar";
+import Close from "../../assets/svg/Close";
+import StripeModal from "./StripeModal";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  CardElement,
+  Elements,
+  useStripe,
+  useElements,
+  ElementsConsumer,
+} from "@stripe/react-stripe-js";
 
 type AmountFunded = {
   amountInDollars: string;
   amountInNaira: string;
 };
 
+const STRIPE_MODAL = "STRIPE_MODAL";
+
 const Wallets = () => {
   const [show, setShow] = useState<boolean>(false);
   const [amountFunded, setAmountFunded] = useState<AmountFunded>({
-    amountInDollars: '',
-    amountInNaira: '',
+    amountInDollars: "",
+    amountInNaira: "",
   });
   const { theme } = useTheme();
 
@@ -50,19 +59,19 @@ const Wallets = () => {
   const { push } = useRouter();
 
   const { data: ETH } = useGetWalletQuery(
-    { address, symbol: 'ETH' },
+    { address, symbol: "ETH" },
     {
       refetchOnMountOrArgChange: true,
-    },
+    }
   );
   const { data: USDT } = useGetWalletQuery(
-    { address, symbol: 'USDT' },
+    { address, symbol: "USDT" },
     {
       refetchOnMountOrArgChange: true,
-    },
+    }
   );
-  const { data: BTC } = useGetWalletQuery({ address, symbol: 'BTC' });
-  const { data: XRP } = useGetWalletQuery({ address, symbol: 'XRP' });
+  const { data: BTC } = useGetWalletQuery({ address, symbol: "BTC" });
+  const { data: XRP } = useGetWalletQuery({ address, symbol: "XRP" });
 
   const { dashboard, ui } = useAppSelector((state) => state);
 
@@ -77,24 +86,21 @@ const Wallets = () => {
     useRedeemVoucherMutation();
 
   isSuccessR &&
-    toast.success(
-      'Voucher redeemed successfully, Fiat wallet credited successfully',
-      {
-        id: 'voucher-redeemed',
-      },
-    );
+    toast.success("Voucher redeemed successfully, Fiat wallet credited successfully", {
+      id: "voucher-redeemed",
+    });
 
   function closeModal() {
     dispatch(hideModal());
   }
 
   function openModal() {
-    dispatch(showModal({ showModal: true, modalType: 'FUND' }));
+    dispatch(showModal({ showModal: true, modalType: "FUND" }));
   }
 
   const toggleState = () => {
     setShow((prevState) => !prevState);
-    localStorage.setItem('show_wallets', JSON.stringify(show));
+    localStorage.setItem("show_wallets", JSON.stringify(show));
   };
 
   const navigateToSingleWallet = () => {
@@ -106,56 +112,61 @@ const Wallets = () => {
   };
 
   // dollar to naira
-  const triigerDollarToNairaModal = () => {
-    dispatch(showModal({ showModal: true, modalType: 'TRX_TO_NAIRA' }));
+  const trigerDollarToNairaModal = () => {
+    dispatch(showModal({ showModal: true, modalType: "TRX_TO_NAIRA" }));
+  };
+
+  const openStripeModal = () => {
+    dispatch(showModal({ showModal: true, modalType: STRIPE_MODAL }));
   };
 
   useEffect(() => {
-    const storage = localStorage.getItem('show_wallets') || false;
+    const storage = localStorage.getItem("show_wallets") || false;
 
-    const boolValue = storage === 'true';
+    const boolValue = storage === "true";
     setShow(boolValue);
   }, []);
+
+  const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
+  const appearance = {
+    theme: "stripe",
+  };
   return (
-    <div className="flex flex-col flex-1 px-8 pb-12">
+    <div className="flex flex-col flex-1 px-4 md:px-8 pb-12">
       <div>
         <div
           className={clsx(
-            'flex flex-wrap px-10 py-12 rounded-lg shadow-sm',
-            theme === 'light' ? 'bg-white' : 'bg-neutral-800',
+            "flex flex-wrap px-7 md:px-10 py-8 md:py-12 rounded-lg shadow-sm",
+            theme === "light" ? "bg-white" : "bg-neutral-800"
           )}
         >
-          <div className="w-4/12 space-y-7">
+          <div className="md:w-4/12 w-full space-y-7">
             <p className="text-3xl font-bold">Wallet Overview</p>
             <div>
               <p className="text-lg text-neutral-500">Total Balance</p>
               <p className="text-4xl font-bold">
                 {show
                   ? isSuccess &&
-                    CurrencyFormatter('USD').format(
-                      Number(fiat.payload.amountInDollars),
-                    )
-                  : '*********'}
+                    CurrencyFormatter("USD").format(Number(fiat.payload.amountInDollars))
+                  : "*********"}
               </p>
             </div>
             <div>
               <p className="text-gray-500 ">
-                {show ? walletInfo?.equivalentBTC.toPrecision(7) : '*********'}
-                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">
-                  BTC
-                </span>
+                {show ? walletInfo?.equivalentBTC.toPrecision(7) : "*********"}
+                <span className="p-2 mx-3 text-white bg-green-500 rounded-lg">BTC</span>
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-between w-8/12">
-            <div className="flex space-x-5">
-              <div className="flex justify-end ml-auto space-x-2 ">
-                <p
+          <div className="flex flex-col justify-between w-full mt-5 md:mt-0 md:w-8/12">
+            <div className="flex mb-5 md:mb-0 space-x-5">
+              <div className="flex justify-end md:ml-auto space-x-2 ">
+                <button
                   onClick={() => toggleState()}
                   className="flex px-2 py-2 space-x-3 border-2 rounded-lg cursor-pointer text-neutral-500"
                 >
                   <span>Show Balance</span> <Eye />
-                </p>
+                </button>
                 {/* <p className="flex items-center px-4 py-1 space-x-2 bg-gray-300 cursor-pointer rounded-2xl text-neutral-800">
                   <span>USD</span> <CarretDown />
                 </p> */}
@@ -164,41 +175,30 @@ const Wallets = () => {
                 <TransactionButtons
                   text="Move to Naira"
                   primary={true}
-                  action={triigerDollarToNairaModal}
+                  action={trigerDollarToNairaModal}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
-              <TransactionButtons
-                text="Send"
-                action={navigateToSend}
-                icon={<Send />}
-              />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <TransactionButtons text="Send" action={navigateToSend} icon={<Send />} />
               <TransactionButtons text="Recieve" icon={<Deposit />} />
-              <TransactionButtons
-                text="Trade"
-                icon={<Send />}
-                action={navigateToSingleWallet}
-              />
+              <TransactionButtons text="Trade" icon={<Send />} action={navigateToSingleWallet} />
               <TransactionButtons
                 text="Fund"
                 icon={<Deposit />}
                 primary={true}
-                // action={openModal}
+                action={openStripeModal}
               />
             </div>
             <AppModal>
               <>
-                {isSuccessR && ui.modalType === 'FUND' && (
+                {isSuccessR && ui.modalType === "FUND" && (
                   <div>
-                    <FundSuccess
-                      amount={amountFunded.amountInNaira}
-                      action={closeModal}
-                    />
+                    <FundSuccess amount={amountFunded.amountInNaira} action={closeModal} />
                   </div>
                 )}
-                {!isSuccessR && ui.modalType === 'FUND' && (
+                {!isSuccessR && ui.modalType === "FUND" && (
                   <FundWallet
                     redeem={redeem}
                     isLoading={isLoading}
@@ -210,25 +210,30 @@ const Wallets = () => {
                   />
                 )}
               </>
-              {ui?.modalType === 'TRX' && (
+              {ui?.modalType === "TRX" && (
                 <TrxToDollar
                   type="dollar"
                   heading="Transfer funds from your Naira wallet to Dollar wallet"
                 />
               )}
 
-              {ui?.modalType === 'TRX_TO_NAIRA' && (
+              {ui?.modalType === "TRX_TO_NAIRA" && (
                 <TrxToDollar
                   type="naira"
                   heading="Transfer funds from your Dollar wallet to Naira wallet"
                 />
+              )}
+              {ui?.modalType === STRIPE_MODAL && (
+                <Elements stripe={stripePromise} appearance={appearance}>
+                  <StripeModal />
+                </Elements>
               )}
             </AppModal>
           </div>
         </div>
       </div>
 
-      <div className="w-7/12 mt-10 ">
+      <div className="md:w-7/12 mt-10 w-full  ">
         <p className="text-3xl font-bold">Fiat Wallets</p>
 
         <div className="mt-4">
@@ -243,18 +248,16 @@ const Wallets = () => {
         </div>
       </div>
 
-      <div className="mt-10 ">
+      <div className="mt-10">
         <p className="text-3xl font-bold">Crypto Wallets</p>
 
-        <div className="grid grid-cols-2 gap-10 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-4">
           <CryptoWallets
             icon={<Tether />}
             currency="USD Tether"
             currencyCode="USDT"
             cryptoBalance={0}
-            balance={
-              USDT ? Number(USDT.payload.amount).toPrecision(7) : '0.0000'
-            }
+            balance={USDT ? Number(USDT.payload.amount).toPrecision(7) : "0.0000"}
             dollarBalance={0}
             show={show}
           />
@@ -263,12 +266,8 @@ const Wallets = () => {
             currency="Ethereum"
             currencyCode="ETH"
             cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
-            balance={ETH ? Number(ETH.payload.amount).toPrecision(7) : '0.0000'}
-            dollarBalance={
-              ETH
-                ? Number(ETH.payload.dollar_equivalent).toPrecision(7)
-                : '0.0000'
-            }
+            balance={ETH ? Number(ETH.payload.amount).toPrecision(7) : "0.0000"}
+            dollarBalance={ETH ? Number(ETH.payload.dollar_equivalent).toPrecision(7) : "0.0000"}
             show={show}
           />
           <CryptoWallets
@@ -285,12 +284,8 @@ const Wallets = () => {
             currency="Ripple"
             currencyCode="XRP"
             cryptoBalance={Number(currentCryptoPrices.ETH.price).toPrecision(7)}
-            balance={XRP ? Number(XRP.payload.amount).toPrecision(7) : '0.0000'}
-            dollarBalance={
-              XRP
-                ? Number(XRP.payload.dollar_equivalent).toPrecision(7)
-                : '0.0000'
-            }
+            balance={XRP ? Number(XRP.payload.amount).toPrecision(7) : "0.0000"}
+            dollarBalance={XRP ? Number(XRP.payload.dollar_equivalent).toPrecision(7) : "0.0000"}
             show={show}
           />
         </div>
@@ -298,9 +293,9 @@ const Wallets = () => {
 
       <Toaster
         toastOptions={{
-          position: 'top-right',
+          position: "top-right",
           duration: 7000,
-          id: 'voucher-redeemed',
+          id: "voucher-redeemed",
         }}
       />
     </div>
