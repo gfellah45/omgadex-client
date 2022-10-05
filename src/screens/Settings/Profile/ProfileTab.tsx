@@ -47,19 +47,31 @@ export type Inputs = {
   phone: string;
 };
 
-function ProfileTab({ payload }: { children?: ReactNode; payload: userResponseInterface }) {
+function ProfileTab() {
   const dispatch = useDispatch();
-  // const { data, {isLoading}, } = useGetUserProfileQuery("", {
-  //   refetchOnMountOrArgChange: true,
-  // });
   const [updateUserInfo] = useUpdateUserProfileMutation();
-  const [userData, setUserData] = useState<userResponseInterface>(payload);
+  const [userData, setUserData] = useState<userResponseInterface>({
+    _id: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    isActivated: false,
+    createdAt: "",
+    updatedAt: "",
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const { data: userProfileDetails, isLoading } = useGetUserProfileQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = event.target;
@@ -74,17 +86,20 @@ function ProfileTab({ payload }: { children?: ReactNode; payload: userResponseIn
     updateUserInfo(data)
       .unwrap()
       .then((res: any) => {
-        console.log(res, "cause data was successfull");
         toast.success("Profile updated successful");
       })
       .catch((err: any) => console.error("something went wrong", err));
   };
 
+  useEffect(() => {
+    setUserData(userProfileDetails?.payload);
+  }, [userProfileDetails?.payload]);
+
   return (
     <>
-      <div className="h-full">
-        <header className=" flex w-[80%] justify-between items-center">
-          <div className="flex items-center gap-8">
+      <div className="h-full mb-28 md:mb-0">
+        <header className="flex md:w-[80%] justify-between flex-wrap items-center">
+          <div className="flex items-center  gap-8">
             <Image
               src="/assets/user.svg"
               onClick={() => {
@@ -93,6 +108,7 @@ function ProfileTab({ payload }: { children?: ReactNode; payload: userResponseIn
               alt="user"
               width={"100%"}
               height={"100%"}
+              className="w-full h-full"
             />
             <div>
               <p className="text-[1.6rem] font-[500]">
@@ -101,9 +117,9 @@ function ProfileTab({ payload }: { children?: ReactNode; payload: userResponseIn
               <p className="text-neutral-500 font-[500]">{userData?.email}</p>
             </div>
           </div>
-          <div>
+          <div className="mt-5 md:mt-0 mx-auto md:mx-0">
             <button className="py-1 font-semibold px-4 rounded-full text-sm border-2 text-purple-500">
-              Unverified
+              {userData?.isActivated ? "Verified" : "Unverified"}
             </button>
           </div>
         </header>

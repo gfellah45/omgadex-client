@@ -12,10 +12,19 @@ import clsx from "clsx";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStoreHooks";
 import { CurrencyFormatter } from "../../../lib/currencyFormatter";
 import { hideModal, showModal } from "../../../reducers/ui";
-import AppModal from "../../../modals";
 import FundSuccess from "../FundSuccess";
 import FundWallet from "../FundWallet";
 import { useRedeemVoucherMutation } from "../../../services/vouchers";
+import AppModal from "../../../modals";
+import Close from "../../../assets/svg/Close";
+import SuccessBadge from "../../../assets/svg/SuccessBadge";
+import CarretDown from "../../../assets/svg/CarretDown";
+import { useForm } from "react-hook-form";
+
+// Types of modal on this component are:
+const MAKE_WITHDRAWAL_MODAL = "MAKE_WITHDRAWAL_MODAL";
+const SUCCESSFUL_WITHDRAWAL_MODAL = "SUCCESSFUL_WITHDRAWAL_MODAL";
+const FUND_WALLET_MODAL = "FUND_WALLET_MODAL";
 
 type AmountFunded = {
   amountInDollars: string;
@@ -23,14 +32,25 @@ type AmountFunded = {
 };
 
 const TransactionTrade = () => {
-  const { back, push } = useRouter();
-
+  const [selectNetwork, setSeleectedNetwork] = useState<availableNetworkProps | any>({});
   const [amountFunded, setAmountFunded] = useState<AmountFunded>({
     amountInDollars: "",
     amountInNaira: "",
   });
-
   const { theme } = useTheme();
+  const { back, push } = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data: any) => {
+    console.log("dataa", data);
+  };
+
+  const modalType = useAppSelector((state) => state.ui.modalType);
 
   const { dollarBalance, equivalentBTC } = useAppSelector(
     (state) => state.dashboard.user.payload.walletInfo
@@ -38,12 +58,14 @@ const TransactionTrade = () => {
 
   const dispatch = useAppDispatch();
 
-  function openModal() {
-    dispatch(showModal({ showModal: true }));
-  }
-  function closeModal() {
+  const handleOpen: (modalType?: string | undefined) => void = (modalType) => {
+    dispatch(showModal({ showModal: true, modalType: modalType }));
+  };
+
+  function handleClose() {
     dispatch(hideModal());
   }
+
   const [redeem, { isLoading, isError, data, isSuccess: isSuccessR, error }] =
     useRedeemVoucherMutation();
 
@@ -74,8 +96,17 @@ const TransactionTrade = () => {
           <div className="grid mt-3 md:mt-0 grid-cols-2 md:grid-cols-4 w-full md:mx-0 gap-4 md:w-6/12">
             <TransactionButtons text="Buy" icon={<Send />} action={routeToBuy} />
             <TransactionButtons text="Sell" icon={<Deposit />} action={routeToSell} />
-            <TransactionButtons text="Withdraw" icon={<Send />} />
-            <TransactionButtons text="Fund" primary={true} icon={<Deposit />} action={openModal} />
+            <TransactionButtons
+              text="Withdraw"
+              action={() => handleOpen(MAKE_WITHDRAWAL_MODAL)}
+              icon={<Send />}
+            />
+            <TransactionButtons
+              text="Fund"
+              primary={true}
+              icon={<Deposit />}
+              action={() => handleOpen(FUND_WALLET_MODAL)}
+            />
           </div>
         </div>
 
@@ -99,23 +130,183 @@ const TransactionTrade = () => {
       </div>
       <AppModal>
         <>
-          {isSuccessR && (
+          {isSuccessR && modalType === FUND_WALLET_MODAL && (
             <div>
-              <FundSuccess amount={amountFunded.amountInNaira} action={closeModal} />
+              <FundSuccess amount={amountFunded.amountInNaira} action={handleClose} />
             </div>
           )}
-          {!isSuccessR && (
+          {!isSuccessR && modalType === FUND_WALLET_MODAL && (
             <FundWallet
               redeem={redeem}
               isLoading={isLoading}
               isError={isError}
-              action={closeModal}
+              action={handleClose}
               isSuccess={isSuccessR}
               error={error}
               setAmountFunded={setAmountFunded}
             />
           )}
         </>
+
+        {modalType === MAKE_WITHDRAWAL_MODAL && (
+          <div className="w-full">
+            <>
+              <div>
+                <p className="text-4xl text-center pt-5 font-bold text-[#353945]">Select Account</p>
+              </div>
+              <div
+                onClick={() => handleClose()}
+                className={clsx(
+                  "absolute right-[-24px] top-0 pl-6 cursor-pointer pr-3 py-3 flex justify-center items-center rounded-l-lg bg-gray-100",
+                  theme === "light" ? "bg-neutral-100" : "bg-neutral-600"
+                )}
+              >
+                <Close />
+              </div>
+            </>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
+              <div>
+                <p className="text-neutral-400 font-medium text-sm">Bank Account</p>
+                <div
+                  // onClick={() => handleOpen(SELECT_NETWORK_MODAL)}
+                  className="my-4 md:w-full text-gray-400 rounded-md justify-between cursor-pointer flex items-center relative px-2 border h-12 "
+                >
+                  <div>
+                    {Object.keys(selectNetwork).length ? (
+                      <div className="flex items-center gap-2">
+                        <div>{selectNetwork?.logo}</div>
+                        {selectNetwork?.shortHand}
+                      </div>
+                    ) : (
+                      <p>Access Bank</p>
+                    )}
+                  </div>
+                  <div className="aboslute top-2 right-2 ">
+                    <CarretDown />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full">
+                <label htmlFor="amount" className="font-light text-neutral-400  text-sm">
+                  Account Number
+                </label>
+                <div
+                  className={`mt-2 w-full text-gray-400 rounded-md justify-between cursor-pointer flex items-center relative px-2 border h-12 ${
+                    errors["amount"] ? "border-red-600" : ""
+                  }`}
+                >
+                  <input
+                    type="text"
+                    className="w-full h-full bg-white outline-none border-0"
+                    placeholder="0011223344"
+                    {...register("amount", { required: true })}
+                    name="amount"
+                    id="amount"
+                  />
+                </div>
+              </div>
+
+              {/* Acccount name */}
+              <div className="w-full mt-2">
+                <label htmlFor="amount" className="font-light text-neutral-400  text-sm">
+                  Account Name
+                </label>
+                <div
+                  className={`mt-2 w-full text-gray-400 rounded-md justify-between cursor-pointer flex items-center relative px-2 border h-12 ${
+                    errors["amount"] ? "border-red-600" : ""
+                  }`}
+                >
+                  <input
+                    type="text"
+                    className="w-full h-full bg-white outline-none border-0"
+                    placeholder="John Doe"
+                    {...register("amount", { required: true })}
+                    name="amount"
+                    id="amount"
+                  />
+                </div>
+              </div>
+
+              <div className="w-full mt-2">
+                <label htmlFor="amount" className="font-light text-neutral-400  text-sm">
+                  Amount
+                </label>
+                <div
+                  className={`mt-2 w-full text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12 ${
+                    errors["amount"] ? "border-red-600" : ""
+                  }`}
+                >
+                  <p className=" pr-1">N</p>
+
+                  <input
+                    type="text"
+                    className="w-full h-full bg-white outline-none border-0"
+                    placeholder="1000"
+                    {...register("amount", { required: true })}
+                    name="amount"
+                    id="amount"
+                  />
+                </div>
+                <p className="text-xs text-neutral-500 my-1">Balance: N1230000</p>
+              </div>
+
+              <div className="mx-auto my-3 flex justify-center items-center">
+                <button
+                  onClick={() => {
+                    handleClose();
+                    push("/wallets");
+                  }}
+                  type="submit"
+                  className="bg-primary mx-center text-center w-full text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer"
+                >
+                  Next
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {modalType === SUCCESSFUL_WITHDRAWAL_MODAL && (
+          <div className="w-full">
+            <div>
+              <p className="text-xl text-center pt-5 font-bold text-[#353945]">
+                Withdrawal Successful
+              </p>
+            </div>
+            <div
+              onClick={() => handleClose()}
+              className={clsx(
+                "absolute right-[-24px] top-0 pl-6 cursor-pointer pr-3 py-3 flex justify-center items-center rounded-l-lg bg-gray-100",
+                theme === "light" ? "bg-neutral-100" : "bg-neutral-600"
+              )}
+            >
+              <Close />
+            </div>
+
+            <p className="flex justify-center items-center">
+              <SuccessBadge size={220} />
+            </p>
+
+            <p className="font-bold text-center text-5xl mt-3 mb-5">N100,234,089</p>
+
+            <p className="text-center text-md">
+              Your withdrawal was successful and your account has been credited
+            </p>
+            <div className="mx-auto my-3 flex justify-center items-center">
+              <button
+                onClick={() => {
+                  handleClose();
+                  push("/wallets");
+                }}
+                type="submit"
+                className="bg-primary mx-center text-center w-full text-white rounded-lg px-3 py-2 space-x-3  cursor-pointer"
+              >
+                Back To Wallet
+              </button>
+            </div>
+          </div>
+        )}
       </AppModal>
     </div>
   );

@@ -41,8 +41,8 @@ const TRX_IN_PROGRESS = "TRX_IN_PROGRESS";
 const TRX_RESOLVED = "TRX_RESOLVED";
 
 // minimum purchaseable amount required for a transaction
-const minimumPurchaseableAmount = 700;
-const maximumPurchaseableAmount = 1550;
+const minimumPurchaseableAmount = 10;
+const maximumPurchaseableAmount = 100000;
 
 function Buy() {
   const { theme } = useTheme();

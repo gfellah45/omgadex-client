@@ -16,31 +16,33 @@ import ig from "../public/assets/ig.svg";
 import rocket from "../public/assets/rocket.png";
 import comingsoon_second_img from "../public/assets/comingsoon_second_img.png";
 
-export const ComingSoonNav = () => {
+export const ComingSoonNav = function () {
   return (
-    <Tween
-      from={{ delay: 0.1, height: "0%", opacity: 0 }}
-      stagger={0.2}
-      ease="elastic.out(0.1, 0.1)"
-    >
-      <div className="w-full shadow-md">
-        <Container>
-          <div className="flex flex-wrap items-center justify-between flex-1 p-2 md:py-2 lg:py-2">
-            <div className="flex items-center lg:w-[60%]  xl:w-[70%] ">
-              {/* logo and name */}
-              <div className="flex items-center lg:w-[20%] xl:lg:w-[20%]">
-                <Logo />
-                <div className="mx-2 text-lg font-bold  md:text-lg lg:text-2xl font-poppins">
-                  Lajeni
+    <>
+      <Tween
+        from={{ delay: 0.1, height: "0%", opacity: 0 }}
+        stagger={0.2}
+        ease="elastic.out(0.1, 0.1)"
+      >
+        <div className="w-full shadow-md">
+          <div className="w-11/12 mx-auto">
+            <div className="flex flex-wrap items-center justify-between flex-1 p-2 md:py-2 lg:py-2">
+              <div className="flex items-center lg:w-[60%]  xl:w-[70%] ">
+                {/* logo and name */}
+                <div className="flex items-center lg:w-[20%] xl:lg:w-[20%]">
+                  <Logo />
+                  <div className="mx-2 text-lg font-bold  md:text-lg lg:text-2xl font-poppins">
+                    Lajeni
+                  </div>
                 </div>
-              </div>
 
-              {/* the nav bar */}
+                {/* the nav bar */}
+              </div>
             </div>
           </div>
-        </Container>
-      </div>
-    </Tween>
+        </div>
+      </Tween>
+    </>
   );
 };
 
@@ -200,7 +202,7 @@ const Home: NextPage = () => {
           </section>
         </main>
         <footer className="bg-white border-t z-20 h-14">
-          <Container>
+          <div className="w-11/12 mx-auto">
             <div className="flex items-center flex-wrap h-14  justify-between">
               <span className="text-neutral-600 w-full md:w-6/12  md:text-left text-center text-sm">
                 Copyright © {new Date().getFullYear()} Lajeni. All rights reserved
@@ -212,7 +214,7 @@ const Home: NextPage = () => {
                 <Image src={ig} alt="instagam" />
               </div>
             </div>
-          </Container>
+          </div>
         </footer>
       </div>
     </div>

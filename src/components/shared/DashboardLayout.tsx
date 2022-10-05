@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { useTheme } from "next-themes";
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import Logo from "../../assets/svg/Logo";
 import { sideBarItems } from "../../data";
 
@@ -9,7 +9,11 @@ import MobileFooter from "./MobileFooter";
 import Sidebar from "./Sidebar";
 import UserProfile from "./UserProfile";
 
-const DashboardLayout: FC = ({ children }) => {
+export type Props = {
+  children?: React.ReactNode;
+};
+
+const DashboardLayout = ({ children }: Props) => {
   const { theme } = useTheme();
   return (
     <div className="flex flex-1 flex-col relative w-full min-h-screen ">
