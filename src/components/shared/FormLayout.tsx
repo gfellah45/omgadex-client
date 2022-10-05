@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import logo from '../../../public/assets/logo.svg';
+import React, { FC, ReactNode } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import logo from "../../../public/assets/logo.svg";
 
 interface Props {
   heading?: string;
@@ -9,16 +9,10 @@ interface Props {
   next?: string;
   link?: string;
   action?: string;
+  children?: ReactNode;
 }
 
-const FormLayout: FC<Props> = ({
-  children,
-  heading,
-  sub,
-  next,
-  link,
-  action,
-}) => {
+const FormLayout: FC<Props> = ({ children, heading, sub, next, link, action }) => {
   return (
     <div className="pb-2">
       <div className="w-full  lg:hidden">
@@ -30,9 +24,7 @@ const FormLayout: FC<Props> = ({
         <div className="flex justify-center w-full space-x-1 text-xs font-semibold text-balck lg:flex font-display md:text-sm">
           <p> {next}</p>
           <Link href={`${link}`}>
-            <a className="cursor-pointer font-poppins text-primary hover:opacity-75">
-              {action}
-            </a>
+            <a className="cursor-pointer font-poppins text-primary hover:opacity-75">{action}</a>
           </Link>
         </div>
       </div>
@@ -66,9 +58,7 @@ const FormLayout: FC<Props> = ({
       <div className="justify-center hidden mt-8 space-x-2 text-xs font-semibold text-center text-omgray-700 lg:flex font-display md:text-sm">
         <p> {next}</p>
         <Link href={`${link}`}>
-          <a className="cursor-pointer font-poppins text-primary hover:opacity-75">
-            {action}
-          </a>
+          <a className="cursor-pointer font-poppins text-primary hover:opacity-75">{action}</a>
         </Link>
       </div>
     </div>

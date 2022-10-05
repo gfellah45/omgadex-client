@@ -1,15 +1,15 @@
 // @ts-nocheck
 // @ts-nochecks
-import clsx from 'clsx';
-import { useTheme } from 'next-themes';
-import React, { FC, useMemo } from 'react';
-import EmptyState from '../../assets/svg/EmptyState';
-import Selector from '../../assets/svg/Selector';
-import { tableHeader } from '../../data';
-import { useTable } from 'react-table';
-import { Transaction } from '../../data/columns';
-import Pagination from './Pagination';
-import { isEmpty } from 'lodash';
+import clsx from "clsx";
+import { useTheme } from "next-themes";
+import React, { FC, useMemo } from "react";
+import EmptyState from "../../assets/svg/EmptyState";
+import Selector from "../../assets/svg/Selector";
+import { tableHeader } from "../../data";
+import { useTable } from "react-table";
+import { Transaction } from "../../data/columns";
+import Pagination from "./Pagination";
+import { isEmpty } from "lodash";
 
 interface Props {
   showHeader?: boolean;
@@ -30,17 +30,16 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData, totalPages }) => {
   const data = useMemo(() => (tableData ? tableData : []), [tableData]);
   const columns = useMemo(() => Transaction, []);
 
-  const { rows, getTableBodyProps, headerGroups, getTableProps, prepareRow } =
-    useTable({
-      columns,
-      data,
-    });
+  const { rows, getTableBodyProps, headerGroups, getTableProps, prepareRow } = useTable({
+    columns,
+    data,
+  });
 
   return (
     <div
       className={clsx(
-        'w-full  flex-1 flex flex-col h-auto rounded-xl  shadow-sm py-9 px-4',
-        theme === 'light' ? 'bg-white' : 'bg-neutral-800',
+        "w-full  flex-1 flex flex-col h-auto rounded-xl  shadow-sm py-9 px-4",
+        theme === "light" ? "bg-white" : "bg-neutral-800"
       )}
     >
       {showHeader && (
@@ -52,14 +51,10 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData, totalPages }) => {
       {/* table */}
 
       <div className="overflow-hidden overflow-x-auto border border-gray-100 rounded">
-        <table
-          {...getTableProps}
-          className="min-w-full text-sm divide-y divide-gray-200"
-        >
+        <table {...getTableProps} className="min-w-full text-sm divide-y divide-gray-200">
           <thead>
             {headerGroups.map((headerGroup) => {
-              const { key, ...restHeaderProps } =
-                headerGroup.getHeaderGroupProps();
+              const { key, ...restHeaderProps } = headerGroup.getHeaderGroupProps();
               return (
                 <tr key={key} className="bg-gray-50 py-4 " {...restHeaderProps}>
                   {headerGroup.headers.map((column) => (
@@ -68,7 +63,7 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData, totalPages }) => {
                       {...restHeaderProps}
                       className="px-4 py-4 font-bold text-left text-gray-600"
                     >
-                      {column.render('Header')}
+                      {column.render("Header")}
                     </th>
                   ))}
                 </tr>
@@ -99,12 +94,8 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData, totalPages }) => {
                       },
                     });
                     return (
-                      <td
-                        key={key}
-                        {...restCellProps}
-                        className="px-4 py-2 text-center truncate"
-                      >
-                        {cell.render('Cell')}
+                      <td key={key} {...restCellProps} className="px-4 py-2 text-center truncate">
+                        {cell.render("Cell")}
                       </td>
                     );
                   })}
@@ -115,12 +106,8 @@ const TransactionTable: FC<Props> = ({ showHeader, tableData, totalPages }) => {
         </table>
       </div>
 
-      <div className="my-3 flex justify-end py-6">
-        {totalPages && totalPages > 0 ? (
-          <Pagination totalPages={totalPages} />
-        ) : (
-          ''
-        )}
+      <div className="my-3 flex justify-center md:justify-end py-6">
+        {totalPages && totalPages > 0 ? <Pagination totalPages={totalPages} /> : ""}
       </div>
     </div>
   );

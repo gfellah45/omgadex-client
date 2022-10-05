@@ -4,8 +4,9 @@ import bgImage from "../../assets/images/Auth_bg.svg";
 import Logo from "../../assets/svg/Logo";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
+import { IProps } from "../../types/components";
 
-const AuthLayout: FC = ({ children }) => {
+const AuthLayout: FC = ({ children }: IProps) => {
   const { theme } = useTheme();
   return (
     <div className="flex flex-1 max-h-screen flex-wrap font-poppins">
@@ -20,9 +21,7 @@ const AuthLayout: FC = ({ children }) => {
             <div>
               <Logo />
             </div>
-            <div className="ml-2 text-2xl font-bold tracking-wide text-black-800">
-              Lajeni
-            </div>
+            <div className="ml-2 text-2xl font-bold tracking-wide text-black-800">Lajeni</div>
           </div>
         </div>
         <div
@@ -36,9 +35,7 @@ const AuthLayout: FC = ({ children }) => {
       </div>
 
       <div className=" w-full  lg:px-0 lg:w-1/2 items-center h-screen overflow-y-scroll ">
-        <div className="mx-auto w-full lg:w-7/12 py-10 px-8 xl:w-7/12 lg:px-0">
-          {children}
-        </div>
+        <div className="mx-auto w-full lg:w-7/12 py-10 px-8 xl:w-7/12 lg:px-0">{children}</div>
       </div>
     </div>
   );

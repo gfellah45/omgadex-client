@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
-import { useRouter } from 'next/router';
+import React, { FC, useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
+import { useRouter } from "next/router";
 
 type IProps = {
   totalPages: number;

@@ -9,7 +9,7 @@ interface Props {
 
 const UsageCard = ({ image, text, description }: Props): JSX.Element => {
   return (
-    <div className="flex flex-col items-center justify-center mt-5 text-center md:mt-0">
+    <div className="flex flex-col items-center justify-center my-5 text-center md:mt-0">
       <div>
         <Image src={image} alt={text} />
       </div>

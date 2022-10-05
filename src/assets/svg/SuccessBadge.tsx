@@ -1,10 +1,10 @@
 import React from "react";
 
-const SuccessBadge = () => {
+const SuccessBadge = ({ size = 270 }) => {
   return (
     <svg
-      width="271"
-      height="270"
+      width={size + 1}
+      height={size}
       viewBox="0 0 271 270"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@ const SuccessBadge = () => {
         d="M113.971 133.802L130.28 150.863L158.972 122.131"
         stroke="white"
         strokeWidth="7"
-        stroke-linecap="round"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
       <g opacity="0.25">

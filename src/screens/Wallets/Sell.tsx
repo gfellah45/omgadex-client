@@ -212,7 +212,7 @@ function Sell() {
 
   return (
     <>
-      <div className=" px-8 w-full h-full">
+      <div className="px-5 md:px-8 w-full h-full">
         <div
           className={clsx(
             "bg-white py-8 px-7 rounded-xl flex items-center space-x-4",
@@ -225,7 +225,7 @@ function Sell() {
           <div className="text-3xl font-bold capitalize">Sell BTC</div>
         </div>
 
-        <div className="overflow-hidden h-[450px] mt-10 ">
+        <div className="overflow-hidden md:h-[450px] pb-5 md:pb-2 mt-10 mb-24 md:mb-0">
           <div
             className={clsx(
               "flex flex-1 overflow-y-auto flex-col px-8 h-full rounded-xl text-xl ",
@@ -239,7 +239,7 @@ function Sell() {
                   <p className="text-neutral-400 font-light text-md">Wallet</p>
                   <div
                     onClick={() => handleOpen(SELECT_NETWORK_MODAL)}
-                    className="my-4 w-10/12 text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12"
+                    className="my-4 md:w-10/12 text-gray-400 rounded justify-between cursor-pointer flex items-center relative px-2 border h-12"
                   >
                     <div>
                       {Object.keys(selectNetwork).length ? (
@@ -256,7 +256,7 @@ function Sell() {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between items-start gap-x-5 my-5 w-10/12">
+                <div className="flex justify-between items-start gap-x-5 my-5 md:w-10/12">
                   <div className="w-5/12">
                     <label htmlFor="amount" className="font-light text-neutral-400  text-[1rem]">
                       Amount to pay
@@ -327,7 +327,7 @@ function Sell() {
               <div className="md:w-[40%]">
                 <div
                   className={clsx(
-                    " shadow rounded-lg w-10/12 ml-auto p-5",
+                    "shadow md:mt-0 mt-3 mb-3 md:mb-0 rounded-lg w-full md:w-10/12 ml-auto p-5",
                     theme === "light" ? "bg-gray-200" : "bg-neutral-700"
                   )}
                 >

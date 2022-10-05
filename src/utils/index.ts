@@ -12,7 +12,7 @@ export const setData = (key: string, value: User | string) => {
   ls.set(key, JSON.stringify(value));
 };
 
-export const getData = (key: string) => {
+export const GetData = (key: string) => {
   const [item, setItem] = useState(null);
 
   useEffect(() => {

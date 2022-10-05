@@ -1,13 +1,14 @@
 // @ts-nocheck
-import React, { Fragment, FC } from 'react';
-import { useTheme } from 'next-themes';
-import clsx from 'clsx';
-import { Dialog, Transition } from '@headlessui/react';
-import { useAppDispatch, useAppSelector } from '../hooks/useStoreHooks';
-import { hideModal } from '../reducers/ui';
+import React, { Fragment, FC, ReactNode } from "react";
+import { useTheme } from "next-themes";
+import clsx from "clsx";
+import { Dialog, Transition } from "@headlessui/react";
+import { useAppDispatch, useAppSelector } from "../hooks/useStoreHooks";
+import { hideModal } from "../reducers/ui";
 
 type Props = {
   maxWidth?: string;
+  children?: ReactNode;
 };
 
 const AppModal: FC<Props> = ({ children, maxWidth }) => {
@@ -21,11 +22,7 @@ const AppModal: FC<Props> = ({ children, maxWidth }) => {
   return (
     <>
       <Transition appear show={showModal} as="div">
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-10 overflow-y-auto"
-          onClose={onClose}
-        >
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
           <div className="min-h-screen px-4 text-center">
             <Transition.Child
               as="div"
@@ -39,18 +36,15 @@ const AppModal: FC<Props> = ({ children, maxWidth }) => {
               <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
             </Transition.Child>
             {/* This element is to trick the browser into centering the modal contents. */}
-            <span
-              className="inline-block h-screen align-middle"
-              aria-hidden="true"
-            >
+            <span className="inline-block h-screen align-middle" aria-hidden="true">
               &#8203;
             </span>
             <div
               className={clsx(
                 `inline-block w-full ${
-                  maxWidth ? `max-w-${maxWidth}` : 'max-w-md'
+                  maxWidth ? `max-w-${maxWidth}` : "max-w-md"
                 } p-6 my-8 overflow-hidden text-left align-middle bg-white transition-all transform  shadow-xl rounded-2xl`,
-                theme === 'light' ? 'bg-white' : 'bg-neutral-800',
+                theme === "light" ? "bg-white" : "bg-neutral-800"
               )}
             >
               <Transition.Child

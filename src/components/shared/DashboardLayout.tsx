@@ -1,13 +1,19 @@
 import clsx from "clsx";
 import { useTheme } from "next-themes";
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import Logo from "../../assets/svg/Logo";
+import { sideBarItems } from "../../data";
 
 import DashboardNav from "../Header/DashboardNav";
+import MobileFooter from "./MobileFooter";
 import Sidebar from "./Sidebar";
 import UserProfile from "./UserProfile";
 
-const DashboardLayout: FC = ({ children }) => {
+export type Props = {
+  children?: React.ReactNode;
+};
+
+const DashboardLayout = ({ children }: Props) => {
   const { theme } = useTheme();
   return (
     <div className="flex flex-1 flex-col relative w-full min-h-screen ">
@@ -24,7 +30,7 @@ const DashboardLayout: FC = ({ children }) => {
             <div className="text-2xl font-bold">Lajeni</div>
           </div>
 
-          <div className=" pl-20 ml-6 border-l">
+          <div className="hidden mb:flex pl-20 ml-6 border-l">
             <DashboardNav />
           </div>
         </div>
@@ -38,7 +44,7 @@ const DashboardLayout: FC = ({ children }) => {
         {/* navigation */}
         <div
           className={clsx(
-            " w-2/12  shadow-sm fixed z-0 h-screen",
+            "w-2/12 hidden md:block shadow-sm fixed z-0 h-screen",
             theme === "light" ? "bg-white" : "bg-neutral-900"
           )}
         >
@@ -47,13 +53,14 @@ const DashboardLayout: FC = ({ children }) => {
         {/* children */}
         <div
           className={clsx(
-            "ml-auto w-10/12  h-auto  pt-6",
+            "md:ml-auto w-full md:w-10/12  h-auto  pt-6",
             theme === "light" ? "bg-gray-100" : "bg-neutral-900"
           )}
         >
           {children}
         </div>
       </div>
+      <MobileFooter />
     </div>
   );
 };

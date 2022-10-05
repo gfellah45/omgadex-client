@@ -1,8 +1,14 @@
-import React, { FC } from "react";
+import React from "react";
 
-const SmallETH: FC = () => {
+const SmallETH = ({ size = 21 }) => {
   return (
-    <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 21 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M10.2883 20.9769C15.8951 20.9769 20.4403 16.4317 20.4403 10.8249C20.4403 5.21808 15.8951 0.672852 10.2883 0.672852C4.68146 0.672852 0.13623 5.21808 0.13623 10.8249C0.13623 16.4317 4.68146 20.9769 10.2883 20.9769Z"
         fill="black"
